@@ -1,8 +1,8 @@
 'use strict';
 
-import { fs } from 'fs';
-import { path } from 'path';
-import { sequelize } from 'sequelize';
+import fs from 'fs';
+import path from 'path';
+import Sequelize  from 'sequelize';
 import config from '../config/config'
 
 const basename = path.basename(__filename);
