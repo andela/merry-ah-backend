@@ -4,9 +4,9 @@ import chaiHttp from 'chai-http';
 
 chai.use(chaiHttp);
 chai.should();
-describe("Google", () => {
-  describe("GET /", () => {
-    it("should reach google homepage", (done) => {
+describe('Google', () => {
+  describe('GET /', () => {
+    it('should reach google homepage', (done) => {
       chai.request('https://google.com.ng')
         .get('/')
         .end((err, res) => {
