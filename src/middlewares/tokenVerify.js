@@ -1,4 +1,7 @@
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const keyconfig = process.env.SECRET;
 
@@ -12,8 +15,8 @@ const Verify = {
             });
         }
         try {
-            const decoded = await jwt.verify(token, keyconfig);
-            req.decoded = decoded;
+            const verifyUser = await jwt.verify(token, keyconfig);
+            req.verifyUser = verifyUser;
             next();
         } catch (error) {
             return res.status(401).send({
