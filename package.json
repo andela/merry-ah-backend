@@ -4,9 +4,10 @@
   "description": "A Social platform for the creative at heart",
   "main": "index.js",
   "scripts": {
-    "start": "babel-node index.js",
+    "start": "npm run-script build && node ./build/index.js",
     "start:dev": "nodemon --exec babel-node index.js",
-    "test": "mocha  test/*.js --exit --require babel-register"
+    "test": "mocha  test/*.js --exit --require babel-register",
+    "build": "babel --presets env -d build/ src"
   },
   "author": "Andela Simulations Programme",
   "license": "MIT",

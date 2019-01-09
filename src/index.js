@@ -3,8 +3,8 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import morgan from 'morgan';
 import requestId from 'express-request-id';
-import routes from './src/routes/index';
-import Response from './src/helpers/response';
+import routes from './routes/index';
+import Response from './helpers/response';
 
 const app = express();
 
