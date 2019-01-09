@@ -3,11 +3,17 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const keyconfig = process.env.SECRET;
 
-const Verify = {
-    async tokenVerify (req, res, next) {
-        const token = req.headers['Authorization'];
+class TokenAuthenticate {
+    static generateToken = (userDetails, expires) => {
+        const token = jwt.sign(userDetails,
+            process.env.SECRET, { expiresIn: expires }
+        );
+    return token;
+    }
+
+    static async tokenVerify (req, res, next) {
+        const token = req.headers['authorization']|| req.headers['Authorization'] || req.headers['x-access-token'] || req.query.token;
         if (!token) {
             return res.status(401).send({
                 status: 'error',
@@ -25,6 +31,7 @@ const Verify = {
             });
         }
     }
+
 }
 
-export default Verify;
+export default TokenAuthenticate;
