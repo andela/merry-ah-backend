@@ -1,14 +1,11 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-// import errorhandler from 'errorhandler';
 import cors from 'cors';
 import morgan from 'morgan';
 import requestId from 'express-request-id';
 import routes from './src/routes/index';
 import Response from './src/helpers/response';
-// import db from './src/db/models/index';
 
-// Create global app object
 const app = express();
 
 const port = process.env.PORT || 9000;
