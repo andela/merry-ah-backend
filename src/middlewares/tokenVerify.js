@@ -7,7 +7,7 @@ const keyconfig = process.env.SECRET;
 
 const Verify = {
     async tokenVerify (req, res, next) {
-        const token = req.headers['x-access-token'];
+        const token = req.headers['Authorization'];
         if (!token) {
             return res.status(401).send({
                 status: 'error',
