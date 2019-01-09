@@ -4,9 +4,10 @@
   "description": "A Social platform for the creative at heart",
   "main": "index.js",
   "scripts": {
-    "start": "npm run-script build && node ./build/index.js",
+    "start": "node ./build/index.js",
     "start:dev": "nodemon --exec babel-node index.js",
     "build": "babel --presets env -d build/ src",
+    "postinstall": "npm run build",
     "test": "nyc mocha --timeout 10000 --require babel-core/register ./test/*.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
