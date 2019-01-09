@@ -11,7 +11,7 @@ const Verify = {
         if (!token) {
             return res.status(401).send({
                 status: 'error',
-                message: 'No token provided.',
+                message: 'No token provided',
             });
         }
         try {
