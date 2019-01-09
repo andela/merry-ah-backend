@@ -6,12 +6,17 @@
   "scripts": {
     "start": "npm run-script build && node ./build/index.js",
     "start:dev": "nodemon --exec babel-node index.js",
-    "test": "mocha  test/*.js --exit --require babel-register",
-    "build": "babel --presets env -d build/ src"
+    "build": "babel --presets env -d build/ src",
+    "test": "nyc mocha --timeout 10000 --require babel-core/register ./test/*.js",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "author": "Andela Simulations Programme",
   "license": "MIT",
   "dependencies": {
+    "babel-core": "^6.26.3",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "babel-register": "^6.26.0",
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
     "dotenv": "^6.0.0",
@@ -43,10 +48,13 @@
     "babel-preset-env": "^1.7.0",
     "chai": "^4.2.0",
     "chai-http": "^4.2.1",
+    "coveralls": "^3.0.2",
     "eslint": "^5.12.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
     "mocha": "^5.2.0",
-    "nodemon": "^1.18.9"
+    "nodemon": "^1.18.9",
+    "mocha-lcov-reporter": "^1.3.0",
+    "nyc": "^13.1.0"
   }
 }

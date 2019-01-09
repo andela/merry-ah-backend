@@ -2,8 +2,8 @@ Authors Haven - A Social platform for the creative at heart.
 =======
 
 [![Build Status](https://travis-ci.org/andela/merry-ah-backend.svg?branch=staging)](https://travis-ci.org/andela/merry-ah-backend)
-
 [![Reviewed by Hound](https://img.shields.io/badge/Reviewed_by-Hound-8E64B0.svg)](https://houndci.com)
+[![Coverage Status](https://coveralls.io/repos/github/andela/merry-ah-backend/badge.svg?branch=staging)](https://coveralls.io/github/andela/merry-ah-backend?branch=staging)
 
 ## Vision
 Create a community of like minded authors to foster inspiration and innovation
