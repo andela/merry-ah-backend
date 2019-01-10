@@ -5,7 +5,7 @@ dotenv.config();
 
 
 class TokenAuthenticate {
-    static generateToken = (userDetails, expires) => {
+    static generateToken (userDetails, expires) {
         const token = jwt.sign(userDetails,
             process.env.SECRET, { expiresIn: expires }
         );

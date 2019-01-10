@@ -16,6 +16,8 @@ app.use(cors());
 
 app.use(requestId());
 
+app.use
+
 morgan.token('id', req => req.id);
 
 const loggerFormat = ':id [:date[web]] ":method :url" :status :response-time';
