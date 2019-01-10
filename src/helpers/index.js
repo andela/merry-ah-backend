@@ -1,5 +1,5 @@
-import EmailNotificationAPI from 'EmailNotificationAPI';
+import EmailNotificationAPI from './EmailNotificationAPI';
 
 export default {
   EmailNotificationAPI,
-}
+};

@@ -3,9 +3,16 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-class EmailNotificationAPI {
 
-  constructor(emailPayload){
+/**
+ * Represents a EmailNotificationAPI.
+ */
+class EmailNotificationAPI {
+  /**
+   * @constructor
+   * @param {Object} emailPayload - The title of the book.
+   */
+  constructor(emailPayload) {
     this.mailOptions = {
       from: `"Merry Ah 👻" <${process.env.EMAILUSER}>`, // sender address
       to: emailPayload.recipient, // list of receivers
@@ -15,30 +22,43 @@ class EmailNotificationAPI {
     };
   }
 
-  static transportCreator(){
-    const { EMAILHOST, EMAILPORT, EMAILUSER, EMAILPASS } = process.env;
+
+  /**
+   * @Represents a transportCreator
+   * @return {Object|string} nodemailer Transport OR Error message string.
+   */
+  static transportCreator() {
+    const {
+      EMAILHOST, EMAILPORT, EMAILUSER, EMAILPASS
+    } = process.env;
+    if (!EMAILUSER || !EMAILPASS || !EMAILHOST) {
+      return 'Please configure your .env file properly';
+    }
 
     return nodemailer.createTransport({
-      host: EMAILHOST || "smtp.mailtrap.io",
+      host: EMAILHOST,
       port: EMAILPORT || 2525,
       auth: {
-        user: EMAILUSER || "a763207f5e2390",
-        pass: EMAILPASS || "f62498d3b50a31"
+        user: EMAILUSER,
+        pass: EMAILPASS
       }
     });
   }
 
-  async sendEmail(){
-    const mailOptions = this.mailOptions;
+
+  /**
+   * @Represents sendEmail
+   * @return {string|Object} Success message | Error
+   */
+  async sendEmail() {
+    const { mailOptions } = this.mailOptions;
 
     try {
-      const mail = await EmailNotificationAPI.transportCreator().sendMail(mailOptions);
+      const mail = await EmailNotificationAPI.transportCreator()
+        .sendMail(mailOptions);
       if (mail.response.includes('OK')) return ('Message sent');
-    }
-    catch (e) {
-      if (error) {
-        return (error);
-      }
+    } catch (error) {
+      return (error);
     }
   }
 }
