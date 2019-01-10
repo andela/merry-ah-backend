@@ -9,22 +9,41 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       username: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       email: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: {
+          args: false,
+          msg: 'Please enter your email address'
+        },
+        unique: {
+          args: true,
+          msg: 'Email already exists'
+        },
+        validate: {
+          isEmail: {
+            args: true,
+            msg: 'Please enter a valid email address'
+          },
+        },
       },
       password: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       userType: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       signUpType: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       isVerified: {
-        type: Sequelize.INTEGER
+        allowNull: false,
+        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,
