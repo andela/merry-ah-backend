@@ -8,7 +8,7 @@
     "start:dev": "nodemon --exec babel-node index.js",
     "build": "babel -d build/ src",
     "postinstall": "npm run build",
-    "test": "nyc mocha --timeout 10000 --require babel-core/register ./test/*.js",
+    "test": "nyc mocha --timeout 10000 --require @babel/register ./test/*.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "author": "Andela Simulations Programme",
