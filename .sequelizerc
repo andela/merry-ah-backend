@@ -1,0 +1,10 @@
+const path = require('path');
+
+if (process.env.NODE_ENV === 'test'){
+ module.exports = {
+   "config": path.resolve('./server/src/config', 'config.js'),
+   "models-path": path.resolve('./server/src/db/test/models'),
+   "seeders-path": path.resolve('./server/src/db/test/seeders'),
+   "migrations-path": path.resolve('./server/src/db/test/migrations')
+ }; 
+}
