@@ -3,7 +3,6 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-
 /**
  * Represents a EmailNotificationAPI.
  */
@@ -21,7 +20,6 @@ class EmailNotificationAPI {
       html: `<p> ${emailPayload.message} </p>` // html body
     };
   }
-
 
   /**
    * @Represents a transportCreator
@@ -56,9 +54,11 @@ class EmailNotificationAPI {
     try {
       const mail = await EmailNotificationAPI.transportCreator()
         .sendMail(mailOptions);
-      if (mail.response.includes('OK')) return ('Message sent');
+      if (mail.response.includes('OK')) {
+        return 'Message sent';
+      }
     } catch (error) {
-      return (error);
+      return error;
     }
   }
 }
