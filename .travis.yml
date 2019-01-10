@@ -1,15 +1,16 @@
 language: node_js
 node_js:
  - "stable"
-cache:
-  directories:
-    - "node_modules"
+install: npm install
 services:
 - postgresql
 env:
 - DB_USERNAME=chidinmaezekwe DB_PASSWORD=null DBNAME=art_cave_test
 before_script:
+- psql -c 'drop database if exists art_cave_test;' -U postgres
 - psql -c 'create database art_cave_test;' -U postgres
 - psql -c "CREATE USER chidinmaezekwe WITH PASSWORD 'null';" -U postgres
+- npm run migrations
+
 script: npm test
 after_success: npm run coverage
