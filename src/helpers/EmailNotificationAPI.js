@@ -1,6 +1,5 @@
-// const nodemailer = require('nodemailer');
-import dotenv from 'dotenv';
 import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -8,9 +7,9 @@ class EmailNotificationAPI {
 
   constructor(emailPayload){
     this.mailOptions = {
-      from: '"Merry Ah 👻" <team@merry-ah.io>', // sender address
+      from: `"Merry Ah 👻" <${process.env.EMAILUSER}>`, // sender address
       to: emailPayload.recipient, // list of receivers
-      subject: emailPayload.message, // Subject line
+      subject: emailPayload.subject, // Subject line
       text: emailPayload.message, // plain text body
       html: `<p> ${emailPayload.message} </p>` // html body
     };
@@ -29,24 +28,19 @@ class EmailNotificationAPI {
     });
   }
 
-  sendEmail(){
+  async sendEmail(){
     const mailOptions = this.mailOptions;
 
-    EmailNotificationAPI.transportCreator().sendMail(mailOptions, (error, info) => {
+    try {
+      const mail = await EmailNotificationAPI.transportCreator().sendMail(mailOptions);
+      if (mail.response.includes('OK')) return ('Message sent');
+    }
+    catch (e) {
       if (error) {
-        return console.log(error);
+        return (error);
       }
-      console.log('Message sent: %s', info.messageId);
-
-      console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-    });
+    }
   }
 }
 
-const sampleEmail = new EmailNotificationAPI({
-  recipient: "didunloluwa.morodolu@andela.com",
-  subject: "Subject",
-  message: "Hello, World from Merry world"
-});
-
-const test = sampleEmail.sendEmail();
+export default EmailNotificationAPI;
