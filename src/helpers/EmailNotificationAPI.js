@@ -16,7 +16,6 @@ class EmailNotificationAPI {
       from: `"Merry Ah 👻" <${process.env.EMAILUSER}>`, // sender address
       to: emailPayload.recipient, // list of receivers
       subject: emailPayload.subject, // Subject line
-      text: emailPayload.message, // plain text body
       html: `<p> ${emailPayload.message} </p>` // html body
     };
   }
