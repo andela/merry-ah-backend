@@ -16,7 +16,7 @@ const tokenExpireTime = '10hr';
 const salt = 10;
 
 
- class UserController {
+ class UsersController {
   
    static async signUp(req, res){
     const defaultstatus = 0;
@@ -87,4 +87,4 @@ const salt = 10;
    }
  }
 
- export default UserController;
+ export default UsersController;
