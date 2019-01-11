@@ -7,7 +7,12 @@ module.exports = (sequelize, DataTypes) => {
     imgURL: DataTypes.STRING
   }, {});
   Profile.associate = function(models) {
-    // associations can be defined here
+    Profile.belongsTo(models.User, {
+      foreignKey: 'userId',
+      as: 'user',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    });
   };
   return Profile;
 };

@@ -9,7 +9,9 @@ module.exports = (sequelize, DataTypes) => {
     isVerified: DataTypes.BOOLEAN
   }, {});
   User.associate = (models) => {
-    // associations can be defined here
+    User.hasOne(models.Profile, {
+      foreignKey: 'userId'
+    })
   };
   return User;
 };
