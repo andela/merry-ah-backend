@@ -1,17 +1,18 @@
 import fs from 'fs';
 import path from 'path';
 import Sequelize from 'sequelize';
-import config from '../../config/config';
+import config from '../config/config';
 
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 const envConfig = config[env];
 const db = {};
+const ssl = process.env.NODE_ENV === 'production' ? true : false;
 const genericOptions = {
   dialect: 'postgres',
   protocol: 'postgres',
   dialectOptions: {
-    ssl: true,
+    ssl
   },
 };
 

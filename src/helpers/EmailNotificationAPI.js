@@ -16,7 +16,7 @@ class EmailNotificationAPI {
       from: `"Merry Ah 👻" <${process.env.EMAILUSER}>`, // sender address
       to: emailPayload.recipient, // list of receivers
       subject: emailPayload.subject, // Subject line
-      text: emailPayload.message, // plain text body
+      text: emailPayload.message, // html body
       html: `<p> ${emailPayload.message} </p>` // html body
     };
   }
@@ -49,7 +49,7 @@ class EmailNotificationAPI {
    * @return {string|Object} Success message | Error
    */
   async sendEmail() {
-    const { mailOptions } = this.mailOptions;
+    const mailOptions = this.mailOptions;
 
     try {
       const mail = await EmailNotificationAPI.transportCreator()
