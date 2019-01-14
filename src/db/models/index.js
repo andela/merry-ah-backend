@@ -7,7 +7,7 @@ const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 const envConfig = config[env];
 const db = {};
-const ssl = process.env.NODE_ENV === 'production' ? true : false;
+const ssl = process.env.NODE_ENV === 'production';
 const genericOptions = {
   dialect: 'postgres',
   protocol: 'postgres',

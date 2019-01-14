@@ -2,6 +2,26 @@ const userDetails = {
   validUser: {
     firstName: 'Femi',
     lastName: 'Ajibade',
+    username: 'Juliet',
+    email: 'julietezekwe@gmail.com',
+    password: 'femiok',
+    bio: '',
+    imgURL: '',
+    userType: 'user',
+  },
+  validUser1: {
+    firstName: 'Femi',
+    lastName: 'Ajibade',
+    username: 'Juliet',
+    email: 'chidimma@gmail.com',
+    password: 'femiok',
+    bio: '',
+    imgURL: '',
+    userType: 'user',
+  },
+  spacedField: {
+    firstName: '   ',
+    lastName: '    ',
     username: 'femi',
     email: 'julietezekwe@gmail.com',
     password: 'femi1',
@@ -9,7 +29,7 @@ const userDetails = {
     imgURL: '',
     userType: 'user',
   },
-  invaliduser: {
+  invalidUser: {
     firstName: '    ',
     lastName: 'Ajibade',
     username: 'femi',

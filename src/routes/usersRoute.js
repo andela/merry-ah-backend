@@ -10,5 +10,7 @@ authRouter
     UserValidator.UserSignUpValidator,
     emailCheck,
     UserController.signUp);
+authRouter
+  .post('/signin', UserController.signIn);
 
 export default authRouter;
