@@ -16,12 +16,12 @@ let response;
 const emailCheck = async (req, res, next) => {
   const { email } = req.body;
 
-  const findEmail = await models.User.find({
+  const emailExist = await models.User.find({
     where: {
       email,
     },
   });
-  if (findEmail) {
+  if (emailExist) {
     response = new Response(
       'Unsuccessful',
       409,
@@ -29,7 +29,7 @@ const emailCheck = async (req, res, next) => {
     );
     return res.status(response.code).json(response);
   }
-  if (!findEmail) next();
+  if (!emailExist) next();
 };
 
 export default emailCheck;

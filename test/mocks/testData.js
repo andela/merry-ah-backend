@@ -6,8 +6,7 @@ const userDetails = {
     email: 'julietezekwe@gmail.com',
     password: 'femiok',
     bio: '',
-    imgURL: '',
-    userType: 'user',
+    imgURL: ''
   },
   validUser1: {
     firstName: 'Femi',
@@ -17,7 +16,6 @@ const userDetails = {
     password: 'femiok',
     bio: '',
     imgURL: '',
-    userType: 'user',
   },
   spacedField: {
     firstName: '   ',
@@ -27,7 +25,6 @@ const userDetails = {
     password: 'femi1',
     bio: '',
     imgURL: '',
-    userType: 'user',
   },
   invalidUser: {
     firstName: '    ',
@@ -37,7 +34,6 @@ const userDetails = {
     password: 'femi1',
     bio: '',
     imgURL: '',
-    userType: 'user',
   },
   invalidUserType: {
     firstName: 'Femi',
@@ -47,7 +43,6 @@ const userDetails = {
     password: 'femi1',
     bio: '',
     imgURL: '',
-    userType: 'manager',
   },
   invalidUserEmail: {
     firstName: 'Femi',
@@ -57,7 +52,6 @@ const userDetails = {
     password: 'femi',
     bio: '',
     imgURL: '',
-    userType: 'user',
   },
 };
 // eslint-disable-next-line import/prefer-default-export

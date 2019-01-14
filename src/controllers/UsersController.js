@@ -4,6 +4,7 @@ import TokenAuthenticate from '../helpers/TokenAuthenticate';
 import Response from '../helpers/response';
 import { passwordHash, comparePassword } from '../helpers/passwordHash';
 import EmailNotificationAPI from '../helpers/EmailNotificationAPI';
+import basePath from '../helpers/basepath';
 
 const { User, Profile } = models;
 
@@ -27,7 +28,7 @@ class UsersController {
     const signUpType = 'local';
     try {
       const {
-        firstName, lastName, email, username, password, userType
+        firstName, lastName, email, username, password
       } = req.body;
       const { bio } = req.body || null;
       const { imgURL } = req.body || null;
@@ -38,7 +39,6 @@ class UsersController {
           email,
           username,
           password: hash,
-          userType,
           signUpType,
           isVerified: defaultstatus
         });
@@ -59,10 +59,11 @@ class UsersController {
       };
       const token = await TokenAuthenticate
         .generateToken(userDetails, tokenExpireTime);
+      const path = basePath(req);
       const recipient = registeredEmail;
       const subject = 'Email Verification';
       const message = `<h1>Verification link</h1><br>
-        <a href='http://localhost:9000/api/v1/auth/user?token=${token}'>
+        <a ${path}/api/v1/auth/user?token=${token}'>
         <button style='font-size: 20px; background: orange;'>verify</button>
         </a><br>
         <p>Kindly click on the button above to verify your email. 

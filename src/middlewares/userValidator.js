@@ -17,13 +17,12 @@ class UserValidator {
    * @memberof UserValidator
    */
   static UserSignUpValidator(req, res, next) {
-    req.check('firstName', 'First Name is required').notEmpty();
-    req.check('lastName', 'Last Name is required').notEmpty();
-    req.check('username', 'Username is required').notEmpty();
-    req.check('userType', 'User type is required').notEmpty();
-    req.check('email', 'Email is required').notEmpty();
-    req.check('email', 'Email is not valid').isEmail();
-    req.check('password', 'Password is required').notEmpty();
+    req.check('firstName', 'First Name is required').trim().notEmpty();
+    req.check('lastName', 'Last Name is required').trim().notEmpty();
+    req.check('username', 'Username is required').trim().notEmpty();
+    req.check('email', 'Email is required').trim().notEmpty();
+    req.check('email', 'Email is not valid').trim().isEmail();
+    req.check('password', 'Password is required').trim().notEmpty();
     req.check('password', 'Minimum password length is 5 characters')
       .isLength({ min: minPassLen });
     const errors = req.validationErrors();
@@ -38,41 +37,8 @@ class UserValidator {
       );
       return res.status(response.code).json(response);
     }
-    const {
-      firstName, lastName, username, email, password, userType,
-    } = req.body;
+    const { email } = req.body;
     req.body.email = email.replace(/\s{1,}/g, '').trim().toLowerCase();
-    req.body.userType = userType.replace(/\s{1,}/g, '').trim().toLowerCase();
-    req.body.password = password.replace(/\s{1,}/g, '').trim().toLowerCase();
-    const userTypes = ['user', 'artist'].includes(userType);
-    if (!userTypes) {
-      response = new Response(
-        'Not found',
-        404,
-        'This user type does not exist'
-      );
-      return res.status(response.code).json(response);
-    }
-    let error = false;
-    const fieldValues = [
-      firstName,
-      lastName,
-      username,
-    ];
-    fieldValues.map((fieldValue) => {
-      if (fieldValue.trim() === '') {
-        error = true;
-      }
-      return error;
-    });
-    if (error) {
-      response = new Response(
-        'Bad request',
-        400,
-        'Please fill in all fields'
-      );
-      return res.status(response.code).json(response);
-    }
     return next();
   }
 }
