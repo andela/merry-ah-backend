@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import requestId from 'express-request-id';
 import routes from './routes/index';
 import Response from './helpers/response';
+import expressValidator from 'express-validator';
 
 const app = express();
 
@@ -15,6 +16,8 @@ let response;
 app.use(cors());
 
 app.use(requestId());
+
+app.use(expressValidator());
 
 morgan.token('id', req => req.id);
 
