@@ -62,7 +62,7 @@ class UsersController {
       const recipient = registeredEmail;
       const subject = 'Email Verification';
       const message = `<h1>Verification link</h1><br>
-        <a href='http://localhost:9000/api/v1/user?token=${token}'>
+        <a href='http://localhost:9000/api/v1/auth/user?token=${token}'>
         <button style='font-size: 20px; background: orange;'>verify</button>
         </a><br>
         <p>Kindly click on the button above to verify your email. 

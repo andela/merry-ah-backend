@@ -17,6 +17,7 @@ const {
   spacedField,
 } = userDetails;
 describe('Users Endpoint API Test', () => {
+  // eslint-disable-next-line no-undef
   before((done) => {
     chai.request(app)
       .post('/api/v1/auth/signup')

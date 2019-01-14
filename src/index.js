@@ -3,9 +3,9 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import morgan from 'morgan';
 import requestId from 'express-request-id';
+import expressValidator from 'express-validator';
 import routes from './routes/index';
 import Response from './helpers/response';
-import expressValidator from 'express-validator';
 
 const app = express();
 
