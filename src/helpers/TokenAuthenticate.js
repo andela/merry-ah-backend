@@ -21,7 +21,7 @@ class TokenAuthenticate {
             });
         }
         try {
-            const verifyUser = await jwt.verify(token, keyconfig);
+            const verifyUser = await jwt.verify(token, process.env.SECRET);
             req.verifyUser = verifyUser;
             next();
         } catch (error) {

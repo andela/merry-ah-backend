@@ -2,7 +2,7 @@ import models from '../db/models';
 import TokenAuthenticate from '../helpers/TokenAuthenticate';
 import Response from '../helpers/response';
 import passwordHash from '../helpers/passwordHash';
-import EmailNotificationAPI from '../helpers/EmailNotificationAPI.js'; 
+import EmailNotificationAPI from '../helpers/EmailNotificationAPI.js';
 const { User, Profile } = models;
 
 
@@ -15,9 +15,17 @@ let response;
 const tokenExpireTime = '10hr';
 const salt = 10;
 
-
- class UsersController {
+/**
+ * @class UsersController
+ */
+class UsersController {
   
+  /**
+   * 
+   * @param {signup} req 
+   * @param {si} res 
+   * @returns {object} object
+   */
    static async signUp(req, res){
     const defaultstatus = 0;
 
@@ -85,6 +93,71 @@ const salt = 10;
           return res.status(response.code).json(response);
     }
    }
- }
+
+  static async forgotPassword(req, res){
+    try {
+      const checkEmail = req.checkEmail;
+      const { email:recipient, username } = checkEmail;
+      const userDetails = { email:recipient, username:username };
+      const token = await TokenAuthenticate.generateToken(userDetails, '1hr');
+      const subject = 'Reset Password';
+      const message = `<h3>Dear ${username}</h3><br>
+      <a href='http://localhost:9000/api/v1/auth/forgot-password?token=${token}'>
+      <button style='font-size: 20px; background: orange;'>Reset Password</button>
+      </a><br>
+      <p>Kindly click on the button above to reset your password. 
+      This link will <strong>expire in 1 hour
+      </strong></p>
+      `;
+      const sendVerificationLink = new EmailNotificationAPI({
+        recipient,
+        subject,
+        message,
+      });
+      const sendMail = await sendVerificationLink.sendEmail();
+      if(sendMail !== 'Message sent'){
+        const response = new Response(
+          'Bad request',
+          400,
+          `There was a problem sending`,
+        );
+        return res.status(response.code).json(response);
+      }
+      const response = new Response(
+        'Ok',
+        200,
+        'Email sent successfully',
+      );
+      return res.status(response.code).json(response);
+    } catch (err) {
+      const response = new Response(
+        'Internal server error',
+        500,
+        `${err}`,
+      );
+      return res.status(response.code).json(response);
+    }
+  }
+
+  static getPasswordToken(req,res){
+    const token = req.query.token;
+    const response = new Response(
+      'Ok',
+      200,
+      'Token retrieved',
+      {token: token},
+    )
+    return res.status(response.code).json(response);
+  }
+
+  static async completeForgotPassword(req, res){
+    const response = new Response(
+      'Ok',
+      200,
+      'Password successfully changed',
+    );
+    return res.status(response.code).json(response);
+  }
+}
 
  export default UsersController;

@@ -18,7 +18,7 @@ const userDetails = {
       bio: '',
       imgURL: '',
       userType: 'user',
-      },
+    },
     
   };
   
