@@ -10,8 +10,9 @@
     "postinstall": "npm run build",
     "db:migrate": "sequelize db:migrate",
     "db:unmigrate": "sequelize db:migrate:undo:all",
-    "test": "NODE_ENV=test npm run db:unmigrate && npm run db:migrate && nyc mocha --exit --timeout 10000 --require @babel/register ./test/**/*.js",
-    "coverage": "nyc report --reporter=text-lcov | coveralls"
+    "test": "NODE_ENV=test npm run db:unmigrate && NODE_ENV=test npm run db:migrate && NODE_ENV=test nyc mocha --exit --timeout 100000 --require @babel/register ./test/**/*.js",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "lint": "./node_modules/.bin/eslint ."
   },
   "author": "Andela Simulations Programme",
   "license": "MIT",
@@ -39,7 +40,7 @@
     "methods": "^1.1.2",
     "mongoose": "^5.2.2",
     "mongoose-unique-validator": "^2.0.1",
-    "morgan": "^1.9.0",
+    "morgan": "^1.9.1",
     "nodemailer": "^5.0.1",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
@@ -48,7 +49,7 @@
     "request": "^2.87.0",
     "sequelize": "^4.42.0",
     "sequelize-cli": "^5.4.0",
-    "slug": "^0.9.1",
+    "slug": "^0.9.3",
     "underscore": "^1.9.1"
   },
   "devDependencies": {

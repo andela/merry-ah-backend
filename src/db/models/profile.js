@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     bio: DataTypes.STRING,
     imgURL: DataTypes.STRING
   }, {});
-  Profile.associate = function(models) {
+  Profile.associate = function (models) {
     Profile.belongsTo(models.User, {
       foreignKey: 'userId',
       as: 'user',
