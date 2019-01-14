@@ -21,8 +21,8 @@ describe('Users Endpoint API Test', () => {
     chai.request(app)
       .post('/api/v1/auth/signup')
       .send(validUser)
-      .end((err, res) => {
-        done();
+      .end((err) => {
+        done(err);
       });
   });
   describe('USERS POST REQUESTS', () => {
