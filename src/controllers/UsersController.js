@@ -28,7 +28,7 @@ class UsersController {
     const signUpType = 'local';
     try {
       const {
-        firstName, lastName, email, username, password
+        firstName, lastName, email, username, password, userType
       } = req.body;
       const { bio } = req.body || null;
       const { imgURL } = req.body || null;
@@ -39,6 +39,7 @@ class UsersController {
           email,
           username,
           password: hash,
+          userType,
           signUpType,
           isVerified: defaultstatus
         });

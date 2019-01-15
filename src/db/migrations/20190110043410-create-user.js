@@ -32,6 +32,10 @@ module.exports = {
       allowNull: false,
       type: Sequelize.STRING
     },
+    userType: {
+      allowNull: false,
+      type: Sequelize.STRING
+    },
     signUpType: {
       allowNull: false,
       type: Sequelize.STRING
