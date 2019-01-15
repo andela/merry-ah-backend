@@ -8,21 +8,21 @@ const authRouter = express.Router();
 authRouter.post('/signup', UserController.signUp);
 
 authRouter.post(
-    '/forgot-password',
-    UserMiddleware.VerifyEmail,
-    UserController.forgotPassword
+  '/forgot-password',
+  UserMiddleware.VerifyEmail,
+  UserController.forgotPassword
 );
 
 authRouter.get(
-    '/forgot-password',
-    UserController.getPasswordToken,
+  '/forgot-password',
+  UserController.getPasswordToken,
 );
 authRouter.put(
-    '/forgot-password',
-    TokenAuthenticate.tokenVerify,
-    UserMiddleware.validatePassword,
-    UserController.completeForgotPassword,
-)
+  '/forgot-password',
+  TokenAuthenticate.tokenVerify,
+  UserMiddleware.validatePassword,
+  UserController.completeForgotPassword,
+);
 authRouter.post('/signin', UserController.signIn);
 
 // eslint-disable-next-line import/prefer-default-export
