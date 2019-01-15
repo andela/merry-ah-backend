@@ -133,26 +133,6 @@ describe('Users Endpoint API Test', () => {
           done(err);
         });
     });
-    it('it should check for token and return valid password token', (done) => {
-      chai.request(app)
-        .get(`/api/v1/auth/forgot-password?token=${userToken}`)
-        .end((err, res) => {
-          expect(res.body.messages).eql('Token retrieved');
-          expect(res.status).to.equal(200);
-          expect(res.body.status).eql('Ok');
-          done(err);
-        });
-    });
-    it('it should not return valid password token', (done) => {
-      chai.request(app)
-        .get('/api/v1/auth/forgot-password')
-        .end((err, res) => {
-          expect(res.body.messages).eql('No token provided');
-          expect(res.status).to.equal(401);
-          expect(res.body.status).eql('Unauthorized');
-          done(err);
-        });
-    });
     it('it should reset user password', (done) => {
       chai.request(app)
         .put('/api/v1/auth/forgot-password')

@@ -24,9 +24,7 @@ class Validation {
     let status = true;
     for (let i = 0; i < fields.length; i++) {
       const field = fields[i];
-      if (field.value === ''
-        || field.value === null
-        || field.value === undefined) {
+      if (!field.value) {
         status = false;
         errors = { field: field.name };
       }

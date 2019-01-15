@@ -1,7 +1,6 @@
 import Validation from '../helpers/Validation';
 import models from '../db/models';
 import Response from '../helpers/response';
-import { passwordHash } from '../helpers/passwordHash';
 
 const { User } = models;
 
@@ -56,7 +55,7 @@ class UserMiddleware {
   }
 
   /**
- * VerifyEmail
+ * Validate Password
  * @param {object} req
  * @param {object} res
  * @param {function} next
@@ -93,25 +92,7 @@ class UserMiddleware {
         );
         return res.status(response.code).json(response);
       }
-      const hashPassword = passwordHash(password, 10);
-
-      const updatePassword = await User.update({
-        password: hashPassword,
-      },
-      {
-        where: {
-          email,
-        }
-      });
-
-      if (!updatePassword) {
-        const response = new Response(
-          'Bad Request',
-          400,
-          'Unable to reset password',
-        );
-        return res.status(response.code).json(response);
-      }
+      req.email = email;
       next();
     } catch (err) {
       const response = new Response(

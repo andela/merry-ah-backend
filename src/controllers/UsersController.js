@@ -4,11 +4,11 @@ import TokenAuthenticate from '../helpers/TokenAuthenticate';
 import Response from '../helpers/response';
 import { passwordHash, comparePassword } from '../helpers/passwordHash';
 import EmailNotificationAPI from '../helpers/EmailNotificationAPI';
+import basePath from '../helpers/basePath';
 
 const { User, Profile } = models;
 
 
-let response;
 const tokenExpireTime = '10hr';
 const salt = 10;
 /** Users Controller Class */
@@ -76,14 +76,14 @@ class UsersController {
       });
       const sendMail = await sendVerificationLink.sendEmail();
       if (sendMail !== 'Message sent') {
-        response = new Response(
+        const response = new Response(
           'Bad request',
           400,
           'There was a problem sending',
         );
         return res.status(response.code).json(response);
       }
-      response = new Response(
+      const response = new Response(
         'Ok',
         201,
         'User created successfully and verification link sent to your Email',
@@ -91,7 +91,7 @@ class UsersController {
       );
       return res.status(response.code).json(response);
     } catch (err) {
-      response = new Response(
+      const response = new Response(
         'Not ok',
         500,
         `${err}`,
@@ -113,7 +113,7 @@ class UsersController {
       const { email, password } = req.body;
       const user = await User.findOne({ where: { email } });
       if (!user) {
-        response = new Response(
+        const response = new Response(
           'Bad Request',
           400,
           'Invalid Credentials'
@@ -121,7 +121,7 @@ class UsersController {
         return res.status(response.code).json(response);
       }
       if (!comparePassword(password, user.password)) {
-        response = new Response(
+        const response = new Response(
           'Bad Request',
           400,
           'Invalid Credentials'
@@ -136,7 +136,7 @@ class UsersController {
       };
       const token = await TokenAuthenticate
         .generateToken(userDetails, tokenExpireTime);
-      response = new Response(
+      const response = new Response(
         'Ok',
         200,
         'User logged in successfully',
@@ -144,7 +144,7 @@ class UsersController {
       );
       return res.status(response.code).json(response);
     } catch (err) {
-      response = new Response(
+      const response = new Response(
         'Not ok',
         500,
         `${err}`,
@@ -168,9 +168,10 @@ class UsersController {
       const userDetails = { email: recipient, username };
       const token = await TokenAuthenticate.generateToken(userDetails, '1hr');
       const subject = 'Reset Password';
+      const path = basePath(req);
+      const linkPath = `${path}/api/v1/auth/forgot-password?token=${token}`;
       const message = `<h3>Dear ${username}</h3><br>
-      <a
-      href='http://localhost:9000/api/v1/auth/forgot-password?token=${token}'>
+      <a href='${linkPath}'>
       <button style='font-size: 20px; background: orange;'>
         Reset Password
       </button>
@@ -193,7 +194,7 @@ class UsersController {
         );
         return res.status(response.code).json(response);
       }
-      response = new Response(
+      const response = new Response(
         'Ok',
         200,
         'Email sent successfully',
@@ -201,7 +202,7 @@ class UsersController {
       );
       return res.status(response.code).json(response);
     } catch (err) {
-      response = new Response(
+      const response = new Response(
         'Internal server error',
         500,
         `${err}`,
@@ -216,37 +217,31 @@ class UsersController {
    * @param {object} req
    * @param {object} res
    * @memberof UsersController
-   * @returns checks if password token exists and returns
-   */
-  static getPasswordToken(req, res) {
-    const { token } = req.query;
-    if (!token) {
-      response = new Response(
-        'Unauthorized',
-        401,
-        'No token provided',
-      );
-      return res.status(response.code).json(response);
-    }
-    response = new Response(
-      'Ok',
-      200,
-      'Token retrieved',
-      { token },
-    );
-    return res.status(response.code).json(response);
-  }
-
-  /**
-   * @static
-   * @desc POST /api/v1/auth/forgot-password
-   * @param {object} req
-   * @param {object} res
-   * @memberof UsersController
    * @returns successful pasword reset
    */
   static async completeForgotPassword(req, res) {
-    response = new Response(
+    const { email } = req;
+    const { password } = req.body;
+    const hashPassword = passwordHash(password, 10);
+
+    const updatePassword = await User.update({
+      password: hashPassword,
+    },
+    {
+      where: {
+        email,
+      }
+    });
+
+    if (!updatePassword) {
+      const response = new Response(
+        'Bad Request',
+        400,
+        'Unable to reset password',
+      );
+      return res.status(response.code).json(response);
+    }
+    const response = new Response(
       'Ok',
       200,
       'Password reset successful',

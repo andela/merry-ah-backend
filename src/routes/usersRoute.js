@@ -12,11 +12,6 @@ authRouter.post(
   UserMiddleware.VerifyEmail,
   UserController.forgotPassword
 );
-
-authRouter.get(
-  '/forgot-password',
-  UserController.getPasswordToken,
-);
 authRouter.put(
   '/forgot-password',
   TokenAuthenticate.tokenVerify,
