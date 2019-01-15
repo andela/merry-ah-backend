@@ -8,7 +8,7 @@ class Validation {
    * @returns {boolean} true|false
    */
   static checkEmptyField(field) {
-    if (!field) {
+    if (!field.value) {
       return false;
     }
     return true;
