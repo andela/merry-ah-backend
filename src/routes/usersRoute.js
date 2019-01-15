@@ -23,5 +23,7 @@ authRouter.put(
     UserMiddleware.validatePassword,
     UserController.completeForgotPassword,
 )
+authRouter.post('/signin', UserController.signIn);
 
-export  { authRouter };
+// eslint-disable-next-line import/prefer-default-export
+export { authRouter };
