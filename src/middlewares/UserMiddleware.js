@@ -1,6 +1,7 @@
 import Validation from '../helpers/Validation';
 import models from '../db/models';
 import Response from '../helpers/response';
+import { passwordHash } from '../helpers/passwordHash';
 
 const { User } = models;
 
@@ -92,9 +93,10 @@ class UserMiddleware {
         );
         return res.status(response.code).json(response);
       }
+      const hashPassword = passwordHash(password, 10);
 
       const updatePassword = await User.update({
-        password,
+        password: hashPassword,
       },
       {
         where: {
