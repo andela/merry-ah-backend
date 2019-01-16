@@ -10,8 +10,8 @@
     "postinstall": "npm run build",
     "db:migrate": "sequelize db:migrate",
     "db:unmigrate": "sequelize db:migrate:undo:all",
-    "test": "NODE_ENV=test npm run db:unmigrate && NODE_ENV=test npm run db:migrate  && NODE_ENV=test nyc mocha --exit --timeout 10000 --require @babel/register ./test/**/*.js",
-   "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "test": "NODE_ENV=test npm run db:unmigrate && NODE_ENV=test npm run db:migrate && NODE_ENV=test nyc mocha --exit --timeout 100000 --require @babel/register ./test/*",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
     "lint": "./node_modules/.bin/eslint ."
   },
   "author": "Andela Simulations Programme",
