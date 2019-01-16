@@ -47,6 +47,15 @@ class TokenAuthenticate {
       });
     }
   }
+
+  static async decodeToken(req){
+    const token = req.headers.Authorization || req.headers['x-access-token'] || req.query.token || req.body.token;
+    if (!token) {
+      return {error: 'Unauthorized token'};
+    }
+
+    return await jwt.decode(token, process.env.SECRET);
+  }
 }
 
 export default TokenAuthenticate;
