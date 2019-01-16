@@ -43,7 +43,6 @@ class EmailNotificationAPI {
     });
   }
 
-
   /**
    * @Represents sendEmail
    * @return {string|Object} Success message | Error

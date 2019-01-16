@@ -1,12 +1,18 @@
 import express from 'express';
 import UserController from '../controllers/UsersController';
+import emailCheck from '../middlewares/emailCheck';
+import UserValidator from '../middlewares/UsersValidator';
 import TokenAuthenticate from '../helpers/TokenAuthenticate';
 import UserMiddleware from '../middlewares/UserMiddleware';
 
+
 const authRouter = express.Router();
 
-authRouter.post('/signup', UserController.signUp);
-
+authRouter
+  .post('/signup',
+    UserValidator.UserSignUpValidator,
+    emailCheck,
+    UserController.signUp);
 authRouter.post(
   '/forgot-password',
   UserMiddleware.VerifyEmail,
@@ -20,5 +26,4 @@ authRouter.put(
 );
 authRouter.post('/signin', UserController.signIn);
 
-// eslint-disable-next-line import/prefer-default-export
-export { authRouter };
+export default authRouter;
