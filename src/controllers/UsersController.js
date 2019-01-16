@@ -252,11 +252,11 @@ class UsersController {
 
   /**
    * @static
-   * @desc POST /api/v1/users
+   * @desc POST /api/v1/users/artists
    * @param {object} req
    * @param {object} res
    * @memberof UsersController
-   * @returns all authors on the platform
+   * @returns all artists on the platform
    */
   static async listAuthors(req, res) {
     try {
@@ -299,11 +299,11 @@ class UsersController {
 
   /**
    * @static
-   * @desc POST /api/v1/users
+   * @desc POST /api/v1/users/artists/:artistId
    * @param {object} req
    * @param {object} res
    * @memberof UsersController
-   * @returns all authors on the platform
+   * @returns one artist on the platform
    */
   static async getOneArtist(req, res) {
     try {
