@@ -59,6 +59,16 @@ const userDetails = {
     imgURL: '',
     userType: 'user',
   },
+  validArtist: {
+    firstName: 'Daniel',
+    lastName: 'Anyaegbu',
+    username: 'Danny',
+    email: 'danielchidiebele@gmail.com',
+    password: 'qwerty',
+    bio: '',
+    imgURL: '',
+    userType: 'artist',
+  }
 };
 // eslint-disable-next-line import/prefer-default-export
 export { userDetails };

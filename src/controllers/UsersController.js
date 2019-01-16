@@ -4,7 +4,7 @@ import TokenAuthenticate from '../helpers/TokenAuthenticate';
 import Response from '../helpers/response';
 import { passwordHash, comparePassword } from '../helpers/passwordHash';
 import EmailNotificationAPI from '../helpers/EmailNotificationAPI';
-import basePath from '../helpers/basePath';
+import basePath from '../helpers/basepath';
 
 const { User, Profile } = models;
 
@@ -248,6 +248,113 @@ class UsersController {
       'Password reset successful',
     );
     return res.status(response.code).json(response);
+  }
+
+  /**
+   * @static
+   * @desc POST /api/v1/users
+   * @param {object} req
+   * @param {object} res
+   * @memberof UsersController
+   * @returns all authors on the platform
+   */
+  static async listAuthors(req, res) {
+    try {
+      const artists = await User.findAll({
+        where: {
+          userType: 'artist'
+        },
+        attributes: ['username', 'email', 'userType'],
+        include: [{
+          model: Profile,
+          as: 'profile',
+          attributes: ['firstName', 'lastName', 'bio', 'imgURL']
+        }]
+      });
+      if (artists.length < 1) {
+        const response = new Response(
+          'Not Found',
+          404,
+          'There is no existing artist',
+        );
+        return res.status(response.code).json(response);
+      }
+
+      const response = new Response(
+        'Ok',
+        200,
+        'Returned all artists',
+        { artists }
+      );
+      return res.status(response.code).json(response);
+    } catch (err) {
+      const response = new Response(
+        'Internal server error',
+        500,
+        `${err}`,
+      );
+      return res.status(response.code).json(response);
+    }
+  }
+
+  /**
+   * @static
+   * @desc POST /api/v1/users
+   * @param {object} req
+   * @param {object} res
+   * @memberof UsersController
+   * @returns all authors on the platform
+   */
+  static async getOneArtist(req, res) {
+    try {
+      const { artistId } = req.params;
+
+      /* eslint-disable no-restricted-globals */
+      if (isNaN(artistId)) {
+        const response = new Response(
+          'Bad Request',
+          400,
+          'Artist ID must be an integer',
+        );
+        return res.status(response.code).json(response);
+      }
+
+      const artist = await User.findOne({
+        where: {
+          id: artistId,
+          userType: 'artist',
+        },
+        attributes: ['username', 'email', 'userType'],
+        include: [{
+          model: Profile,
+          as: 'profile',
+          attributes: ['firstName', 'lastName', 'bio', 'imgURL']
+        }]
+      });
+      if (!artist) {
+        const response = new Response(
+          'Not Found',
+          404,
+          'Artist was not found',
+        );
+        return res.status(response.code).json(response);
+      }
+
+      const response = new Response(
+        'Ok',
+        200,
+        'Returned one artist',
+        { artist }
+      );
+      return res.status(response.code).json(response);
+    } catch (err) {
+      const response = new Response(
+        'Internal server error',
+        500,
+        `${err}`,
+      );
+      return res.status(response.code).json(response);
+    }
   }
 }
 
