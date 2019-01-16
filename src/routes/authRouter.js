@@ -1,7 +1,7 @@
 import express from 'express';
 import UserController from '../controllers/UsersController';
 import emailCheck from '../middlewares/emailCheck';
-import UserValidator from '../middlewares/userValidator';
+import UserValidator from '../middlewares/UsersValidator';
 import TokenAuthenticate from '../helpers/TokenAuthenticate';
 import UserMiddleware from '../middlewares/UserMiddleware';
 
