@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import morgan from 'morgan';
 import requestId from 'express-request-id';
+import expressValidator from 'express-validator';
 import routes from './routes/index';
 import Response from './helpers/response';
 
@@ -15,6 +16,8 @@ let response;
 app.use(cors());
 
 app.use(requestId());
+
+app.use(expressValidator());
 
 morgan.token('id', req => req.id);
 
@@ -35,7 +38,7 @@ app.use('/api/v1/', routes);
 
 app.all('/', ((req, res) => {
   response = new Response(
-    'ok',
+    'Ok',
     200,
     'Welcome to Authors Haven',
     {}
@@ -45,7 +48,7 @@ app.all('/', ((req, res) => {
 
 app.all('/*', ((req, res) => {
   response = new Response(
-    'ok',
+    'Not Found',
     404,
     `Specified route does not exist ${req.originalUrl}`,
     {}
