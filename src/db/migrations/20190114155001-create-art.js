@@ -7,12 +7,12 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      userId: {
+      artistId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Users',
           key: 'id',
-          as: 'userId',
+          as: 'artistId',
         }
       },
       slug: {

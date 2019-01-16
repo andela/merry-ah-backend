@@ -1,11 +1,11 @@
 
 module.exports = (sequelize, DataTypes) => {
   const Art = sequelize.define('Art', {
-    user_id: DataTypes.INTEGER,
+    artistId: DataTypes.INTEGER,
     slug: DataTypes.STRING,
     title: DataTypes.STRING,
     description: DataTypes.TEXT,
-    category_id: DataTypes.INTEGER,
+    categoryId: DataTypes.INTEGER,
     featuredImg: DataTypes.STRING,
     status: DataTypes.BOOLEAN
   }, {});
