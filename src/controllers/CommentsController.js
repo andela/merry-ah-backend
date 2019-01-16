@@ -1,0 +1,58 @@
+import models from '../db/models';
+import Response from '../helpers/response';
+
+const { Comment, Art } = models;
+
+let response;
+/**
+ * Represents a CommentsController.
+ */
+class CommentsController {
+  /**
+   * @static
+   * @param {Object} req
+   * @param {object} res
+   * @return {object} comment
+   */
+  static async createComment(req, res) {
+    try {
+      const { body } = req.body;
+      const { artId } = req.params;
+      const { id } = req.verifyUser;
+
+      const findArt = await Art.find({
+        where: {
+          id: artId
+        }
+      });
+      if (findArt) {
+        await Comment.create({
+          userId: id,
+          artId,
+          body
+        });
+        response = new Response(
+          'created',
+          201,
+          'Comment added successfully',
+        );
+        return res.status(response.code).json(response);
+      }
+      response = new Response(
+        'Not Found',
+        404,
+        'This art does not exist',
+      );
+      return res.status(response.code).json(response);
+    } catch (err) {
+      response = new Response(
+        'Not ok',
+        500,
+        `${err}`,
+      );
+      return res.status(response.code).json(response);
+    }
+  }
+}
+
+export default CommentsController;

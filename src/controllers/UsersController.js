@@ -4,7 +4,7 @@ import TokenAuthenticate from '../helpers/TokenAuthenticate';
 import Response from '../helpers/response';
 import { passwordHash, comparePassword } from '../helpers/passwordHash';
 import EmailNotificationAPI from '../helpers/EmailNotificationAPI';
-import basePath from '../helpers/basePath';
+import basePath from '../helpers/basepath';
 
 const { User, Profile } = models;
 
