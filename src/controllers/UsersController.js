@@ -252,7 +252,7 @@ class UsersController {
 
   /**
    * @static
-   * @desc POST /api/v1/users/artists
+   * @desc GET /api/v1/users/artists
    * @param {object} req
    * @param {object} res
    * @memberof UsersController
@@ -299,7 +299,7 @@ class UsersController {
 
   /**
    * @static
-   * @desc POST /api/v1/users/artists/:artistId
+   * @desc GET /api/v1/users/artists/:artistId
    * @param {object} req
    * @param {object} res
    * @memberof UsersController
