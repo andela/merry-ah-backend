@@ -1,6 +1,6 @@
 import express from 'express';
-import { authRouter } from './usersRoute';
-import { socialRouter } from './socialRouter';
+import authRouter from './authRouter';
+import socialRouter from './socialRouter';
 
 const router = express.Router();
 

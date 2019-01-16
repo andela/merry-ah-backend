@@ -22,4 +22,4 @@ socialRouter.get('/twitter/callback',
   passport.authenticate('twitter'), SocialController.getToken);
 
 // eslint-disable-next-line import/prefer-default-export
-export { socialRouter };
+export default socialRouter;

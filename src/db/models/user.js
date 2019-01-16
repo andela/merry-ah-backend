@@ -1,4 +1,3 @@
-
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     username: DataTypes.STRING,
@@ -10,6 +9,30 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   User.associate = (models) => {
     User.hasOne(models.Profile, {
+      foreignKey: 'userId'
+    });
+    User.hasMany(models.Rate, {
+      foreignKey: 'userId'
+    });
+    User.hasMany(models.Following, {
+      foreignKey: 'userId'
+    });
+    User.hasMany(models.Following, {
+      foreignKey: 'followerId'
+    });
+    User.hasMany(models.Transaction, {
+      foreignKey: 'buyerId'
+    });
+    User.hasMany(models.Transaction, {
+      foreignKey: 'sellerId'
+    });
+    User.hasOne(models.FollowSummary, {
+      foreignKey: 'userId'
+    });
+    User.hasMany(models.Like, {
+      foreignKey: 'userId'
+    });
+    User.hasMany(models.Comment, {
       foreignKey: 'userId'
     });
   };
