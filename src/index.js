@@ -35,7 +35,7 @@ app.use('/api/v1/', routes);
 
 app.all('/', ((req, res) => {
   response = new Response(
-    'ok',
+    'Ok',
     200,
     'Welcome to Authors Haven',
     {}
@@ -45,7 +45,7 @@ app.all('/', ((req, res) => {
 
 app.all('/*', ((req, res) => {
   response = new Response(
-    'ok',
+    'Not Found',
     404,
     `Specified route does not exist ${req.originalUrl}`,
     {}
