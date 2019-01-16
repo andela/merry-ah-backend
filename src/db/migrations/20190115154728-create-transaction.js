@@ -1,17 +1,27 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Media', {
+    return queryInterface.createTable('Transactions', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      contentUrl: {
-        type: Sequelize.TEXT
+      buyerId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Users',
+          key: 'id',
+          as: 'buyerId',
+        }
       },
-      mediaType: {
-        type: Sequelize.STRING
+      sellerId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Users',
+          key: 'id',
+          as: 'sellerId',
+        }
       },
       artId: {
         type: Sequelize.INTEGER,
@@ -20,6 +30,9 @@ module.exports = {
           key: 'id',
           as: 'artId',
         }
+      },
+      amount: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
@@ -31,5 +44,5 @@ module.exports = {
       }
     });
   },
-  down: queryInterface => queryInterface.dropTable('Media')
+  down: queryInterface => queryInterface.dropTable('Transactions')
 };

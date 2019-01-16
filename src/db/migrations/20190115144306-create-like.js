@@ -1,17 +1,11 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Media', {
+    return queryInterface.createTable('Likes', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
-      },
-      contentUrl: {
-        type: Sequelize.TEXT
-      },
-      mediaType: {
-        type: Sequelize.STRING
       },
       artId: {
         type: Sequelize.INTEGER,
@@ -19,6 +13,16 @@ module.exports = {
           model: 'Arts',
           key: 'id',
           as: 'artId',
+        }
+      },
+      userId: {
+        type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
+        references: {
+          model: 'Users',
+          key: 'id',
+          as: 'userId',
         }
       },
       createdAt: {
@@ -31,5 +35,5 @@ module.exports = {
       }
     });
   },
-  down: queryInterface => queryInterface.dropTable('Media')
+  down: queryInterface => queryInterface.dropTable('Likes')
 };

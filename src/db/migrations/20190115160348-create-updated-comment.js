@@ -1,14 +1,22 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Categories', {
+    return queryInterface.createTable('UpdatedComments', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      categoryName: {
-        type: Sequelize.STRING
+      commentId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Comments',
+          key: 'id',
+          as: 'commentId',
+        }
+      },
+      body: {
+        type: Sequelize.TEXT
       },
       createdAt: {
         allowNull: false,
@@ -20,5 +28,5 @@ module.exports = {
       }
     });
   },
-  down: queryInterface => queryInterface.dropTable('Categories')
+  down: queryInterface => queryInterface.dropTable('UpdatedComments')
 };

@@ -1,17 +1,11 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Media', {
+    return queryInterface.createTable('Comments', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
-      },
-      contentUrl: {
-        type: Sequelize.TEXT
-      },
-      mediaType: {
-        type: Sequelize.STRING
       },
       artId: {
         type: Sequelize.INTEGER,
@@ -20,6 +14,19 @@ module.exports = {
           key: 'id',
           as: 'artId',
         }
+      },
+      userId: {
+        type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
+        references: {
+          model: 'Users',
+          key: 'id',
+          as: 'userId',
+        }
+      },
+      body: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -31,5 +38,5 @@ module.exports = {
       }
     });
   },
-  down: queryInterface => queryInterface.dropTable('Media')
+  down: queryInterface => queryInterface.dropTable('Comments')
 };

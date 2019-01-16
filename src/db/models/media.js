@@ -1,14 +1,13 @@
-'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Media = sequelize.define('Media', {
-    content_url: DataTypes.TEXT,
-    media_type: DataTypes.STRING,
-    art_id: DataTypes.INTEGER
+    contentUrl: DataTypes.TEXT,
+    mediaType: DataTypes.STRING,
+    artId: DataTypes.INTEGER
   }, {});
-  Media.associate = function(models) {
+  Media.associate = function (models) {
     // associations can be defined here
     Media.belongsTo(models.Art, {
-      foreignKey: 'art_id',
+      foreignKey: 'artId',
       as: 'media',
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',

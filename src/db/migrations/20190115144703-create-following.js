@@ -1,24 +1,30 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Media', {
+    return queryInterface.createTable('Followings', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      contentUrl: {
-        type: Sequelize.TEXT
-      },
-      mediaType: {
-        type: Sequelize.STRING
-      },
-      artId: {
+      userId: {
         type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
         references: {
-          model: 'Arts',
+          model: 'Users',
           key: 'id',
-          as: 'artId',
+          as: 'userId',
+        }
+      },
+      followerId: {
+        type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
+        references: {
+          model: 'Users',
+          key: 'id',
+          as: 'followerId',
         }
       },
       createdAt: {
@@ -31,5 +37,5 @@ module.exports = {
       }
     });
   },
-  down: queryInterface => queryInterface.dropTable('Media')
+  down: queryInterface => queryInterface.dropTable('Followings')
 };

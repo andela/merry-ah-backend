@@ -1,14 +1,22 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Categories', {
+    return queryInterface.createTable('LikeSummaries', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      categoryName: {
-        type: Sequelize.STRING
+      artId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Arts',
+          key: 'id',
+          as: 'artId',
+        }
+      },
+      noOfLikes: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
@@ -20,5 +28,5 @@ module.exports = {
       }
     });
   },
-  down: queryInterface => queryInterface.dropTable('Categories')
+  down: queryInterface => queryInterface.dropTable('LikeSummaries')
 };
