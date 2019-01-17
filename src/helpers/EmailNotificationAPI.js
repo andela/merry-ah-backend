@@ -53,7 +53,7 @@ class EmailNotificationAPI {
     try {
       const mail = await EmailNotificationAPI.transportCreator()
         .sendMail(mailOptions);
-      if (mail.response.includes('OK')) {
+      if (mail.response.includes('250')) {
         return 'Message sent';
       }
     } catch (error) {
