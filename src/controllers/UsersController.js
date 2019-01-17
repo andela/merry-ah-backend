@@ -258,7 +258,7 @@ class UsersController {
    * @memberof UsersController
    * @returns all artists on the platform
    */
-  static async listAuthors(req, res) {
+  static async listArtists(req, res) {
     try {
       const artists = await User.findAll({
         where: {

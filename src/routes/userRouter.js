@@ -7,7 +7,7 @@ const userRouter = express.Router();
 userRouter.get(
   '/artists',
   TokenAuthenticate.tokenVerify,
-  UsersController.listAuthors,
+  UsersController.listArtists,
 );
 
 userRouter.get(
