@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     artId: DataTypes.INTEGER,
     caculatedRate: DataTypes.INTEGER
   }, {});
-  RateSummary.associate = function (models) {
+  RateSummary.associate = (models) => {
     // associations can be defined here
     RateSummary.belongsTo(models.Art, {
       foreignKey: 'artId',

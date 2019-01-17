@@ -4,15 +4,20 @@ import RatingValidator from '../middlewares/RatingValidator';
 
 const ratingRouter = express.Router();
 
-ratingRouter.post('/:artId',
+ratingRouter.post(
+  '/:artId',
   RatingValidator.genericRatingValidator,
   RatingValidator.addRatingValidator,
-  RatingController.addItemRating);
-ratingRouter.get('/:artId',
+  RatingController.addItemRating
+);
+ratingRouter.get(
+  '/:artId',
   RatingValidator.genericRatingValidator,
-  RatingController.getItemRating);
-ratingRouter.get('/:artId/user',
+  RatingController.getItemRating
+);
+ratingRouter.get(
+  '/:artId/user',
   RatingValidator.genericRatingValidator,
-  RatingController.getUserItemRating);
-
+  RatingController.getUserItemRating
+);
 export default ratingRouter;

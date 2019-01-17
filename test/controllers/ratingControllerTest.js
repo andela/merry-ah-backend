@@ -154,7 +154,6 @@ describe('Pre-Rating Test', () => {
       .set('authorization', `${mockLoginUser}`)
       .send({ rating: 4 })
       .end((err, res) => {
-        console.log(res.body);
         expect(200);
         expect(res.body).to.be.a('object');
         expect(res.body.status).eql('Ok');

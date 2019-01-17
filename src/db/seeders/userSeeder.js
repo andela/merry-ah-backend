@@ -8,8 +8,8 @@ module.exports = {
     userType: 'artist',
     signUpType: 'local',
     isVerified: true,
-    password: bcrypt.hashSync(process.env.PASSWORD, bcrypt.genSaltSync(8)),
-    email: process.env.EMAIL_SEED,
+    password: bcrypt.hashSync('vbvbbvhhdfjhdf', bcrypt.genSaltSync(8)),
+    email: 'email@ok.com',
     createdAt: new Date(),
     updatedAt: new Date()
   }], {}),

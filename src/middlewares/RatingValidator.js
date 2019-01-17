@@ -21,8 +21,10 @@ class RatingValidator {
   static async genericRatingValidator(req, res, next) {
     /** Check if the right keys are sent */
     req.check('artId', 'Item/Art Id is required').trim().notEmpty();
-    req.check('authorization',
-      'Token is required to access this route').trim().notEmpty();
+    req.check(
+      'authorization',
+      'Token is required to access this route'
+    ).trim().notEmpty();
 
     /** Verify that values are of required type */
     if (!req.validationErrors()) {
@@ -107,9 +109,10 @@ class RatingValidator {
       try {
         const artIdData = await ratingQuery.getArt(artId);
         const isItemAuthor = artIdData.dataValues.artistId === id;
-        req.check('verifyuser',
-          'Creators are not allowed to rate their own items')
-          .custom(() => !isItemAuthor);
+        req.check(
+          'verifyuser',
+          'Creators are not allowed to rate their own items'
+        ).custom(() => !isItemAuthor);
       } catch (error) {
         response = new Response(
           'Not Ok',
