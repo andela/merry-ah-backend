@@ -4,9 +4,8 @@ import TokenAuthenticate from '../helpers/TokenAuthenticate';
 import Response from '../helpers/response';
 import { passwordHash, comparePassword } from '../helpers/passwordHash';
 import EmailNotificationAPI from '../helpers/EmailNotificationAPI';
-import basePath from '../helpers/basePath';
-import Validation from '../helpers/Validation';
-import Follow from '../db/service/follow';
+import basePath from '../helpers/basepath';
+import Follow from '../db/service/Follow';
 import Unfollow from '../db/service/Unfollow';
 
 const { User, Profile, Following, } = models;
