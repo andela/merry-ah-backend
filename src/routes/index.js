@@ -5,6 +5,6 @@ import commentRouter from './commentRouter';
 const router = express.Router();
 
 router.use('/auth', authRouter);
-router.use('/articles/comments/', commentRouter);
+router.use('/arts/comments/', commentRouter);
 
 export default router;

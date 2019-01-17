@@ -24,7 +24,7 @@ describe('Comments Endpoint API Test', () => {
   describe('Comments POST REQUESTS', () => {
     it('it should add a product that exists', (done) => {
       chai.request(app)
-        .post('/api/v1/articles/comments/1')
+        .post('/api/v1/arts/comments/1')
         .set('Authorization', userToken)
         .send(validComment)
         .end((err, res) => {
@@ -36,7 +36,7 @@ describe('Comments Endpoint API Test', () => {
     });
     it('it should submit comment for an art that does not exit', (done) => {
       chai.request(app)
-        .post('/api/v1/articles/comments/100')
+        .post('/api/v1/arts/comments/100')
         .set('Authorization', userToken)
         .send(validComment)
         .end((err, res) => {
@@ -48,7 +48,7 @@ describe('Comments Endpoint API Test', () => {
     });
     it('it should not add comment with non logged in user', (done) => {
       chai.request(app)
-        .post('/api/v1/articles/comments/1')
+        .post('/api/v1/arts/comments/1')
         .send(validComment)
         .end((err, res) => {
           expect(res.body.status).eql('error');
@@ -58,7 +58,7 @@ describe('Comments Endpoint API Test', () => {
     });
     it('it should not add comment with no body', (done) => {
       chai.request(app)
-        .post('/api/v1/articles/comments/1')
+        .post('/api/v1/arts/comments/1')
         .set('Authorization', userToken)
         .send({})
         .end((err, res) => {
@@ -70,7 +70,7 @@ describe('Comments Endpoint API Test', () => {
     });
     it('it should not add comment with invalid art ID', (done) => {
       chai.request(app)
-        .post('/api/v1/articles/comments/hhh')
+        .post('/api/v1/arts/comments/hhh')
         .set('Authorization', userToken)
         .send(validComment)
         .end((err, res) => {
