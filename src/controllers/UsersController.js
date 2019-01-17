@@ -264,16 +264,18 @@ class UsersController {
       const { id } = req.verifyUser;
       const { bio, imgURL, userType } = req.body;
 
-      const updateProfile = await Profile.update({
-        bio,
-        imgURL,
-        userType
-      },
-      {
-        where: {
-          userId: id,
+      const updateProfile = await Profile.update(
+        {
+          bio,
+          imgURL,
+          userType
+        },
+        {
+          where: {
+            userId: id,
+          }
         }
-      });
+      );
       if (updateProfile[0]) {
         const response = new Response(
           'Ok',

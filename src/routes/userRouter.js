@@ -6,9 +6,11 @@ import UsersController from '../controllers/UsersController';
 const userRouter = express.Router();
 
 userRouter
-  .put('/profile',
+  .put(
+    '/profile',
     TokenAuthenticate.tokenVerify,
     UserValidator.userProfileValidator,
-    UsersController.updateProfile);
+    UsersController.updateProfile
+  );
 
 export default userRouter;
