@@ -14,4 +14,7 @@ authRouter.delete(
   ArtController.delete
 );
 
+authRouter.get('/', ArtController.getAllArticles);
+authRouter.get('/:slug', ArtController.getSingleArticle);
+
 export default authRouter;

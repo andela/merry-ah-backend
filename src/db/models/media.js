@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     Media.belongsTo(models.Art, {
       foreignKey: 'artId',
-      as: 'media',
+      as: 'Media',
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
     });

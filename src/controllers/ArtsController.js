@@ -1,7 +1,9 @@
 import models from '../db/models';
 import { TokenAuthenticate, Response, Slugify } from '../helpers/index';
 
-const { Art, Media, Category } = models;
+const {
+  Art, Media, Category, User
+} = models;
 
 let response;
 
@@ -13,7 +15,7 @@ class ArtsController {
    * @param {object} res
    * @memberof ArtsController
    * This will receive a media object containing a list of media files
-   * @returns {Object} ARTicle details
+   * @returns {Object} Article details
    */
   static async create(req, res) {
     try {
@@ -116,7 +118,7 @@ class ArtsController {
    * @param {object} req
    * @param {object} res
    * @memberof ArtsController
-   * @returns {Object} ARTicle details
+   * @returns {Object} Article details
    */
   static async update(req, res) {
     try {
@@ -222,7 +224,7 @@ class ArtsController {
    * @param {object} req
    * @param {object} res
    * @memberof ArtsController
-   * @returns {Object} ARTicle details
+   * @returns {Object} Article details
    */
   static async delete(req, res) {
     try {
@@ -263,6 +265,147 @@ class ArtsController {
         200,
         'Article deleted successfully',
         { artToDelete: artDeleted }
+      );
+      return res.status(response.code).json(response);
+    } catch (err) {
+      response = new Response(
+        'Not ok',
+        500,
+        `${err}`,
+      );
+      return res.status(response.code).json(response);
+    }
+  }
+
+  /**
+   * @desc GET /api/v1/articles
+   * @param {object} req
+   * @param {object} res
+   * @memberof ArtsController
+   * @returns {Object} All Articles
+   */
+  static async getAllArticles(req, res) {
+    try {
+      const { limit, page } = req.query;
+      const limitDefault = limit || 20;
+      const pageDefault = page || 1;
+
+      const offset = limitDefault * (pageDefault - 1);
+
+      const allArticlesCount = await Art.findAndCountAll();
+
+      const pages = Math.ceil(allArticlesCount.count / limitDefault);
+
+      const articles = await Art.findAll({
+        include: [
+          {
+            model: Category,
+            as: 'Category',
+            attributes: ['id', 'categoryName'],
+          },
+          {
+            model: User,
+            as: 'Author',
+            attributes: ['username'],
+          }
+        ],
+        order: [
+          ['createdAt', 'DESC'],
+          ['id', 'DESC'],
+        ],
+        attributes: [
+          'id',
+          'slug',
+          'artistId',
+          'categoryId',
+          'title',
+          'description',
+          'featuredImg',
+          'createdAt',
+        ],
+        limit: limitDefault,
+        offset,
+      });
+
+      response = new Response(
+        'Ok',
+        200,
+        'All Articles',
+        {
+          articles,
+          articlesGrandTotal: allArticlesCount.count,
+          page: pageDefault,
+          pages
+        }
+      );
+      return res.status(response.code).json(response);
+    } catch (err) {
+      response = new Response(
+        'Not ok',
+        500,
+        `${err}`,
+      );
+      return res.status(response.code).json(response);
+    }
+  }
+
+  /**
+   * @desc GET /api/v1/articles/slug
+   * @param {object} req
+   * @param {object} res
+   * @memberof ArtsController
+   * @returns {Object} Single Article
+   */
+  static async getSingleArticle(req, res) {
+    try {
+      const { slug } = req.params;
+
+      const article = await Art.findOne({
+        where: { slug },
+        include: [
+          {
+            model: Category,
+            as: 'Category',
+            attributes: ['id', 'categoryName'],
+          },
+          {
+            model: User,
+            as: 'Author',
+            attributes: ['username'],
+          },
+          {
+            model: Media,
+            as: 'Media',
+            attributes: ['id', 'contentUrl'],
+          },
+        ],
+        attributes: [
+          'id',
+          'slug',
+          'artistId',
+          'categoryId',
+          'title',
+          'description',
+          'featuredImg',
+          'createdAt',
+        ],
+      });
+
+
+      if (!article) {
+        response = new Response(
+          'Not Found',
+          404,
+          'Sorry. Article Not Found'
+        );
+        return res.status(response.code).json(response);
+      }
+
+      response = new Response(
+        'Ok',
+        200,
+        'Single Article',
+        article
       );
       return res.status(response.code).json(response);
     } catch (err) {

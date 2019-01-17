@@ -38,6 +38,45 @@ before((done) => {
 
 
 describe('Arts Endpoint API Test', () => {
+  describe('ARTS GET REQUESTS', () => {
+    it('it should get all articles paginated', (done) => {
+      chai.request(app)
+        .get('/api/v1/articles')
+        .end((err, res) => {
+          expect(res.body.messages).eql('All Articles');
+          expect(res.body.data).to.have.property('articles');
+          expect(res.body.data).to.have.property('articlesGrandTotal');
+          expect(res.body.data).to.have.property('page');
+          expect(res.body.data).to.have.property('pages');
+          expect(res.status).to.equal(200);
+          done(err);
+        });
+    });
+
+    it('it should fetch an article with provided slug', (done) => {
+      chai.request(app)
+        .get(`/api/v1/articles/${validUpdatedArticle.slug}`)
+        .end((err, res) => {
+          expect(res.status).to.equal(200);
+          expect(res.body.status).eql('Ok');
+          expect(res.body.messages).eql('Single Article');
+          expect(res.body.data.slug).eql(validUpdatedArticle.slug);
+          done(err);
+        });
+    });
+
+    it('it should not fetch an article with invalid slug', (done) => {
+      chai.request(app)
+        .get(`/api/v1/articles/ss-${validUpdatedArticle.slug}`)
+        .end((err, res) => {
+          expect(res.status).to.equal(404);
+          expect(res.body.status).eql('Not Found');
+          expect(res.body.messages).eql('Sorry. Article Not Found');
+          done(err);
+        });
+    });
+  });
+
   describe('ARTS POST REQUESTS', () => {
     it('it should create a new article', (done) => {
       chai.request(app)
