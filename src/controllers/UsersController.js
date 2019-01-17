@@ -4,7 +4,7 @@ import TokenAuthenticate from '../helpers/TokenAuthenticate';
 import Response from '../helpers/response';
 import { passwordHash, comparePassword } from '../helpers/passwordHash';
 import EmailNotificationAPI from '../helpers/EmailNotificationAPI';
-import basePath from '../helpers/basePath';
+import basePath from '../helpers/basepath';
 
 const { User, Profile } = models;
 
@@ -248,6 +248,54 @@ class UsersController {
       'Password reset successful',
     );
     return res.status(response.code).json(response);
+  }
+
+
+  /**
+   * @static
+   * @desc POST /api/v1/auth/forgot-password
+   * @param {object} req
+   * @param {object} res
+   * @memberof UsersController
+   * @returns successful pasword reset
+   */
+  static async updateProfile(req, res) {
+    try {
+      const { id } = req.verifyUser;
+      const { bio, imgURL, userType } = req.body;
+
+      const updateProfile = await Profile.update({
+        bio,
+        imgURL,
+        userType
+      },
+      {
+        where: {
+          userId: id,
+        }
+      });
+      if (updateProfile[0]) {
+        const response = new Response(
+          'Ok',
+          200,
+          'Profile updated successfully',
+        );
+        return res.status(response.code).json(response);
+      }
+      const response = new Response(
+        'Bad Request',
+        400,
+        'Unable to update profile',
+      );
+      return res.status(response.code).json(response);
+    } catch (err) {
+      const response = new Response(
+        'Internal server error',
+        500,
+        `${err}`,
+      );
+      return res.status(response.code).json(response);
+    }
   }
 }
 

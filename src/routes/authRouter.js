@@ -10,7 +10,7 @@ const authRouter = express.Router();
 
 authRouter
   .post('/signup',
-    UserValidator.UserSignUpValidator,
+    UserValidator.userSignUpValidator,
     emailCheck,
     UserController.signUp);
 authRouter.post(
