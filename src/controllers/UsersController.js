@@ -264,7 +264,7 @@ class UsersController {
         where: {
           userType: 'artist'
         },
-        attributes: ['username', 'email', 'userType'],
+        attributes: ['id', 'username', 'email', 'userType'],
         include: [{
           model: Profile,
           as: 'profile',
@@ -324,7 +324,7 @@ class UsersController {
           id: artistId,
           userType: 'artist',
         },
-        attributes: ['username', 'email', 'userType'],
+        attributes: ['id', 'username', 'email', 'userType'],
         include: [{
           model: Profile,
           as: 'profile',
