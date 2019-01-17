@@ -59,6 +59,26 @@ const userDetails = {
     imgURL: '',
     userType: 'user',
   },
+  validArtist1: {
+    firstName: 'Derek',
+    lastName: 'Hales',
+    username: 'halesBaba',
+    email: 'smartwiz14@gmail.com',
+    password: 'qwerty',
+    bio: '',
+    imgURL: '',
+    userType: 'artist',
+  },
+  validArtist2: {
+    firstName: 'Scott',
+    lastName: 'McCall',
+    username: 'scotBaba',
+    email: 'danny@gmail.com',
+    password: 'qwerty',
+    bio: '',
+    imgURL: '',
+    userType: 'artist',
+  },
 };
 // eslint-disable-next-line import/prefer-default-export
 export { userDetails };

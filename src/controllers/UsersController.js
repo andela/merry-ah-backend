@@ -5,8 +5,11 @@ import Response from '../helpers/response';
 import { passwordHash, comparePassword } from '../helpers/passwordHash';
 import EmailNotificationAPI from '../helpers/EmailNotificationAPI';
 import basePath from '../helpers/basePath';
+import Validation from '../helpers/Validation';
+import Follow from '../db/service/follow';
+import Unfollow from '../db/service/Unfollow';
 
-const { User, Profile } = models;
+const { User, Profile, Following, } = models;
 
 
 const tokenExpireTime = '10hr';
@@ -248,6 +251,106 @@ class UsersController {
       'Password reset successful',
     );
     return res.status(response.code).json(response);
+  }
+
+  /**
+   * @static
+   * @desc POST /api/v1/users/artists/follow/:artistId
+   * @param {object} req
+   * @param {object} res
+   * @memberof UsersController
+   * @returns successful follow
+   */
+  static async userFollow(req, res) {
+    try {
+      const { artistId } = req.params;
+      const { id } = req.verifyUser;
+
+      const follow = await Following.findOrCreate({
+        where: {
+          userId: artistId,
+          followerId: id,
+        }
+      })
+        .spread((user, created) => {
+          user.get({ plain: true });
+          return created;
+        });
+
+      if (!follow) {
+        const response = new Response(
+          'Bad Request',
+          400,
+          'You are already following this artist',
+        );
+        return res.status(response.code).json(response);
+      }
+
+      Follow.follower(id);
+      Follow.followed(artistId);
+
+      const response = new Response(
+        'Ok',
+        201,
+        `You are now following artist ${artistId}`,
+      );
+      return res.status(response.code).json(response);
+    } catch (err) {
+      const response = new Response(
+        'Internal server error',
+        500,
+        `${err}`,
+      );
+      return res.status(response.code).json(response);
+    }
+  }
+
+  /**
+   * @static
+   * @desc POST /api/v1/users/artists/unfollow/:artistId
+   * @param {object} req
+   * @param {object} res
+   * @memberof UsersController
+   * @returns successful unfollow
+   */
+  static async userUnfollow(req, res) {
+    try {
+      const { artistId } = req;
+      const { id } = req.verifyUser;
+
+      const unfollow = await Following.destroy({
+        where: {
+          userId: artistId,
+          followerId: id,
+        }
+      });
+
+      if (!unfollow) {
+        const response = new Response(
+          'Bad Request',
+          400,
+          'You are not following this artist',
+        );
+        return res.status(response.code).json(response);
+      }
+
+      Unfollow.unfollower(id);
+      Unfollow.unfollowed(artistId);
+
+      const response = new Response(
+        'Ok',
+        200,
+        `You have unfollowed artist ${artistId}`,
+      );
+      return res.status(response.code).json(response);
+    } catch (err) {
+      const response = new Response(
+        'Internal server error',
+        500,
+        `${err}`,
+      );
+      return res.status(response.code).json(response);
+    }
   }
 }
 

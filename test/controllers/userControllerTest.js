@@ -15,9 +15,11 @@ const {
   invalidUserEmail,
   invalidUserType,
   spacedField,
+  validArtist1,
+  validArtist2,
 } = userDetails;
 
-let userToken;
+let userToken, loginToken, loginToken2;
 
 describe('Users Endpoint API Test', () => {
   // eslint-disable-next-line no-undef
@@ -138,6 +140,8 @@ describe('Users Endpoint API Test', () => {
         .end((err, res) => {
           expect(res.body.status).eql('Ok');
           expect(res.body.messages).eql('User logged in successfully');
+          const { token } = res.body.data;
+          loginToken = token;
           done(err);
         });
     });
@@ -241,6 +245,164 @@ describe('Users Endpoint API Test', () => {
           expect(res.body.status).eql('Bad Request');
           done(err);
         });
+    });
+    describe('Follow and Unfollow Functionality', () => {
+      before((done) => {
+        chai.request(app)
+          .post('/api/v1/auth/signup')
+          .send(validArtist1)
+          .end((err) => {
+            done(err);
+          });
+      });
+      before((done) => {
+        chai.request(app)
+          .post('/api/v1/auth/signup')
+          .send(validArtist2)
+          .end((err) => {
+            done(err);
+          });
+      });
+      before((done) => {
+        chai.request(app)
+          .post('/api/v1/auth/signin')
+          .send(validUser1)
+          .end((err, res) => {
+            const { token } = res.body.data;
+            loginToken2 = token;
+            done(err);
+          });
+      });
+      before((done) => {
+        chai.request(app)
+          .post(`/api/v1/users/artists/follow/${4}`)
+          .set('x-access-token', loginToken)
+          .end((err) => {
+            done(err);
+          });
+      });
+      it('user should follow an artist', (done) => {
+        chai.request(app)
+          .post(`/api/v1/users/artists/follow/${3}`)
+          .set('x-access-token', loginToken)
+          .end((err, res) => {
+            expect(res.body.messages).eql(`You are now following artist ${3}`);
+            expect(res.status).to.equal(201);
+            expect(res.body.status).eql('Ok');
+            done(err);
+          });
+      });
+      it('another user should follow an artist', (done) => {
+        chai.request(app)
+          .post(`/api/v1/users/artists/follow/${3}`)
+          .set('x-access-token', loginToken2)
+          .end((err, res) => {
+            expect(res.body.messages).eql(`You are now following artist ${3}`);
+            expect(res.status).to.equal(201);
+            expect(res.body.status).eql('Ok');
+            done(err);
+          });
+      });
+      it('should return error when artist id is not integer', (done) => {
+        chai.request(app)
+          .post('/api/v1/users/artists/follow/ddd')
+          .set('x-access-token', loginToken)
+          .end((err, res) => {
+            expect(res.body.messages).eql('Artist ID must be an integer');
+            expect(res.status).to.equal(400);
+            expect(res.body.status).eql('Bad Request');
+            done(err);
+          });
+      });
+      it('should return error when artist id is equal to user id', (done) => {
+        chai.request(app)
+          .post(`/api/v1/users/artists/follow/${1}`)
+          .set('x-access-token', loginToken)
+          .end((err, res) => {
+            expect(res.body.messages).eql('You cannot follow or unfollow yourself');
+            expect(res.status).to.equal(400);
+            expect(res.body.status).eql('Bad Request');
+            done(err);
+          });
+      });
+      it('should return error when artist id is equal to user id', (done) => {
+        chai.request(app)
+          .post(`/api/v1/users/artists/follow/${100}`)
+          .set('x-access-token', loginToken)
+          .end((err, res) => {
+            expect(res.body.messages).eql('User may not exist or is not an artist');
+            expect(res.status).to.equal(404);
+            expect(res.body.status).eql('Not Found');
+            done(err);
+          });
+      });
+      it('should return response of already following the artist', (done) => {
+        chai.request(app)
+          .post(`/api/v1/users/artists/follow/${4}`)
+          .set('x-access-token', loginToken)
+          .end((err, res) => {
+            expect(res.body.messages).eql('You are already following this artist');
+            expect(res.status).to.equal(400);
+            expect(res.body.status).eql('Bad Request');
+            done(err);
+          });
+      });
+
+      it('user should unfollow an artist', (done) => {
+        chai.request(app)
+          .post(`/api/v1/users/artists/unfollow/${3}`)
+          .set('x-access-token', loginToken)
+          .end((err, res) => {
+            expect(res.body.messages).eql(`You have unfollowed artist ${3}`);
+            expect(res.status).to.equal(200);
+            expect(res.body.status).eql('Ok');
+            done(err);
+          });
+      });
+      it('should return error when artist id is not integer', (done) => {
+        chai.request(app)
+          .post('/api/v1/users/artists/unfollow/ddd')
+          .set('x-access-token', loginToken)
+          .end((err, res) => {
+            expect(res.body.messages).eql('Artist ID must be an integer');
+            expect(res.status).to.equal(400);
+            expect(res.body.status).eql('Bad Request');
+            done(err);
+          });
+      });
+      it('should return error when artist id is equal to user id', (done) => {
+        chai.request(app)
+          .post(`/api/v1/users/artists/unfollow/${1}`)
+          .set('x-access-token', loginToken)
+          .end((err, res) => {
+            expect(res.body.messages).eql('You cannot follow or unfollow yourself');
+            expect(res.status).to.equal(400);
+            expect(res.body.status).eql('Bad Request');
+            done(err);
+          });
+      });
+      it('should return error when artist id is equal to user id', (done) => {
+        chai.request(app)
+          .post(`/api/v1/users/artists/unfollow/${100}`)
+          .set('x-access-token', loginToken)
+          .end((err, res) => {
+            expect(res.body.messages).eql('User may not exist or is not an artist');
+            expect(res.status).to.equal(404);
+            expect(res.body.status).eql('Not Found');
+            done(err);
+          });
+      });
+      it('should return response of already following the artist', (done) => {
+        chai.request(app)
+          .post(`/api/v1/users/artists/unfollow/${3}`)
+          .set('x-access-token', loginToken)
+          .end((err, res) => {
+            expect(res.body.messages).eql('You are not following this artist');
+            expect(res.status).to.equal(400);
+            expect(res.body.status).eql('Bad Request');
+            done(err);
+          });
+      });
     });
   });
 });
