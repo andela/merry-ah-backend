@@ -27,15 +27,11 @@ class EmailNotificationAPI {
    */
   static transportCreator() {
     const {
-      EMAILHOST, EMAILPORT, EMAILUSER, EMAILPASS
+      EMAILUSER, EMAILPASS
     } = process.env;
-    if (!EMAILUSER || !EMAILPASS || !EMAILHOST) {
-      return 'Please configure your .env file properly';
-    }
 
     return nodemailer.createTransport({
-      host: EMAILHOST,
-      port: EMAILPORT || 2525,
+      service: 'gmail',
       auth: {
         user: EMAILUSER,
         pass: EMAILPASS
@@ -50,14 +46,18 @@ class EmailNotificationAPI {
   async sendEmail() {
     const mailOptions = this.mailOptions;
 
-    try {
-      const mail = await EmailNotificationAPI.transportCreator()
-        .sendMail(mailOptions);
-      if (mail.response.includes('OK')) {
-        return 'Message sent';
+    if (process.env.NODE_ENV === 'production') {
+      try {
+        const mail = await EmailNotificationAPI.transportCreator()
+          .sendMail(mailOptions);
+        if (mail.response.includes('OK')) {
+          return 'Message sent';
+        }
+      } catch (error) {
+        return error;
       }
-    } catch (error) {
-      return error;
+    } else {
+      return 'Message sent';
     }
   }
 }
