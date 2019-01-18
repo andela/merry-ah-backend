@@ -1,8 +1,6 @@
 import ratingQuery from '../db/service/rate';
 import Response from '../helpers/response';
 
-
-// let response;
 /** Rating Controller Class */
 class RatingController {
   /**
