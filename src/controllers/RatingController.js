@@ -2,7 +2,7 @@ import ratingQuery from '../db/service/rate';
 import Response from '../helpers/response';
 
 
-let response;
+// let response;
 /** Rating Controller Class */
 class RatingController {
   /**
@@ -22,7 +22,7 @@ class RatingController {
       const addRatingResponse = await ratingQuery
         .addRating(artId, verifyUser.id, rating);
       if (addRatingResponse) {
-        response = new Response(
+        const response = new Response(
           'Ok',
           201,
           'Rating has been added',
@@ -31,11 +31,12 @@ class RatingController {
         return res.status(response.code).json(response);
       }
     } catch (error) {
-      response = new Response(
+      const response = new Response(
         'Not Ok',
         500,
         `${error}`
       );
+      return res.status(response.code).json(response);
     }
   }
 
@@ -51,24 +52,25 @@ class RatingController {
     const { artId } = req.params;
 
     try {
-      const isRatingExists = await ratingQuery.getItemRating(artId);
-      if (isRatingExists) {
-        response = new Response(
+      const doesRatingExists = await ratingQuery.getItemRating(artId);
+      if (doesRatingExists) {
+        const response = new Response(
           'Ok',
           200,
           'Art Rating Exists',
-          isRatingExists.dataValues
+          doesRatingExists.dataValues
         );
         return res.status(response.code).json(response);
       }
     } catch (error) {
-      response = new Response(
+      const response = new Response(
         'Not Ok',
         500,
         `${error}`
       );
+      return res.status(response.code).json(response);
     }
-    response = new Response(
+    const response = new Response(
       'Ok',
       200,
       'Art Rating Does not exist',
@@ -87,25 +89,34 @@ class RatingController {
   static async getUserItemRating(req, res) {
     const { artId } = req.params;
     const { verifyUser } = req;
-    const getUserItemRatingResponse = await ratingQuery
-      .getUserItemRating(artId, verifyUser.id);
 
-    if (getUserItemRatingResponse) {
-      response = new Response(
-        'Ok',
-        200,
-        `${verifyUser
-          .username} Rated Art ID ${artId} : ${getUserItemRatingResponse
-          .dataValues.rating}`,
-        getUserItemRatingResponse.dataValues
+    try {
+      const getUserItemRatingResponse = await ratingQuery
+        .getUserItemRating(artId, verifyUser.id);
+
+      if (getUserItemRatingResponse) {
+        const response = new Response(
+          'Ok',
+          200,
+          `${verifyUser
+            .username} Rated Art ID ${artId} : ${getUserItemRatingResponse
+            .dataValues.rating}`,
+          getUserItemRatingResponse.dataValues
+        );
+        return res.status(response.code).json(response);
+      }
+    } catch (error) {
+      const response = new Response(
+        'Not Ok',
+        500,
+        `${error}`
       );
       return res.status(response.code).json(response);
     }
-    response = new Response(
+    const response = new Response(
       'Ok',
       404,
-      `${verifyUser.username} has no rating for Art ID: ${artId}`,
-      getUserItemRatingResponse
+      `${verifyUser.username} has no rating for Art ID: ${artId}`
     );
     return res.status(response.code).json(response);
   }

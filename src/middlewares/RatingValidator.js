@@ -1,9 +1,6 @@
 import Response from '../helpers/response';
 import ratingQuery from '../db/service/rate';
 
-
-let response;
-
 /**
  * A module that checks if email already exists at sign up
  * @module validateRatingValues
@@ -41,11 +38,12 @@ class RatingValidator {
         req.check('artId', 'Item/Art ID Does not exist')
           .custom(() => !doesArtExist);
       } catch (error) {
-        response = new Response(
+        const response = new Response(
           'Not Ok',
           500,
           `${error}`
         );
+        return res.status(response.code).json(response);
       }
     }
 
@@ -58,11 +56,12 @@ class RatingValidator {
         req.check('verifyuser', 'User does not exist on the platform')
           .custom(() => !doesUserExist);
       } catch (error) {
-        response = new Response(
+        const response = new Response(
           'Not Ok',
           500,
           `${error}`
         );
+        return res.status(response.code).json(response);
       }
     }
 
@@ -70,7 +69,7 @@ class RatingValidator {
     const validationErrors = [];
     if (errors) {
       errors.map(err => validationErrors.push(err.msg));
-      response = new Response(
+      const response = new Response(
         'Bad Request',
         400,
         'Invalid Credentials',
@@ -114,11 +113,12 @@ class RatingValidator {
           'Creators are not allowed to rate their own items'
         ).custom(() => !isItemAuthor);
       } catch (error) {
-        response = new Response(
+        const response = new Response(
           'Not Ok',
           500,
           `${error}`
         );
+        return res.status(response.code).json(response);
       }
     }
 
@@ -126,7 +126,7 @@ class RatingValidator {
     const validationErrors = [];
     if (errors) {
       errors.map(err => validationErrors.push(err.msg));
-      response = new Response(
+      const response = new Response(
         'Bad Request',
         400,
         'Invalid Credentials',
