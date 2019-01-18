@@ -3,7 +3,6 @@ import Response from '../helpers/response';
 
 const { Comment, Art } = models;
 
-let response;
 /**
  * Represents a CommentsController.
  */
@@ -31,21 +30,21 @@ class CommentsController {
           artId,
           body
         });
-        response = new Response(
+        const response = new Response(
           'created',
           201,
           'Comment added successfully',
         );
         return res.status(response.code).json(response);
       }
-      response = new Response(
+      const response = new Response(
         'Not Found',
         404,
         'This art does not exist',
       );
       return res.status(response.code).json(response);
     } catch (err) {
-      response = new Response(
+      const response = new Response(
         'Not ok',
         500,
         `${err}`,

@@ -13,6 +13,6 @@ commentRouter
     ParamsChecker.idChecker,
     CommentValidator.createCommentValidator,
     CommentsController.createComment
-    );
+  );
 
 export default commentRouter;
