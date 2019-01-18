@@ -24,7 +24,9 @@ authRouter.put(
   UserMiddleware.validatePassword,
   UserController.completeForgotPassword,
 );
-authRouter.post('/signin', UserValidator.UserSignInValidator,
-  UserController.signIn);
+authRouter.post(
+  '/signin', UserValidator.UserSignInValidator,
+  UserController.signIn
+);
 
 export default authRouter;
