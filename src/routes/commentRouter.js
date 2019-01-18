@@ -7,10 +7,12 @@ import CommentValidator from '../middlewares/CommentValidator';
 const commentRouter = express.Router();
 
 commentRouter
-  .post('/:artId',
+  .post(
+    '/:artId',
     TokenAuthenticate.tokenVerify,
     ParamsChecker.idChecker,
     CommentValidator.createCommentValidator,
-    CommentsController.createComment);
+    CommentsController.createComment
+    );
 
 export default commentRouter;
