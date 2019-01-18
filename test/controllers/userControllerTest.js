@@ -21,6 +21,7 @@ const {
 } = userDetails;
 
 let userToken;
+let updateToken;
 
 describe('Users Endpoint API Test', () => {
   // eslint-disable-next-line no-undef
@@ -29,7 +30,8 @@ describe('Users Endpoint API Test', () => {
       .post('/api/v1/auth/signin')
       .send({ email: 'email@email.com', password: 'abcdefgh' })
       .end((err, res) => {
-        userToken = res.body.data.token;
+        // eslint-disable-next-line prefer-destructuring
+        updateToken = res.body.data.token;
         done(err);
       });
   });
@@ -265,7 +267,7 @@ describe('Users Endpoint API Test', () => {
     it('it should not update user with empty fields', (done) => {
       chai.request(app)
         .put('/api/v1/users/profile')
-        .set('Authorization', userToken)
+        .set('Authorization', updateToken)
         .send(invalidImage)
         .end((err, res) => {
           expect(res.body.status).eql('Bad Request');
@@ -277,7 +279,7 @@ describe('Users Endpoint API Test', () => {
     it('it should not update user with empty fields', (done) => {
       chai.request(app)
         .put('/api/v1/users/profile')
-        .set('Authorization', userToken)
+        .set('Authorization', updateToken)
         .send(invalidBio)
         .end((err, res) => {
           expect(res.body.status).eql('Bad Request');
@@ -289,7 +291,7 @@ describe('Users Endpoint API Test', () => {
     it('it should not update user with space in the fields', (done) => {
       chai.request(app)
         .put('/api/v1/users/profile')
-        .set('Authorization', userToken)
+        .set('Authorization', updateToken)
         .send({ bio: 'hahh jhvhjv hhv hgghg hhjhhj', imgURL: 'hhxvvh.gif', userType: '       ' })
         .end((err, res) => {
           expect(res.body.status).eql('Bad Request');
@@ -301,7 +303,7 @@ describe('Users Endpoint API Test', () => {
     it('it should not update user with wrong usertype', (done) => {
       chai.request(app)
         .put('/api/v1/users/profile')
-        .set('Authorization', userToken)
+        .set('Authorization', updateToken)
         .send(invalidProfile)
         .end((err, res) => {
           expect(res.body.status).eql('Not found');
@@ -312,7 +314,7 @@ describe('Users Endpoint API Test', () => {
     it('it should update logged in user with valid update', (done) => {
       chai.request(app)
         .put('/api/v1/users/profile')
-        .set('authorization', userToken)
+        .set('authorization', updateToken)
         .send({ bio: 'hahh jhvhjv hhv hgghg hhjhhj', imgURL: 'hhxvvh.png', userType: 'user' })
         .end((err, res) => {
           expect(res.body.messages).eql('Profile updated successfully');
@@ -322,7 +324,7 @@ describe('Users Endpoint API Test', () => {
     it('it should not update user with invalid token', (done) => {
       chai.request(app)
         .put('/api/v1/users/profile')
-        .set('authorization', `invalid${userToken}`)
+        .set('authorization', `invalid${updateToken}`)
         .send({ bio: 'hahh jhvhjv hhv hgghg hhjhhj', imgURL: 'hhxvvh.gif', userType: 'user' })
         .end((err, res) => {
           expect(res.body.message).eql('Unauthorized token');

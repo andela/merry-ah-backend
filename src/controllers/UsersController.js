@@ -80,7 +80,7 @@ class UsersController {
         const response = new Response(
           'Bad request',
           400,
-          'There was a problem sending',
+          'There was a problem sending mail',
         );
         return res.status(response.code).json(response);
       }
@@ -191,7 +191,7 @@ class UsersController {
         const response = new Response(
           'Bad request',
           400,
-          'There was a problem sending',
+          'There was a problem sending mail',
         );
         return res.status(response.code).json(response);
       }
