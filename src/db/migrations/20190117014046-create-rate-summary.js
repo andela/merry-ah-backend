@@ -1,6 +1,8 @@
 module.exports = {
-  up: (queryInterface,
-    Sequelize) => queryInterface.createTable('RateSummaries', {
+  up: (
+    queryInterface,
+    Sequelize
+  ) => queryInterface.createTable('RateSummaries', {
     id: {
       allowNull: false,
       autoIncrement: true,
