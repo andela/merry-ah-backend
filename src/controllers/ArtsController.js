@@ -1,5 +1,5 @@
 import models from '../db/models';
-import { TokenAuthenticate, Response, Slugify } from '../helpers/index';
+import { Response, Slugify } from '../helpers/index';
 
 const { Art, Media, Category } = models;
 
