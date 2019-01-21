@@ -23,8 +23,8 @@ class SocialController {
     const {
       first_name, middle_name, email
     } = profile._json;
-    const { bio } = profile._json || null;
-    const { imgURL } = profile._json || null;
+    const bio = profile._json.bio || null;
+    const imgURL = profile._json.imgURL || null;
     User.findOrCreate({
       where: { email },
       defaults: {
@@ -65,8 +65,8 @@ class SocialController {
     const {
       displayName, emails,
     } = profile;
-    const { bio } = profile || null;
-    const { imgURL } = profile || null;
+    const bio = profile.bio || null;
+    const imgURL = profile.imgURL || null;
     User.findOrCreate({
       where: { email: emails[0].value },
       defaults: {
@@ -107,8 +107,8 @@ class SocialController {
     const {
       displayName, emails,
     } = profile;
-    const { bio } = profile || null;
-    const { imgURL } = profile || null;
+    const bio = profile.bio || null;
+    const imgURL = profile.imgURL || null;
     User.findOrCreate({
       where: { email: emails[0].value },
       defaults: {
