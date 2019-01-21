@@ -48,22 +48,6 @@ class TokenAuthenticate {
       });
     }
   }
-
-  /**
-   *Decode Token Method
-   * @static
-   * @param {object} req
-   * @returns {function} returns an object with status and method property
-   * @memberof TokenAuthenticate
-   */
-  static async decodeToken(req) {
-    const token = req.headers.Authorization
-      || req.headers['x-access-token'] || req.query.token || req.body.token;
-    if (!token) {
-      return { error: 'Unauthorized token' };
-    }
-    return jwt.decode(token, process.env.SECRET);
-  }
 }
 
 export default TokenAuthenticate;

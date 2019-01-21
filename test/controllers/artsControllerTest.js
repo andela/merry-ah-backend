@@ -70,6 +70,18 @@ describe('Arts Endpoint API Test', () => {
         });
     });
 
+    it('it should not create an article with invalid category', (done) => {
+      chai.request(app)
+        .post('/api/v1/articles')
+        .set('x-access-token', jwtToken)
+        .send(invalidUpdatedArticleCategory)
+        .end((err, res) => {
+          expect(res.status).to.equal(500);
+          expect(res.body.status).eql('Not Ok');
+          done(err);
+        });
+    });
+
     it('it should not create an article without authorization', (done) => {
       chai.request(app)
         .post('/api/v1/articles')
