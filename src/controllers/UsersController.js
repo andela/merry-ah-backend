@@ -301,16 +301,6 @@ class UsersController {
     try {
       const { artistId } = req.params;
 
-      /* eslint-disable no-restricted-globals */
-      if (isNaN(artistId)) {
-        const response = new Response(
-          'Bad Request',
-          400,
-          'Artist ID must be an integer',
-        );
-        return res.status(response.code).json(response);
-      }
-
       const artist = await User.findOne({
         where: {
           id: artistId,

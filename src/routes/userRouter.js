@@ -1,6 +1,7 @@
 import express from 'express';
 import UsersController from '../controllers/UsersController';
 import TokenAuthenticate from '../helpers/TokenAuthenticate';
+import UserMiddleware from '../middlewares/UserMiddleware';
 
 const userRouter = express.Router();
 
@@ -13,6 +14,7 @@ userRouter.get(
 userRouter.get(
   '/artists/:artistId',
   TokenAuthenticate.tokenVerify,
+  UserMiddleware.validateArtistID,
   UsersController.getOneArtist,
 );
 
