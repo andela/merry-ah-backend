@@ -5,7 +5,6 @@ import UserValidator from '../middlewares/UsersValidator';
 import TokenAuthenticate from '../helpers/TokenAuthenticate';
 import UserMiddleware from '../middlewares/UserMiddleware';
 
-
 const authRouter = express.Router();
 /**
    * @swagger
@@ -136,5 +135,7 @@ authRouter.put(
    *           type: object
    */
 authRouter.post('/signin', UserController.signIn);
+authRouter
+  .get('/verify', TokenAuthenticate.tokenVerify, UserController.verifyEmail);
 
 export default authRouter;
