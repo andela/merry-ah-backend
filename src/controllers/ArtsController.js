@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/prefer-default-export
 import sequelize from 'sequelize';
 import models from '../db/models';
 import { Response, Slugify } from '../helpers/index';
@@ -7,7 +6,6 @@ const {
   Art, Media, Category, User, Comment
 } = models;
 
-let response;
 
 /** Arts Controller Class */
 class ArtsController {
@@ -40,7 +38,7 @@ class ArtsController {
 
       if (errors) {
         errors.map(err => validationErrors.push(err.msg));
-        response = new Response(
+        const response = new Response(
           'Not Ok',
           400,
           'Validation Errors Occurred',
@@ -89,7 +87,7 @@ class ArtsController {
         });
       }
 
-      response = new Response(
+      const response = new Response(
         'Ok',
         201,
         'Article created successfully',
@@ -105,7 +103,7 @@ class ArtsController {
 
       return res.status(response.code).json(response);
     } catch (err) {
-      response = new Response(
+      const response = new Response(
         'Not Ok',
         500,
         `${err}`,
@@ -133,7 +131,7 @@ class ArtsController {
       });
 
       if (!artToUpdate) {
-        response = new Response(
+        const response = new Response(
           'Not Found',
           404,
           'Sorry. Article Not Found'
@@ -142,7 +140,7 @@ class ArtsController {
       }
 
       if (artistId !== artToUpdate.artistId) {
-        response = new Response(
+        const response = new Response(
           'Not Ok',
           403,
           'Unauthorized to Edit Article',
@@ -164,7 +162,7 @@ class ArtsController {
       const errors = req.validationErrors();
       if (errors) {
         errors.map(err => validationErrors.push(err.msg));
-        response = new Response(
+        const response = new Response(
           'Not Ok',
           400,
           'Validation Errors Occurred',
@@ -202,7 +200,7 @@ class ArtsController {
 
       const updateArticleSuccess = await artToUpdate.update(updatedArticle);
 
-      response = new Response(
+      const response = new Response(
         'Ok',
         200,
         'Article updated successfully',
@@ -210,7 +208,7 @@ class ArtsController {
       );
       return res.status(response.code).json(response);
     } catch (err) {
-      response = new Response(
+      const response = new Response(
         'Not ok',
         500,
         `${err}`,
@@ -237,7 +235,7 @@ class ArtsController {
       });
 
       if (!artToDelete) {
-        response = new Response(
+        const response = new Response(
           'Not Found',
           404,
           'Sorry. Article Not Found'
@@ -246,7 +244,7 @@ class ArtsController {
       }
 
       if (artistId !== artToDelete.artistId) {
-        response = new Response(
+        const response = new Response(
           'Not Ok',
           403,
           'Unauthorized to Delete Article',
@@ -259,7 +257,7 @@ class ArtsController {
         where: { slug }
       });
 
-      response = new Response(
+      const response = new Response(
         'Ok',
         200,
         'Article deleted successfully',
@@ -267,7 +265,7 @@ class ArtsController {
       );
       return res.status(response.code).json(response);
     } catch (err) {
-      response = new Response(
+      const response = new Response(
         'Not ok',
         500,
         `${err}`,
@@ -294,7 +292,6 @@ class ArtsController {
       const allArticlesCount = await Art.findAndCountAll();
 
       const pages = Math.ceil(allArticlesCount.count / limitDefault);
-
       const articles = await Art.findAll({
         include: [
           {
@@ -325,14 +322,15 @@ class ArtsController {
           'description',
           'featuredImg',
           'createdAt',
-          [sequelize.fn('COUNT', 'comments.id'), 'commentsCount'],
+          [sequelize.literal(
+            '(SELECT COUNT(*) FROM "Comments" C WHERE C."artId" = "Art".id)'
+          ), 'CommentsCount']
         ],
-        group: ['Art.id'],
         limit: limitDefault,
         offset,
       });
 
-      response = new Response(
+      const response = new Response(
         'Ok',
         200,
         'All Articles',
@@ -345,7 +343,7 @@ class ArtsController {
       );
       return res.status(response.code).json(response);
     } catch (err) {
-      response = new Response(
+      const response = new Response(
         'Not ok',
         500,
         `${err}`,
@@ -388,21 +386,14 @@ class ArtsController {
             attributes: ['id', 'contentUrl'],
           },
         ],
-        attributes: [
-          'id',
-          'slug',
-          'artistId',
-          'categoryId',
-          'title',
-          'description',
-          'featuredImg',
-          'createdAt',
-        ],
+        attributes: {
+          exclude: ['updatedAt']
+        },
       });
 
 
       if (!article) {
-        response = new Response(
+        const response = new Response(
           'Not Found',
           404,
           'Sorry. Article Not Found'
@@ -410,7 +401,7 @@ class ArtsController {
         return res.status(response.code).json(response);
       }
 
-      response = new Response(
+      const response = new Response(
         'Ok',
         200,
         'Single Article',
@@ -418,7 +409,7 @@ class ArtsController {
       );
       return res.status(response.code).json(response);
     } catch (err) {
-      response = new Response(
+      const response = new Response(
         'Not ok',
         500,
         `${err}`,
