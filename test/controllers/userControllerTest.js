@@ -106,6 +106,62 @@ describe('Users Endpoint API Test', () => {
           done(err);
         });
     });
+    it('it should not signin a user with an empty email', (done) => {
+      chai.request(app)
+        .post('/api/v1/auth/signin')
+        .send({
+          email: '',
+          password: 'abejidefemi1'
+        })
+        .end((err, res) => {
+          expect(res.body.status).eql('Bad Request');
+          expect(res.body.code).eql(400);
+          expect(res.body.messages).eql('Invalid Credentials');
+          done(err);
+        });
+    });
+    it('it should not signin a user with an empty password', (done) => {
+      chai.request(app)
+        .post('/api/v1/auth/signin')
+        .send({
+          email: 'abejdiefemi@gmail.com',
+          password: ''
+        })
+        .end((err, res) => {
+          expect(res.body.status).eql('Bad Request');
+          expect(res.body.code).eql(400);
+          expect(res.body.messages).eql('Invalid Credentials');
+          done(err);
+        });
+    });
+    it('it should not signin a user if password is less than 5', (done) => {
+      chai.request(app)
+        .post('/api/v1/auth/signin')
+        .send({
+          email: 'abejdiefemi@gmail.com',
+          password: 'aaa'
+        })
+        .end((err, res) => {
+          expect(res.body.status).eql('Bad Request');
+          expect(res.body.code).eql(400);
+          expect(res.body.messages).eql('Invalid Credentials');
+          done(err);
+        });
+    });
+    it('it should not signin a user with an invalid email', (done) => {
+      chai.request(app)
+        .post('/api/v1/auth/signin')
+        .send({
+          email: 'abejide',
+          password: 'abejidefemi1'
+        })
+        .end((err, res) => {
+          expect(res.body.status).eql('Bad Request');
+          expect(res.body.code).eql(400);
+          expect(res.body.messages).eql('Invalid Credentials');
+          done(err);
+        });
+    });
     it('it should not sign in a user with an email that does not exist',
       (done) => {
         chai.request(app)
