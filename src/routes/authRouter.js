@@ -134,7 +134,11 @@ authRouter.put(
    *         schema:
    *           type: object
    */
-authRouter.post('/signin', UserController.signIn);
+authRouter.post(
+  '/signin',
+  UserValidator.UserSignInValidator,
+  UserController.signIn
+);
 authRouter
   .get('/verify', TokenAuthenticate.tokenVerify, UserController.verifyEmail);
 
