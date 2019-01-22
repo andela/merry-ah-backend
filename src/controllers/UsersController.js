@@ -4,9 +4,10 @@ import TokenAuthenticate from '../helpers/TokenAuthenticate';
 import Response from '../helpers/response';
 import { passwordHash, comparePassword } from '../helpers/passwordHash';
 import EmailNotificationAPI from '../helpers/EmailNotificationAPI';
-import basePath from '../helpers/basePath';
+import basePath from '../helpers/basepath';
+import LikeUnlike from '../db/service/LikeUnlike';
 
-const { User, Profile } = models;
+const { User, Profile, } = models;
 
 
 const tokenExpireTime = '10hr';
