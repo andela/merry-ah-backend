@@ -326,7 +326,7 @@ describe('Users Endpoint API Test', () => {
     });
     it('it should not update user with empty fields', (done) => {
       chai.request(app)
-        .put('/api/v1/users/profile')
+        .put('/api/v1/users/profile-update')
         .set('Authorization', userToken)
         .send({})
         .end((err, res) => {
@@ -342,7 +342,7 @@ describe('Users Endpoint API Test', () => {
     });
     it('it should not update user with empty fields', (done) => {
       chai.request(app)
-        .put('/api/v1/users/profile')
+        .put('/api/v1/users/profile-update')
         .set('Authorization', updateToken)
         .send(invalidImage)
         .end((err, res) => {
@@ -354,7 +354,7 @@ describe('Users Endpoint API Test', () => {
     });
     it('it should not update user with empty fields', (done) => {
       chai.request(app)
-        .put('/api/v1/users/profile')
+        .put('/api/v1/users/profile-update')
         .set('Authorization', updateToken)
         .send(invalidBio)
         .end((err, res) => {
@@ -366,7 +366,7 @@ describe('Users Endpoint API Test', () => {
     });
     it('it should not update user with space in the fields', (done) => {
       chai.request(app)
-        .put('/api/v1/users/profile')
+        .put('/api/v1/users/profile-update')
         .set('Authorization', updateToken)
         .send({ bio: 'hahh jhvhjv hhv hgghg hhjhhj', imgURL: 'hhxvvh.gif', userType: '       ' })
         .end((err, res) => {
@@ -378,7 +378,7 @@ describe('Users Endpoint API Test', () => {
     });
     it('it should not update user with wrong usertype', (done) => {
       chai.request(app)
-        .put('/api/v1/users/profile')
+        .put('/api/v1/users/profile-update')
         .set('Authorization', updateToken)
         .send(invalidProfile)
         .end((err, res) => {
@@ -389,7 +389,7 @@ describe('Users Endpoint API Test', () => {
     });
     it('it should update logged in user with valid update', (done) => {
       chai.request(app)
-        .put('/api/v1/users/profile')
+        .put('/api/v1/users/profile-update')
         .set('authorization', updateToken)
         .send({ bio: 'hahh jhvhjv hhv hgghg hhjhhj', imgURL: 'hhxvvh.png', userType: 'user' })
         .end((err, res) => {
@@ -399,7 +399,7 @@ describe('Users Endpoint API Test', () => {
     });
     it('it should not update user with invalid token', (done) => {
       chai.request(app)
-        .put('/api/v1/users/profile')
+        .put('/api/v1/users/profile-update')
         .set('authorization', `invalid${updateToken}`)
         .send({ bio: 'hahh jhvhjv hhv hgghg hhjhhj', imgURL: 'hhxvvh.gif', userType: 'user' })
         .end((err, res) => {
@@ -409,7 +409,7 @@ describe('Users Endpoint API Test', () => {
     });
     it('it should not update non logged in user', (done) => {
       chai.request(app)
-        .put('/api/v1/users/profile')
+        .put('/api/v1/users/profile-update')
         .send(validProfile)
         .end((err, res) => {
           expect(res.body.message).eql('No token provided');

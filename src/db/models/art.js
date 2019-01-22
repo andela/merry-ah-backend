@@ -32,6 +32,11 @@ module.exports = (sequelize, DataTypes) => {
     Art.hasOne(models.Transaction, {
       foreignKey: 'artId'
     });
+    Art.hasOne(models.RateSummary, {
+      foreignKey: 'artId',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    });
   };
   return Art;
 };

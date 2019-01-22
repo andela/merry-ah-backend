@@ -12,12 +12,12 @@ const {
   validArticle, validUpdatedArticle,
   invalidArticle, invalidUpdatedArticle, invalidUpdatedArticleCategory
 } = artDetails;
-const { validUser, validUserTT } = userDetails;
+const { validUserTT, validUserLogin } = userDetails;
 
 before((done) => {
   chai.request(app)
-    .post('/api/v1/auth/signup')
-    .send(validUser)
+    .post('/api/v1/auth/signin')
+    .send(validUserLogin)
     .end((err, res) => {
       done();
       jwtToken = res.body.data.token;

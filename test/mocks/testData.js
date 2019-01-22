@@ -9,6 +9,10 @@ const userDetails = {
     imgURL: '',
     userType: 'user',
   },
+  validUserLogin: {
+    email: 'email@gmail.com',
+    password: 'abcdefgh'
+  },
   validUserSignup: {
     firstName: 'Femi',
     lastName: 'Ajibade',
