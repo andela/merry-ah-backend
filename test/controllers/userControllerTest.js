@@ -28,9 +28,9 @@ describe('Users Endpoint API Test', () => {
   before((done) => {
     chai.request(app)
       .post('/api/v1/auth/signin')
-      .send({ email: 'email@email.com', password: 'abcdefgh' })
+      .send({ email: 'email@gmail.com', password: 'abcdefgh' })
       .end((err, res) => {
-        // eslint-disable-next-line prefer-destructuring
+        userToken = res.body.data.token;
         updateToken = res.body.data.token;
         done(err);
       });
@@ -151,7 +151,7 @@ describe('Users Endpoint API Test', () => {
       chai.request(app)
         .post('/api/v1/auth/forgot-password')
         .send({
-          email: 'email@email.com'
+          email: 'email@gmail.com'
         })
         .end((err, res) => {
           expect(res.body.messages).eql('Email sent successfully');

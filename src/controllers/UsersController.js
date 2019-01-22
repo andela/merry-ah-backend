@@ -63,7 +63,7 @@ class UsersController {
       const recipient = registeredEmail;
       const subject = 'Email Verification';
       const message = `<h1>Verification link</h1><br>
-        <a href='${path}/api/v1/auth/user?token=${token}'>
+        <a href='${path}/api/v1/auth/verify?token=${token}'>
         <button style='font-size: 20px; background: orange;'>verify</button>
         </a><br>
         <p>Kindly click on the button above to verify your email. 
@@ -253,11 +253,11 @@ class UsersController {
 
   /**
    * @static
-   * @desc POST /api/v1/auth/forgot-password
+   * @desc PUT /api/v1/users/profile
    * @param {object} req
    * @param {object} res
    * @memberof UsersController
-   * @returns successful pasword reset
+   * @returns successful profile update
    */
   static async updateProfile(req, res) {
     try {
@@ -298,6 +298,41 @@ class UsersController {
       );
       return res.status(response.code).json(response);
     }
+  }
+
+  /**
+   * @static
+   * @desc POST /api/v1/auth/verify Email
+   * @param {object} req
+   * @param {object} res
+   * @memberof UsersController
+   * @returns successful email verification
+   */
+  static async verifyEmail(req, res) {
+    const { id } = req.verifyUser;
+    const verified = await User.update({
+      isVerified: true,
+    },
+    {
+      where: {
+        id,
+      }
+    });
+
+    if (!verified) {
+      const response = new Response(
+        'Bad Request',
+        400,
+        'Unable to verify email',
+      );
+      return res.status(response.code).json(response);
+    }
+    const response = new Response(
+      'Ok',
+      200,
+      'Email verified successful',
+    );
+    return res.status(response.code).json(response);
   }
 }
 

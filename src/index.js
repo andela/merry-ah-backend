@@ -1,6 +1,9 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import passport from 'passport';
+import dotenv from 'dotenv';
+import session from 'express-session';
 import morgan from 'morgan';
 import requestId from 'express-request-id';
 import expressValidator from 'express-validator';
@@ -8,8 +11,23 @@ import routes from './routes/index';
 import Response from './helpers/response';
 import imageValidator from './middlewares/imageValidator';
 
+dotenv.config();
 const app = express();
+app.use(session({
+  secret: process.env.SECRET,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false },
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
 
+passport.deserializeUser((user, done) => {
+  done(null, user);
+});
 const port = process.env.PORT || 9000;
 
 let response;
