@@ -247,18 +247,6 @@ describe('Users Endpoint API Test', () => {
     });
   });
   describe('USERS GET REQUESTS', () => {
-    it('it should return not found status if artists do not exist', (done) => {
-      chai.request(app)
-        .get('/api/v1/users/artists')
-        .set('x-access-token', loginToken)
-        .end((err, res) => {
-          expect(res.body).to.be.a('object');
-          expect(res.body.messages).eql('There is no existing artist');
-          expect(res.status).to.equal(404);
-          expect(res.body.status).eql('Not Found');
-          done();
-        });
-    });
     it('should return error status if artist id is not an integer', (done) => {
       chai.request(app)
         .get('/api/v1/users/artists/ddd')
@@ -309,7 +297,7 @@ describe('Users Endpoint API Test', () => {
     });
     it('it should return profile of one artist on the platform', (done) => {
       chai.request(app)
-        .get(`/api/v1/users/artists/${3}`)
+        .get(`/api/v1/users/artists/${1}`)
         .set('x-access-token', loginToken)
         .end((err, res) => {
           expect(res.body).to.be.a('object');
