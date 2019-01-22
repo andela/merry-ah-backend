@@ -31,7 +31,6 @@ class TokenAuthenticate {
   static async tokenVerify(req, res, next) {
     const token = req.headers.authorization
       || req.headers['x-access-token'] || req.query.token || req.body.token;
-    
     if (!token) {
       return res.status(401).send({
         status: 'error',

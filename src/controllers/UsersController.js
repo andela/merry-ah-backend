@@ -252,6 +252,94 @@ class UsersController {
 
   /**
    * @static
+   * @desc GET /api/v1/users/artists
+   * @param {object} req
+   * @param {object} res
+   * @memberof UsersController
+   * @returns all artists on the platform
+   */
+  static async listArtists(req, res) {
+    try {
+      const artists = await User.findAll({
+        where: {
+          userType: 'artist'
+        },
+        attributes: ['id', 'username', 'email', 'userType'],
+        include: [{
+          model: Profile,
+          as: 'profile',
+          attributes: ['firstName', 'lastName', 'bio', 'imgURL']
+        }]
+      });
+
+      const response = new Response(
+        'Ok',
+        200,
+        'Returned all artists',
+        { artists }
+      );
+      return res.status(response.code).json(response);
+    } catch (err) {
+      const response = new Response(
+        'Internal server error',
+        500,
+        `${err}`,
+      );
+      return res.status(response.code).json(response);
+    }
+  }
+
+  /**
+   * @static
+   * @desc GET /api/v1/users/artists/:artistId
+   * @param {object} req
+   * @param {object} res
+   * @memberof UsersController
+   * @returns one artist on the platform
+   */
+  static async getOneArtist(req, res) {
+    try {
+      const { artistId } = req.params;
+
+      const artist = await User.findOne({
+        where: {
+          id: artistId,
+          userType: 'artist',
+        },
+        attributes: ['id', 'username', 'email', 'userType'],
+        include: [{
+          model: Profile,
+          as: 'profile',
+          attributes: ['firstName', 'lastName', 'bio', 'imgURL']
+        }]
+      });
+      if (!artist) {
+        const response = new Response(
+          'Not Found',
+          404,
+          'Artist was not found',
+        );
+        return res.status(response.code).json(response);
+      }
+
+      const response = new Response(
+        'Ok',
+        200,
+        'Returned one artist',
+        { artist }
+      );
+      return res.status(response.code).json(response);
+    } catch (err) {
+      const response = new Response(
+        'Internal server error',
+        500,
+        `${err}`,
+      );
+      return res.status(response.code).json(response);
+    }
+  }
+
+  /**
    * @desc POST /api/v1/auth/verify
    * @param {object} req
    * @param {object} res
