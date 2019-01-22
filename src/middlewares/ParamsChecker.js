@@ -12,7 +12,7 @@ class ParamsChecker {
      * @returns {function} next
      */
   static idChecker(req, res, next) {
-    const { userId, artId } = req.params;
+    const { userId, artId, commentId } = req.params;
     const validId = /^[0-9]+$/;
 
     const checkParam = (param) => {
@@ -28,6 +28,7 @@ class ParamsChecker {
     };
     if (userId) checkParam(userId);
     if (artId) checkParam(artId);
+    if (commentId) checkParam(commentId);
   }
 }
 
