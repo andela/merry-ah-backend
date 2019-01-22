@@ -29,11 +29,11 @@ module.exports = {
       },
     },
     password: {
-      allowNull: false,
+      allowNull: true,
       type: Sequelize.STRING
     },
     userType: {
-      allowNull: false,
+      allowNull: true,
       type: Sequelize.STRING
     },
     signUpType: {

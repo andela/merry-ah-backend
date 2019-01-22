@@ -134,5 +134,13 @@ const artDetails = {
   },
 };
 
+const commentDetails = {
+  validComment: {
+    body: 'this is a good comment'
+  },
+  invalidComment: {
+    body: '  '
+  },
+};
 // eslint-disable-next-line import/prefer-default-export
-export { userDetails, artDetails };
+export { userDetails, artDetails, commentDetails };
