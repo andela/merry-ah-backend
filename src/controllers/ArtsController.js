@@ -1,9 +1,10 @@
+// eslint-disable-next-line import/prefer-default-export
 import sequelize from 'sequelize';
 import models from '../db/models';
 import { Response, Slugify } from '../helpers/index';
 
 const {
-  Art, Media, Category, User, Comment, Like
+  Art, Media, Category, User, Comment
 } = models;
 
 let response;
