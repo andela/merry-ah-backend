@@ -53,7 +53,19 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use('/api/v1/', routes);
-
+/**
+ * @swagger
+ * /:
+ *  get:
+ *    summary: Author's Haven root endpoint
+ *    description: Returns a welcome message
+ *    responses:
+ *      200:
+ *        description: Welcome to Authors Haven
+ *        schema:
+ *          type: string
+ *          default: "Test Successful"
+ */
 app.all('/', ((req, res) => {
   response = new Response(
     'Ok',
