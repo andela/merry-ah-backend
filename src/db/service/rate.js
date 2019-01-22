@@ -15,7 +15,8 @@ module.exports = {
         userId,
       },
       defaults: { rating }
-    });
+    }).spread(obj => obj.get());
+
     const getSumRating = await Rate.sum('rating', { where: { artId } });
     const getCountRating = await Rate.count({ where: { artId } });
     const caculatedRating = (getSumRating / getCountRating);
@@ -31,7 +32,6 @@ module.exports = {
         caculatedRate: caculatedRating
       });
     }
-
     return query;
   },
   async getItemRating(artId) {
