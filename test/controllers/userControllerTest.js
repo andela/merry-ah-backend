@@ -115,7 +115,7 @@ describe('Users Endpoint API Test', () => {
         .end((err, res) => {
           expect(res.body.status).eql('Bad Request');
           expect(res.body.code).eql(400);
-          expect(res.body.messages).eql('Invalid credentials');
+          expect(res.body.messages).eql('Invalid Credentials');
           done(err);
         });
     });
@@ -129,7 +129,7 @@ describe('Users Endpoint API Test', () => {
         .end((err, res) => {
           expect(res.body.status).eql('Bad Request');
           expect(res.body.code).eql(400);
-          expect(res.body.messages).eql('Invalid credentials');
+          expect(res.body.messages).eql('Invalid Credentials');
           done(err);
         });
     });
@@ -143,7 +143,7 @@ describe('Users Endpoint API Test', () => {
         .end((err, res) => {
           expect(res.body.status).eql('Bad Request');
           expect(res.body.code).eql(400);
-          expect(res.body.messages).eql('Invalid credentials');
+          expect(res.body.messages).eql('Invalid Credentials');
           done(err);
         });
     });
@@ -157,7 +157,7 @@ describe('Users Endpoint API Test', () => {
         .end((err, res) => {
           expect(res.body.status).eql('Bad Request');
           expect(res.body.code).eql(400);
-          expect(res.body.messages).eql('Invalid credentials');
+          expect(res.body.messages).eql('Invalid Credentials');
           done(err);
         });
     });
@@ -168,7 +168,7 @@ describe('Users Endpoint API Test', () => {
           .send(invalidUser.email, invalidUser.password)
           .end((err, res) => {
             expect(res.body.status).eql('Bad Request');
-            expect(res.body.messages).eql('Invalid credentials');
+            expect(res.body.messages).eql('Invalid Credentials');
             done(err);
           });
       });
