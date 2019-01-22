@@ -2,19 +2,19 @@ import express from 'express';
 import ArtController from '../controllers/ArtsController';
 import { TokenAuthenticate } from '../helpers/index';
 
-const authRouter = express.Router();
+const artsRoute = express.Router();
 
-authRouter.post('/', TokenAuthenticate.tokenVerify, ArtController.create);
+artsRoute.post('/', TokenAuthenticate.tokenVerify, ArtController.create);
 
-authRouter.put('/:slug', TokenAuthenticate.tokenVerify, ArtController.update);
+artsRoute.put('/:slug', TokenAuthenticate.tokenVerify, ArtController.update);
 
-authRouter.delete(
+artsRoute.delete(
   '/:slug',
   TokenAuthenticate.tokenVerify,
   ArtController.delete
 );
 
-authRouter.get('/', ArtController.getAllArticles);
-authRouter.get('/:slug', ArtController.getSingleArticle);
+artsRoute.get('/', ArtController.getAllArticles);
+artsRoute.get('/:slug', ArtController.getSingleArticle);
 
-export default authRouter;
+export default artsRoute;

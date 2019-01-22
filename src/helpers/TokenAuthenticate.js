@@ -29,7 +29,7 @@ class TokenAuthenticate {
    * @memberof TokenAuthenticate
    */
   static async tokenVerify(req, res, next) {
-    const token = req.headers.Authorization
+    const token = req.headers.authorization
       || req.headers['x-access-token'] || req.query.token || req.body.token;
     if (!token) {
       return res.status(401).send({
@@ -47,22 +47,6 @@ class TokenAuthenticate {
         message: 'Unauthorized token',
       });
     }
-  }
-
-  /**
-   *Decode Token Method
-   * @static
-   * @param {object} req
-   * @returns {function} returns an object with status and method property
-   * @memberof TokenAuthenticate
-   */
-  static async decodeToken(req) {
-    const token = req.headers.Authorization
-      || req.headers['x-access-token'] || req.query.token || req.body.token;
-    if (!token) {
-      return { error: 'Unauthorized token' };
-    }
-    return jwt.decode(token, process.env.SECRET);
   }
 }
 

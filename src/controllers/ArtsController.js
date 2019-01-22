@@ -1,8 +1,9 @@
+import sequelize from 'sequelize';
 import models from '../db/models';
-import { TokenAuthenticate, Response, Slugify } from '../helpers/index';
+import { Response, Slugify } from '../helpers/index';
 
 const {
-  Art, Media, Category, User
+  Art, Media, Category, User, Comment, Like
 } = models;
 
 let response;
@@ -19,11 +20,10 @@ class ArtsController {
    */
   static async create(req, res) {
     try {
-      const decoded = await TokenAuthenticate.decodeToken(req);
       const defaultStatus = 0;
       const validationErrors = [];
 
-      const { id: artistId } = decoded;
+      const { id: artistId } = req.verifyUser;
 
       const {
         title, description, categoryId, media,
@@ -48,7 +48,7 @@ class ArtsController {
         return res.status(response.code).json(response);
       }
 
-      const slugifiedTitle = Slugify.slugify(title, true);
+      const slugifiedTitle = Slugify.slugify(title);
 
       const checkCategory = await Category.findOne({ where: { id: 1 } });
       if (!checkCategory) {
@@ -105,7 +105,7 @@ class ArtsController {
       return res.status(response.code).json(response);
     } catch (err) {
       response = new Response(
-        'Not ok',
+        'Not Ok',
         500,
         `${err}`,
       );
@@ -122,10 +122,9 @@ class ArtsController {
    */
   static async update(req, res) {
     try {
-      const decoded = await TokenAuthenticate.decodeToken(req);
       const validationErrors = [];
 
-      const { id: artistId } = decoded;
+      const { id: artistId } = req.verifyUser;
       const { slug } = req.params;
 
       const artToUpdate = await Art.findOne({
@@ -173,7 +172,7 @@ class ArtsController {
         return res.status(response.code).json(response);
       }
 
-      const slugifiedTitle = Slugify.slugify(title, true);
+      const slugifiedTitle = Slugify.slugify(title);
 
       const updatedArticle = {
         id: artToUpdate.id,
@@ -230,8 +229,7 @@ class ArtsController {
     try {
       const { slug } = req.params;
 
-      const decoded = await TokenAuthenticate.decodeToken(req);
-      const { id: artistId } = decoded;
+      const { id: artistId } = req.verifyUser;
 
       const artToDelete = await Art.findOne({
         where: { slug }
@@ -307,6 +305,10 @@ class ArtsController {
             model: User,
             as: 'Author',
             attributes: ['username'],
+          },
+          {
+            model: Comment,
+            attributes: [],
           }
         ],
         order: [
@@ -322,7 +324,9 @@ class ArtsController {
           'description',
           'featuredImg',
           'createdAt',
+          [sequelize.fn('COUNT', 'comments.id'), 'commentsCount'],
         ],
+        group: ['Art.id'],
         limit: limitDefault,
         offset,
       });
@@ -367,6 +371,10 @@ class ArtsController {
             model: Category,
             as: 'Category',
             attributes: ['id', 'categoryName'],
+          },
+          {
+            model: Comment,
+            attributes: ['id', 'userId', 'body', 'createdAt'],
           },
           {
             model: User,
