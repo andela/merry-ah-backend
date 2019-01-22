@@ -49,7 +49,6 @@ class EmailNotificationAPI {
    */
   async sendEmail() {
     const mailOptions = this.mailOptions;
-
     if (process.env.NODE_ENV === 'production') {
       try {
         const mail = await EmailNotificationAPI.transportCreator()
