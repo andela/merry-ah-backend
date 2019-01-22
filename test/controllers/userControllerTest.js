@@ -15,9 +15,10 @@ const {
   invalidUserEmail,
   invalidUserType,
   spacedField,
+  validArtist,
 } = userDetails;
 
-let userToken;
+let userToken, loginToken;
 
 describe('Users Endpoint API Test', () => {
   // eslint-disable-next-line no-undef
@@ -138,6 +139,8 @@ describe('Users Endpoint API Test', () => {
         .end((err, res) => {
           expect(res.body.status).eql('Ok');
           expect(res.body.messages).eql('User logged in successfully');
+          const { token } = res.body.data;
+          loginToken = token;
           done(err);
         });
     });
@@ -240,6 +243,70 @@ describe('Users Endpoint API Test', () => {
           expect(res.status).to.equal(400);
           expect(res.body.status).eql('Bad Request');
           done(err);
+        });
+    });
+  });
+  describe('USERS GET REQUESTS', () => {
+    it('should return error status if artist id is not an integer', (done) => {
+      chai.request(app)
+        .get('/api/v1/users/artists/ddd')
+        .set('x-access-token', loginToken)
+        .end((err, res) => {
+          expect(res.body).to.be.a('object');
+          expect(res.body.messages).eql('Artist ID must be an integer');
+          expect(res.status).to.equal(400);
+          expect(res.body.status).eql('Bad Request');
+          done();
+        });
+    });
+    it('it should return not found status if artist do not exist', (done) => {
+      chai.request(app)
+        .get(`/api/v1/users/artists/${100}`)
+        .set('x-access-token', loginToken)
+        .end((err, res) => {
+          expect(res.body).to.be.a('object');
+          expect(res.body.messages).eql('Artist was not found');
+          expect(res.status).to.equal(404);
+          expect(res.body.status).eql('Not Found');
+          done();
+        });
+    });
+  });
+  describe('USERS GET REQUESTS', () => {
+    before((done) => {
+      chai.request(app)
+        .post('/api/v1/auth/signup')
+        .send(validArtist)
+        .end((err) => {
+          done(err);
+        });
+    });
+    it('it should fetch list of artists on the platform', (done) => {
+      chai.request(app)
+        .get('/api/v1/users/artists')
+        .set('x-access-token', loginToken)
+        .end((err, res) => {
+          expect(res.body).to.be.a('object');
+          expect(res.body.messages).eql('Returned all artists');
+          expect(res.status).to.equal(200);
+          expect(res.body.status).eql('Ok');
+          expect(res.body.data).to.have.property('artists');
+          expect(res.body.data.artists).to.be.a('array');
+          done();
+        });
+    });
+    it('it should return profile of one artist on the platform', (done) => {
+      chai.request(app)
+        .get(`/api/v1/users/artists/${1}`)
+        .set('x-access-token', loginToken)
+        .end((err, res) => {
+          expect(res.body).to.be.a('object');
+          expect(res.body.messages).eql('Returned one artist');
+          expect(res.status).to.equal(200);
+          expect(res.body.status).eql('Ok');
+          expect(res.body.data).to.have.property('artist');
+          expect(res.body.data.artist).to.be.a('object');
+          done();
         });
     });
   });
