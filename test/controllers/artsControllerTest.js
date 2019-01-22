@@ -164,7 +164,7 @@ describe('Arts Endpoint API Test', () => {
 
     it('it should not update an article with invalid slug', (done) => {
       chai.request(app)
-        .put(`/api/v1/arts/ss-slug`)
+        .put('/api/v1/arts/ss-slug')
         .set('x-access-token', jwtToken)
         .send(invalidUpdatedArticle)
         .end((err, res) => {
