@@ -206,8 +206,8 @@ describe('Arts Endpoint API Test', () => {
         .delete(`/api/v1/arts/${validUpdatedArticleSlug}`)
         .set('x-access-token', jwtToken)
         .end((err, res) => {
-          expect(res.body.status).eql('Ok');
           expect(res.status).to.equal(200);
+          expect(res.body.status).eql('Ok');
           expect(res.body.messages).eql('Article deleted successfully');
           expect(res.body.data).to.have.property('artToDelete');
           done(err);
