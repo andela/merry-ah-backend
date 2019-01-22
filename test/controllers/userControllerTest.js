@@ -150,7 +150,6 @@ describe('Users Endpoint API Test', () => {
         .end((err, res) => {
           expect(res.body.status).eql('Bad Request');
           expect(res.body.messages).eql('Invalid credentials');
-          console.log(res.body)
           expect(res.body.data[0]).eql('Email is required');
           expect(res.body.data[1]).eql('Email is not valid');
           expect(res.body.data[2]).eql('Password is required');
