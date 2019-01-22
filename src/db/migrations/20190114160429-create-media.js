@@ -15,8 +15,6 @@ module.exports = {
       },
       artId: {
         type: Sequelize.INTEGER,
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
         references: {
           model: 'Arts',
           key: 'id',
