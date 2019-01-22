@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import express from 'express';
 import UserController from '../controllers/UsersController';
 import emailCheck from '../middlewares/emailCheck';

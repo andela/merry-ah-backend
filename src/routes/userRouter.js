@@ -8,7 +8,7 @@ const userRouter = express.Router();
 
 userRouter
   .put(
-    '/profile',
+    '/profile-update',
     TokenAuthenticate.tokenVerify,
     UserValidator.userProfileValidator,
     UsersController.updateProfile

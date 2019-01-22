@@ -22,7 +22,7 @@ describe('Comments Endpoint API Test', () => {
       });
   });
   describe('Comments POST REQUESTS', () => {
-    it('it should comment add comment for a product that exists', (done) => {
+    it('it should add comment for a product that exists', (done) => {
       chai.request(app)
         .post('/api/v1/arts/comments/1')
         .set('Authorization', userToken)
