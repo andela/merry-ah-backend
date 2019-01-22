@@ -26,8 +26,8 @@ class ParamsChecker {
       }
       return next();
     };
-    if (userId) checkParam(userId);
-    if (artId) checkParam(artId);
+    /* istanbul ignore next */if (userId) checkParam(userId);
+    /* istanbul ignore next */if (artId) checkParam(artId);
   }
 }
 
