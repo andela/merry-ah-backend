@@ -16,7 +16,7 @@ const { validUser, validUserTT } = userDetails;
 
 before((done) => {
   chai.request(app)
-    .post('/api/v1/auth/signup')
+    .post('/api/v1/auth/signin')
     .send(validUser)
     .end((err, res) => {
       done();
