@@ -60,5 +60,14 @@ const userDetails = {
     userType: 'user',
   },
 };
+
+const commentDetails = {
+  validComment: {
+    body: 'this is a good comment'
+  },
+  invalidComment: {
+    body: '  '
+  },
+};
 // eslint-disable-next-line import/prefer-default-export
-export { userDetails };
+export { userDetails, commentDetails };
