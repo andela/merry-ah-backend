@@ -93,7 +93,7 @@ class CommentsController {
         const response = new Response(
           'Unauthorized',
           401,
-          'You are not authorized to access this route',
+          'You are not authorized to update this comment',
         );
         return res.status(response.code).json(response);
       }
@@ -101,6 +101,45 @@ class CommentsController {
         'Not Found',
         404,
         'This comment does not exist',
+      );
+      return res.status(response.code).json(response);
+    } catch (err) {
+      const response = new Response(
+        'Not ok',
+        500,
+        `${err}`,
+      );
+      return res.status(response.code).json(response);
+    }
+  }
+
+  /**
+   * @static
+   * @param {Object} req
+   * @param {object} res
+   * @return {object} Edit history comment
+   */
+  static async getEditHistory(req, res) {
+    try {
+      const { commentId } = req.params;
+      const getUpdatedComments = await UpdatedComment.findAll({
+        where: {
+          commentId,
+        }
+      });
+      if (getUpdatedComments.length < 1) {
+        const response = new Response(
+          'Not found',
+          404,
+          'This comment has not been edited',
+        );
+        return res.status(response.code).json(response);
+      }
+      const response = new Response(
+        'Ok',
+        200,
+        'Successfully retrieved updated comment history',
+        getUpdatedComments
       );
       return res.status(response.code).json(response);
     } catch (err) {

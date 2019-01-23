@@ -2,14 +2,14 @@ module.exports = {
   up: queryInterface => queryInterface.bulkInsert('Comments', [{
     artId: 1,
     body: 'Comment for user 1, art 1',
-    userId: 1,
+    userId: 4,
     createdAt: new Date(),
     updatedAt: new Date()
   },
   {
     artId: 2,
     body: 'Comment for user 1, art 2',
-    userId: 1,
+    userId: 4,
     createdAt: new Date(),
     updatedAt: new Date()
   },
