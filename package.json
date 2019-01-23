@@ -17,7 +17,8 @@
   },
   "nyc": {
     "exclude": [
-      "src/helpers/EmailNotificationAPI.js"
+      "src/helpers/EmailNotificationAPI.js",
+      "test"
     ]
   },
   "author": "Andela Simulations Programme",

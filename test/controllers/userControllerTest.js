@@ -10,13 +10,20 @@ chai.use(chaiHttp);
 const { expect } = chai;
 const {
   validUser,
-  validUser1,
+  validUserSignup,
   invalidUser,
   invalidUserEmail,
   invalidUserType,
   spacedField,
-  validArtist,
+  validProfile,
+  invalidProfile,
+  invalidImage,
+  invalidBio,
+  validArtist
 } = userDetails;
+
+
+let updateToken;
 
 let userToken, loginToken;
 
@@ -24,9 +31,11 @@ describe('Users Endpoint API Test', () => {
   // eslint-disable-next-line no-undef
   before((done) => {
     chai.request(app)
-      .post('/api/v1/auth/signup')
-      .send(validUser)
-      .end((err) => {
+      .post('/api/v1/auth/signin')
+      .send({ email: 'email@gmail.com', password: 'abcdefgh' })
+      .end((err, res) => {
+        userToken = res.body.data.token;
+        updateToken = res.body.data.token;
         done(err);
       });
   });
@@ -34,7 +43,7 @@ describe('Users Endpoint API Test', () => {
     it('it should signup a valid user', (done) => {
       chai.request(app)
         .post('/api/v1/auth/signup')
-        .send(validUser1)
+        .send(validUserSignup)
         .end((err, res) => {
           expect(res.body).to.be.a('object');
           expect(res.body.messages)
@@ -44,7 +53,7 @@ describe('Users Endpoint API Test', () => {
           done(err);
         });
     });
-    it('it should signup user if email exist', (done) => {
+    it('it should not signup user if email exist', (done) => {
       chai.request(app)
         .post('/api/v1/auth/signup')
         .send(validUser)
@@ -116,7 +125,7 @@ describe('Users Endpoint API Test', () => {
         .end((err, res) => {
           expect(res.body.status).eql('Bad Request');
           expect(res.body.code).eql(400);
-          expect(res.body.messages).eql('Invalid Credentials');
+          expect(res.body.messages).eql('Invalid credentials');
           done(err);
         });
     });
@@ -130,7 +139,21 @@ describe('Users Endpoint API Test', () => {
         .end((err, res) => {
           expect(res.body.status).eql('Bad Request');
           expect(res.body.code).eql(400);
-          expect(res.body.messages).eql('Invalid Credentials');
+          expect(res.body.messages).eql('Invalid credentials');
+          done(err);
+        });
+    });
+    it('it should not sign in an invalid user', (done) => {
+      chai.request(app)
+        .post('/api/v1/auth/signin')
+        .send({})
+        .end((err, res) => {
+          expect(res.body.status).eql('Bad Request');
+          expect(res.body.messages).eql('Invalid credentials');
+          expect(res.body.data[0]).eql('Email is required');
+          expect(res.body.data[1]).eql('Email is not valid');
+          expect(res.body.data[2]).eql('Password is required');
+          expect(res.body.data[3]).eql('Minimum password length is 5 characters');
           done(err);
         });
     });
@@ -144,7 +167,7 @@ describe('Users Endpoint API Test', () => {
         .end((err, res) => {
           expect(res.body.status).eql('Bad Request');
           expect(res.body.code).eql(400);
-          expect(res.body.messages).eql('Invalid Credentials');
+          expect(res.body.messages).eql('Invalid credentials');
           done(err);
         });
     });
@@ -158,7 +181,7 @@ describe('Users Endpoint API Test', () => {
         .end((err, res) => {
           expect(res.body.status).eql('Bad Request');
           expect(res.body.code).eql(400);
-          expect(res.body.messages).eql('Invalid Credentials');
+          expect(res.body.messages).eql('Invalid credentials');
           done(err);
         });
     });
@@ -169,7 +192,7 @@ describe('Users Endpoint API Test', () => {
           .send(invalidUser.email, invalidUser.password)
           .end((err, res) => {
             expect(res.body.status).eql('Bad Request');
-            expect(res.body.messages).eql('Invalid Credentials');
+            expect(res.body.messages).eql('Invalid credentials');
             done(err);
           });
       });
@@ -204,7 +227,7 @@ describe('Users Endpoint API Test', () => {
       chai.request(app)
         .post('/api/v1/auth/forgot-password')
         .send({
-          email: 'julietezekwe@gmail.com'
+          email: 'email@gmail.com'
         })
         .end((err, res) => {
           expect(res.body.messages).eql('Email sent successfully');
@@ -298,6 +321,100 @@ describe('Users Endpoint API Test', () => {
           expect(res.body.messages).eql('Passwords do not match');
           expect(res.status).to.equal(400);
           expect(res.body.status).eql('Bad Request');
+          done(err);
+        });
+    });
+    it('it should not update user with empty fields', (done) => {
+      chai.request(app)
+        .put('/api/v1/users/profile-update')
+        .set('Authorization', userToken)
+        .send({})
+        .end((err, res) => {
+          expect(res.body.status).eql('Bad Request');
+          expect(res.body.messages).eql('Invalid credentials');
+          expect(res.body.data[0]).eql('Biography cannot be empty');
+          expect(res.body.data[1]).eql('Biography should be more than 5 words');
+          expect(res.body.data[2]).eql('imgURL is cannot be empty');
+          expect(res.body.data[3]).eql('Only Jpeg, Png or Gif is accepted image format');
+          expect(res.body.data[4]).eql('userType cannot be empty');
+          done(err);
+        });
+    });
+    it('it should not update user with empty fields', (done) => {
+      chai.request(app)
+        .put('/api/v1/users/profile-update')
+        .set('Authorization', updateToken)
+        .send(invalidImage)
+        .end((err, res) => {
+          expect(res.body.status).eql('Bad Request');
+          expect(res.body.messages).eql('Invalid credentials');
+          expect(res.body.data[0]).eql('Only Jpeg, Png or Gif is accepted image format');
+          done(err);
+        });
+    });
+    it('it should not update user with empty fields', (done) => {
+      chai.request(app)
+        .put('/api/v1/users/profile-update')
+        .set('Authorization', updateToken)
+        .send(invalidBio)
+        .end((err, res) => {
+          expect(res.body.status).eql('Bad Request');
+          expect(res.body.messages).eql('Invalid credentials');
+          expect(res.body.data[0]).eql('Biography should be more than 5 words');
+          done(err);
+        });
+    });
+    it('it should not update user with space in the fields', (done) => {
+      chai.request(app)
+        .put('/api/v1/users/profile-update')
+        .set('Authorization', updateToken)
+        .send({ bio: 'hahh jhvhjv hhv hgghg hhjhhj', imgURL: 'hhxvvh.gif', userType: '       ' })
+        .end((err, res) => {
+          expect(res.body.status).eql('Bad Request');
+          expect(res.body.messages).eql('Invalid credentials');
+          expect(res.body.data[0]).eql('userType cannot be empty');
+          done(err);
+        });
+    });
+    it('it should not update user with wrong usertype', (done) => {
+      chai.request(app)
+        .put('/api/v1/users/profile-update')
+        .set('Authorization', updateToken)
+        .send(invalidProfile)
+        .end((err, res) => {
+          expect(res.body.status).eql('Not found');
+          expect(res.body.messages).eql('This user type does not exist');
+          done(err);
+        });
+    });
+    it('it should update logged in user with valid update', (done) => {
+      chai.request(app)
+        .put('/api/v1/users/profile-update')
+        .set('authorization', updateToken)
+        .send({ bio: 'hahh jhvhjv hhv hgghg hhjhhj', imgURL: 'hhxvvh.png', userType: 'user' })
+        .end((err, res) => {
+          expect(res.body.messages).eql('Profile updated successfully');
+          done(err);
+        });
+    });
+    it('it should not update user with invalid token', (done) => {
+      chai.request(app)
+        .put('/api/v1/users/profile-update')
+        .set('authorization', `invalid${updateToken}`)
+        .send({ bio: 'hahh jhvhjv hhv hgghg hhjhhj', imgURL: 'hhxvvh.gif', userType: 'user' })
+        .end((err, res) => {
+          expect(res.body.message).eql('Unauthorized token');
+          done(err);
+        });
+    });
+    it('it should not update non logged in user', (done) => {
+      chai.request(app)
+        .put('/api/v1/users/profile-update')
+        .send(validProfile)
+        .end((err, res) => {
+          expect(res.body.message).eql('No token provided');
+          expect(res.body.status).eql('error');
+          expect(res.status).eql(401);
           done(err);
         });
     });

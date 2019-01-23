@@ -81,7 +81,7 @@ describe('Pre-Rating Test', () => {
   });
   it('Creators should not be allowed to rate their items', (done) => {
     chai.request(app)
-      .post('/api/v1/rate/1')
+      .post('/api/v1/rate/4')
       .set('authorization', `${loginToken}`)
       .send({ rating: 5 })
       .end((err, res) => {

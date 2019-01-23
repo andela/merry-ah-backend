@@ -29,7 +29,7 @@ const emailCheck = async (req, res, next) => {
     );
     return res.status(response.code).json(response);
   }
-  if (!emailExist) next();
+  /* istanbul ignore next */ if (!emailExist) next();
 };
 
 export default emailCheck;

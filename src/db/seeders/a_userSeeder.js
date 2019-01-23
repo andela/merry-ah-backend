@@ -20,6 +20,16 @@ module.exports = {
     email: 'email1@gmail.com',
     createdAt: new Date(),
     updatedAt: new Date()
+  },
+  {
+    username: 'Juliet',
+    userType: 'user',
+    signUpType: 'local',
+    isVerified: true,
+    password: bcrypt.hashSync('femiok', bcrypt.genSaltSync(8)),
+    email: 'gentle883@gmail.com',
+    createdAt: new Date(),
+    updatedAt: new Date()
   }], {}),
 
   down: queryInterface => queryInterface.bulkDelete('Users', null, {})
