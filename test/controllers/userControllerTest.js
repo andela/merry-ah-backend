@@ -15,6 +15,7 @@ const {
   invalidUserEmail,
   invalidUserType,
   spacedField,
+  validArtist,
   validArtist1,
   validArtist2,
 } = userDetails;
@@ -104,6 +105,62 @@ describe('Users Endpoint API Test', () => {
           expect(res.body.status).eql('Bad Request');
           expect(res.body.code).eql(400);
           expect(res.body.messages).eql('Invalid credentials');
+          done(err);
+        });
+    });
+    it('it should not signin a user with an empty email', (done) => {
+      chai.request(app)
+        .post('/api/v1/auth/signin')
+        .send({
+          email: '',
+          password: 'abejidefemi1'
+        })
+        .end((err, res) => {
+          expect(res.body.status).eql('Bad Request');
+          expect(res.body.code).eql(400);
+          expect(res.body.messages).eql('Invalid Credentials');
+          done(err);
+        });
+    });
+    it('it should not signin a user with an empty password', (done) => {
+      chai.request(app)
+        .post('/api/v1/auth/signin')
+        .send({
+          email: 'abejdiefemi@gmail.com',
+          password: ''
+        })
+        .end((err, res) => {
+          expect(res.body.status).eql('Bad Request');
+          expect(res.body.code).eql(400);
+          expect(res.body.messages).eql('Invalid Credentials');
+          done(err);
+        });
+    });
+    it('it should not signin a user if password is less than 5', (done) => {
+      chai.request(app)
+        .post('/api/v1/auth/signin')
+        .send({
+          email: 'abejdiefemi@gmail.com',
+          password: 'aaa'
+        })
+        .end((err, res) => {
+          expect(res.body.status).eql('Bad Request');
+          expect(res.body.code).eql(400);
+          expect(res.body.messages).eql('Invalid Credentials');
+          done(err);
+        });
+    });
+    it('it should not signin a user with an invalid email', (done) => {
+      chai.request(app)
+        .post('/api/v1/auth/signin')
+        .send({
+          email: 'abejide',
+          password: 'abejidefemi1'
+        })
+        .end((err, res) => {
+          expect(res.body.status).eql('Bad Request');
+          expect(res.body.code).eql(400);
+          expect(res.body.messages).eql('Invalid Credentials');
           done(err);
         });
     });
@@ -283,10 +340,21 @@ describe('Users Endpoint API Test', () => {
       });
       it('user should follow an artist', (done) => {
         chai.request(app)
-          .post(`/api/v1/users/artists/follow/${3}`)
+          .post(`/api/v1/users/artists/follow/${8}`)
           .set('x-access-token', loginToken)
           .end((err, res) => {
-            expect(res.body.messages).eql(`You are now following artist ${3}`);
+            expect(res.body.messages).eql(`You are now following artist ${8}`);
+            expect(res.status).to.equal(201);
+            expect(res.body.status).eql('Ok');
+            done(err);
+          });
+      });
+      it('user should follow another artist', (done) => {
+        chai.request(app)
+          .post(`/api/v1/users/artists/follow/${9}`)
+          .set('x-access-token', loginToken)
+          .end((err, res) => {
+            expect(res.body.messages).eql(`You are now following artist ${9}`);
             expect(res.status).to.equal(201);
             expect(res.body.status).eql('Ok');
             done(err);
@@ -294,10 +362,10 @@ describe('Users Endpoint API Test', () => {
       });
       it('another user should follow an artist', (done) => {
         chai.request(app)
-          .post(`/api/v1/users/artists/follow/${3}`)
+          .post(`/api/v1/users/artists/follow/${8}`)
           .set('x-access-token', loginToken2)
           .end((err, res) => {
-            expect(res.body.messages).eql(`You are now following artist ${3}`);
+            expect(res.body.messages).eql(`You are now following artist ${8}`);
             expect(res.status).to.equal(201);
             expect(res.body.status).eql('Ok');
             done(err);
@@ -316,7 +384,7 @@ describe('Users Endpoint API Test', () => {
       });
       it('should return error when artist id is equal to user id', (done) => {
         chai.request(app)
-          .post(`/api/v1/users/artists/follow/${1}`)
+          .post(`/api/v1/users/artists/follow/${3}`)
           .set('x-access-token', loginToken)
           .end((err, res) => {
             expect(res.body.messages).eql('You cannot follow or unfollow yourself');
@@ -338,7 +406,7 @@ describe('Users Endpoint API Test', () => {
       });
       it('should return response of already following the artist', (done) => {
         chai.request(app)
-          .post(`/api/v1/users/artists/follow/${4}`)
+          .post(`/api/v1/users/artists/follow/${8}`)
           .set('x-access-token', loginToken)
           .end((err, res) => {
             expect(res.body.messages).eql('You are already following this artist');
@@ -350,10 +418,10 @@ describe('Users Endpoint API Test', () => {
 
       it('user should unfollow an artist', (done) => {
         chai.request(app)
-          .post(`/api/v1/users/artists/unfollow/${3}`)
+          .post(`/api/v1/users/artists/unfollow/${8}`)
           .set('x-access-token', loginToken)
           .end((err, res) => {
-            expect(res.body.messages).eql(`You have unfollowed artist ${3}`);
+            expect(res.body.messages).eql(`You have unfollowed artist ${8}`);
             expect(res.status).to.equal(200);
             expect(res.body.status).eql('Ok');
             done(err);
@@ -372,7 +440,7 @@ describe('Users Endpoint API Test', () => {
       });
       it('should return error when artist id is equal to user id', (done) => {
         chai.request(app)
-          .post(`/api/v1/users/artists/unfollow/${1}`)
+          .post(`/api/v1/users/artists/unfollow/${3}`)
           .set('x-access-token', loginToken)
           .end((err, res) => {
             expect(res.body.messages).eql('You cannot follow or unfollow yourself');
@@ -381,7 +449,7 @@ describe('Users Endpoint API Test', () => {
             done(err);
           });
       });
-      it('should return error when artist id is equal to user id', (done) => {
+      it('should return error when artist id does not exist', (done) => {
         chai.request(app)
           .post(`/api/v1/users/artists/unfollow/${100}`)
           .set('x-access-token', loginToken)
@@ -392,9 +460,9 @@ describe('Users Endpoint API Test', () => {
             done(err);
           });
       });
-      it('should return response of already following the artist', (done) => {
+      it('should return response of not following the artist', (done) => {
         chai.request(app)
-          .post(`/api/v1/users/artists/unfollow/${3}`)
+          .post(`/api/v1/users/artists/unfollow/${8}`)
           .set('x-access-token', loginToken)
           .end((err, res) => {
             expect(res.body.messages).eql('You are not following this artist');
@@ -403,6 +471,70 @@ describe('Users Endpoint API Test', () => {
             done(err);
           });
       });
+    });
+  });
+  describe('USERS GET REQUESTS', () => {
+    it('should return error status if artist id is not an integer', (done) => {
+      chai.request(app)
+        .get('/api/v1/users/artists/ddd')
+        .set('x-access-token', loginToken)
+        .end((err, res) => {
+          expect(res.body).to.be.a('object');
+          expect(res.body.messages).eql('Artist ID must be an integer');
+          expect(res.status).to.equal(400);
+          expect(res.body.status).eql('Bad Request');
+          done();
+        });
+    });
+    it('it should return not found status if artist do not exist', (done) => {
+      chai.request(app)
+        .get(`/api/v1/users/artists/${100}`)
+        .set('x-access-token', loginToken)
+        .end((err, res) => {
+          expect(res.body).to.be.a('object');
+          expect(res.body.messages).eql('Artist was not found');
+          expect(res.status).to.equal(404);
+          expect(res.body.status).eql('Not Found');
+          done();
+        });
+    });
+  });
+  describe('USERS GET REQUESTS', () => {
+    before((done) => {
+      chai.request(app)
+        .post('/api/v1/auth/signup')
+        .send(validArtist)
+        .end((err) => {
+          done(err);
+        });
+    });
+    it('it should fetch list of artists on the platform', (done) => {
+      chai.request(app)
+        .get('/api/v1/users/artists')
+        .set('x-access-token', loginToken)
+        .end((err, res) => {
+          expect(res.body).to.be.a('object');
+          expect(res.body.messages).eql('Returned all artists');
+          expect(res.status).to.equal(200);
+          expect(res.body.status).eql('Ok');
+          expect(res.body.data).to.have.property('artists');
+          expect(res.body.data.artists).to.be.a('array');
+          done();
+        });
+    });
+    it('it should return profile of one artist on the platform', (done) => {
+      chai.request(app)
+        .get(`/api/v1/users/artists/${1}`)
+        .set('x-access-token', loginToken)
+        .end((err, res) => {
+          expect(res.body).to.be.a('object');
+          expect(res.body.messages).eql('Returned one artist');
+          expect(res.status).to.equal(200);
+          expect(res.body.status).eql('Ok');
+          expect(res.body.data).to.have.property('artist');
+          expect(res.body.data.artist).to.be.a('object');
+          done();
+        });
     });
   });
 });

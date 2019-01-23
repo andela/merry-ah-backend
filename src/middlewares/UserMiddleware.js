@@ -171,6 +171,29 @@ class UserMiddleware {
       return res.status(response.code).json(response);
     }
   }
+
+  /**
+ * Validate Password
+ * @param {object} req
+ * @param {object} res
+ * @param {function} next
+ * @memberof UserMiddleware
+ * @returns {object} error object if artist id is not a number
+ */
+  static async validateArtistID(req, res, next) {
+    const { artistId } = req.params;
+    /* eslint-disable no-restricted-globals */
+    if (isNaN(artistId)) {
+      const response = new Response(
+        'Bad Request',
+        400,
+        'Artist ID must be an integer',
+      );
+      return res.status(response.code).json(response);
+    }
+
+    next();
+  }
 }
 
 export default UserMiddleware;

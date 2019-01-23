@@ -19,4 +19,17 @@ userRouter.post(
   UsersController.userUnfollow,
 );
 
+userRouter.get(
+  '/artists',
+  TokenAuthenticate.tokenVerify,
+  UsersController.listArtists,
+);
+
+userRouter.get(
+  '/artists/:artistId',
+  TokenAuthenticate.tokenVerify,
+  UserMiddleware.validateArtistID,
+  UsersController.getOneArtist,
+);
+
 export default userRouter;
