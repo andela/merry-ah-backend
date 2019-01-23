@@ -372,10 +372,6 @@ class ArtsController {
             attributes: ['id', 'categoryName'],
           },
           {
-            model: Comment,
-            attributes: ['id', 'userId', 'body', 'createdAt'],
-          },
-          {
             model: User,
             as: 'Author',
             attributes: ['username'],
