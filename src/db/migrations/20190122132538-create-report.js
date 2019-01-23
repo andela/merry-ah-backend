@@ -9,9 +9,6 @@ module.exports = {
     reportText: {
       type: Sequelize.STRING
     },
-    reportType: {
-      type: Sequelize.STRING
-    },
     artId: {
       type: Sequelize.INTEGER,
       onDelete: 'CASCADE',

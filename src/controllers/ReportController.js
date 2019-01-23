@@ -14,7 +14,7 @@ class ReportController {
    */
   static async createReport(req, res) {
     try {
-      const { reportText, reportType } = req.body;
+      const { reportText } = req.body;
       const artId = await Art.findById(req.params.id);
       if (!artId) {
         const response = new Response(
@@ -28,7 +28,6 @@ class ReportController {
         reportText,
         artId: req.params.id,
         userId: req.verifyUser.id,
-        reportType: reportType.toLowerCase()
       });
       const response = new Response(
         'Created',

@@ -8,7 +8,7 @@ chai.use(chaiHttp);
 const { expect } = chai;
 let userToken;
 
-describe('Comments Endpoint API Test', () => {
+describe('Reports Endpoint API Test', () => {
   // eslint-disable-next-line no-undef
   before((done) => {
     chai.request(app)
@@ -35,8 +35,7 @@ describe('Comments Endpoint API Test', () => {
         .post('/api/v1/arts/50/report')
         .set('Authorization', userToken)
         .send({
-          reportText: 'this is some nad adad',
-          reportType: 'Spam'
+          reportText: 'this is some nad adad'
         })
         .end((err, res) => {
           expect(res.status).to.equal(404);
@@ -58,47 +57,19 @@ describe('Comments Endpoint API Test', () => {
         .post('/api/v1/arts/1/report')
         .set('Authorization', userToken)
         .send({
-          reportText: '',
-          reportType: 'Spam'
+          reportText: ''
         })
         .end((err, res) => {
           expect(res.body.status).eql('Bad Request');
           done(err);
         });
     });
-    it('it should return error if report type is empty', (done) => {
+    it('it should create a report if report text  is valid', (done) => {
       chai.request(app)
         .post('/api/v1/arts/1/report')
         .set('Authorization', userToken)
         .send({
           reportText: 'sfsfsdfbdjfbdjgdjgbdg',
-          reportType: ''
-        })
-        .end((err, res) => {
-          expect(res.body.status).eql('Bad Request');
-          done(err);
-        });
-    });
-    it('it should return 404 if report type does not exist', (done) => {
-      chai.request(app)
-        .post('/api/v1/arts/1/report')
-        .set('Authorization', userToken)
-        .send({
-          reportText: 'sfsfsdfbdjfbdjgdjgbdg',
-          reportType: 'karma'
-        })
-        .end((err, res) => {
-          expect(res.status).to.equal(404);
-          done(err);
-        });
-    });
-    it('it should create a report if report text and type is valid', (done) => {
-      chai.request(app)
-        .post('/api/v1/arts/1/report')
-        .set('Authorization', userToken)
-        .send({
-          reportText: 'sfsfsdfbdjfbdjgdjgbdg',
-          reportType: 'Abuse'
         })
         .end((err, res) => {
           expect(res.status).to.equal(201);

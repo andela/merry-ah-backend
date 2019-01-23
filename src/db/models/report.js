@@ -4,9 +4,6 @@ module.exports = (sequelize, DataTypes) => {
     reportText: {
       type: DataTypes.STRING
     },
-    reportType: {
-      type: DataTypes.STRING
-    },
     artId: {
       type: DataTypes.INTEGER,
       references: {
