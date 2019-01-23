@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import express from 'express';
 import UserController from '../controllers/UsersController';
 import emailCheck from '../middlewares/emailCheck';
@@ -46,7 +47,7 @@ const authRouter = express.Router();
    */
 authRouter
   .post('/signup',
-    UserValidator.UserSignUpValidator,
+    UserValidator.userSignUpValidator,
     emailCheck,
     UserController.signUp);
 /**
@@ -134,7 +135,11 @@ authRouter.put(
    *         schema:
    *           type: object
    */
-authRouter.post('/signin', UserController.signIn);
+authRouter.post(
+  '/signin',
+  UserValidator.UserSignInValidator,
+  UserController.signIn
+);
 authRouter
   .get('/verify', TokenAuthenticate.tokenVerify, UserController.verifyEmail);
 

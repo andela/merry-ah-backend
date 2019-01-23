@@ -82,7 +82,7 @@ class UsersController {
         const response = new Response(
           'Bad request',
           400,
-          'There was a problem sending',
+          'There was a problem sending mail',
         );
         return res.status(response.code).json(response);
       }
@@ -193,7 +193,7 @@ class UsersController {
         const response = new Response(
           'Bad request',
           400,
-          'There was a problem sending',
+          'There was a problem sending mail',
         );
         return res.status(response.code).json(response);
       }
@@ -252,8 +252,10 @@ class UsersController {
     return res.status(response.code).json(response);
   }
 
+
   /**
    * @static
+   * @desc PUT /api/v1/users/profile
    * @desc GET /api/v1/users/artists
    * @param {object} req
    * @param {object} res
@@ -446,7 +448,56 @@ class UsersController {
    * @param {object} req
    * @param {object} res
    * @memberof UsersController
-   * @returns successful pasword reset
+   * @returns successful profile update
+   */
+  static async updateProfile(req, res) {
+    try {
+      const { id } = req.verifyUser;
+      const { bio, imgURL, userType } = req.body;
+
+      const updateProfile = await Profile.update(
+        {
+          bio,
+          imgURL,
+          userType
+        },
+        {
+          where: {
+            userId: id,
+          }
+        }
+      );
+      if (updateProfile[0]) {
+        const response = new Response(
+          'Ok',
+          200,
+          'Profile updated successfully',
+        );
+        return res.status(response.code).json(response);
+      }
+      const response = new Response(
+        'Bad Request',
+        400,
+        'Unable to update profile',
+      );
+      return res.status(response.code).json(response);
+    } catch (err) {
+      const response = new Response(
+        'Internal server error',
+        500,
+        `${err}`,
+      );
+      return res.status(response.code).json(response);
+    }
+  }
+
+  /**
+   * @static
+   * @desc POST /api/v1/auth/verify Email
+   * @param {object} req
+   * @param {object} res
+   * @memberof UsersController
+   * @returns successful email verification
    */
   static async verifyEmail(req, res) {
     const { id } = req.verifyUser;
