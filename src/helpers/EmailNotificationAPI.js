@@ -29,6 +29,9 @@ class EmailNotificationAPI {
     const {
       EMAILUSER, EMAILPASS
     } = process.env;
+    if (!EMAILUSER || !EMAILPASS) {
+      return 'Please configure your .env file properly';
+    }
 
     return nodemailer.createTransport({
       service: 'gmail',
