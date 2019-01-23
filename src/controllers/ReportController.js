@@ -54,6 +54,7 @@ class ReportController {
    * @returns {Object} report type and text
    */
   static async getAllReports(req, res) {
+    console.log('aaaaaaaa')
     const reports = await Report.findAll({
       include: [
         {
