@@ -53,6 +53,36 @@ class UserValidator {
     req.body.email = email.replace(/\s{1,}/g, '').trim().toLowerCase();
     return next();
   }
+
+  /**
+   * @description - Checks the request parameters for user login
+   * @param  {Object} req - request
+   * @param  {object} res - response
+   * @param {Object} next - Call back function
+   * @return {object} - status code and error message or next()
+   * @static
+   * @memberof UserValidator
+   */
+  static UserSignInValidator(req, res, next) {
+    req.check('email', 'Email is required').trim().notEmpty();
+    req.check('email', 'Email is not valid').trim().isEmail();
+    req.check('password', 'Password is required').trim().notEmpty();
+    req.check('password', 'Minimum password length is 5 characters')
+      .isLength({ min: minPassLen });
+    const errors = req.validationErrors();
+    const validationErrors = [];
+    if (errors) {
+      errors.map(err => validationErrors.push(err.msg));
+      response = new Response(
+        'Bad Request',
+        400,
+        'Invalid credentials',
+        validationErrors
+      );
+      return res.status(response.code).json(response);
+    }
+    next();
+  }
 }
 
 export default UserValidator;

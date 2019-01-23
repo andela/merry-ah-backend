@@ -1,5 +1,11 @@
 import EmailNotificationAPI from './EmailNotificationAPI';
+import TokenAuthenticate from './TokenAuthenticate';
+import Response from './response';
+import Slugify from './Slugify';
 
-export default {
+export {
   EmailNotificationAPI,
+  Slugify,
+  TokenAuthenticate,
+  Response
 };
