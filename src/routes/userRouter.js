@@ -40,4 +40,18 @@ userRouter.get(
   UsersController.getOneArtist,
 );
 
+userRouter.get(
+  '/:userId/followers',
+  TokenAuthenticate.tokenVerify,
+  UserMiddleware.checkForUserFollowers,
+  UsersController.getFollowers,
+);
+
+userRouter.get(
+  '/:userId/following',
+  TokenAuthenticate.tokenVerify,
+  UserMiddleware.checkForUserFollowings,
+  UsersController.getFollowing,
+);
+
 export default userRouter;

@@ -525,6 +525,105 @@ class UsersController {
     );
     return res.status(response.code).json(response);
   }
+
+  /**
+   * @static
+   * @desc POST /api/v1/users/followers Email
+   * @param {object} req
+   * @param {object} res
+   * @memberof UsersController
+   * @returns all users following the authenticated user
+   */
+  static async getFollowers(req, res) {
+    try {
+      const { followers } = req;
+      /* eslint-disable prefer-const  */
+      let queries = [];
+      followers.forEach((x) => {
+        const { followerId } = x;
+        const query = User.findOne({
+          where: {
+            id: followerId,
+          },
+          attributes: ['id', 'username', 'email', 'userType'],
+          include: [{
+            model: Profile,
+            as: 'profile',
+            attributes: ['firstName', 'lastName', 'bio', 'imgURL']
+          }]
+        });
+        queries.push(query);
+        return query;
+      });
+
+      Promise.all(queries).then((user) => {
+        const response = new Response(
+          'Ok',
+          200,
+          'Returned all followers',
+          { user }
+        );
+        return res.status(response.code).json(response);
+      });
+    } catch (err) {
+      const response = new Response(
+        'Internal server error',
+        500,
+        `${err}`,
+      );
+      return res.status(response.code).json(response);
+    }
+  }
+
+  /**
+   * @static
+   * @desc POST /api/v1/users/following
+   * @param {object} req
+   * @param {object} res
+   * @memberof UsersController
+   * @returns all users the authenticated user is following
+   */
+  static async getFollowing(req, res) {
+    try {
+      const { following } = req;
+
+      /* eslint-disable prefer-const  */
+      let queries = [];
+      following.forEach((x) => {
+        const { userId } = x;
+        const query = User.findOne({
+          where: {
+            id: userId,
+          },
+          attributes: ['id', 'username', 'email', 'userType'],
+          include: [{
+            model: Profile,
+            as: 'profile',
+            attributes: ['firstName', 'lastName', 'bio', 'imgURL']
+          }]
+        });
+        queries.push(query);
+        return query;
+      });
+
+      Promise.all(queries).then((user) => {
+        const response = new Response(
+          'Ok',
+          200,
+          'Returned all users this person follows',
+          { user }
+        );
+        return res.status(response.code).json(response);
+      });
+    } catch (err) {
+      const response = new Response(
+        'Internal server error',
+        500,
+        `${err}`,
+      );
+      return res.status(response.code).json(response);
+    }
+  }
 }
 
 export default UsersController;

@@ -589,6 +589,72 @@ describe('Users Endpoint API Test', () => {
           done(err);
         });
     });
+    it('should fetch a list of followers for a user', (done) => {
+      chai.request(app)
+        .get(`/api/v1/users/${11}/followers`)
+        .set('x-access-token', loginToken)
+        .end((err, res) => {
+          expect(res.body.messages).eql('Returned all followers');
+          expect(res.status).to.equal(200);
+          expect(res.body.status).eql('Ok');
+          done(err);
+        });
+    });
+    it('should return error when user id is not integer', (done) => {
+      chai.request(app)
+        .get('/api/v1/users/ddd/followers')
+        .set('x-access-token', loginToken)
+        .end((err, res) => {
+          expect(res.body.messages).eql('User ID must be an integer');
+          expect(res.status).to.equal(400);
+          expect(res.body.status).eql('Bad Request');
+          done(err);
+        });
+    });
+    it('should return error when user has no follower', (done) => {
+      chai.request(app)
+        .get(`/api/v1/users/${100}/followers`)
+        .set('x-access-token', loginToken)
+        .end((err, res) => {
+          expect(res.body.messages).eql('User has no followers');
+          expect(res.status).to.equal(404);
+          expect(res.body.status).eql('Not Found');
+          done(err);
+        });
+    });
+    it('should fetch a list of followings for a user', (done) => {
+      chai.request(app)
+        .get(`/api/v1/users/${6}/following`)
+        .set('x-access-token', loginToken)
+        .end((err, res) => {
+          expect(res.body.messages).eql('Returned all users this person follows');
+          expect(res.status).to.equal(200);
+          expect(res.body.status).eql('Ok');
+          done(err);
+        });
+    });
+    it('should return error when user id is not integer', (done) => {
+      chai.request(app)
+        .get('/api/v1/users/ddd/following')
+        .set('x-access-token', loginToken)
+        .end((err, res) => {
+          expect(res.body.messages).eql('User ID must be an integer');
+          expect(res.status).to.equal(400);
+          expect(res.body.status).eql('Bad Request');
+          done(err);
+        });
+    });
+    it('should return error when user has no following', (done) => {
+      chai.request(app)
+        .get(`/api/v1/users/${100}/following`)
+        .set('x-access-token', loginToken)
+        .end((err, res) => {
+          expect(res.body.messages).eql('User is not following anyone');
+          expect(res.status).to.equal(404);
+          expect(res.body.status).eql('Not Found');
+          done(err);
+        });
+    });
   });
   describe('USERS GET REQUESTS', () => {
     it('should return error status if artist id is not an integer', (done) => {
