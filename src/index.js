@@ -9,6 +9,7 @@ import requestId from 'express-request-id';
 import expressValidator from 'express-validator';
 import routes from './routes/index';
 import Response from './helpers/response';
+import imageValidator from './middlewares/imageValidator';
 
 dotenv.config();
 const app = express();
@@ -35,7 +36,7 @@ app.use(cors());
 
 app.use(requestId());
 
-app.use(expressValidator());
+app.use(expressValidator(imageValidator));
 
 morgan.token('id', req => req.id);
 

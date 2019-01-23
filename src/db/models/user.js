@@ -12,6 +12,9 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'userId',
       as: 'profile'
     });
+    User.hasMany(models.Art, {
+      foreignKey: 'artistId',
+    });
     User.hasMany(models.Rate, {
       foreignKey: 'userId'
     });

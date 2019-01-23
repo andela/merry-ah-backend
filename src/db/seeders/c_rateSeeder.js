@@ -10,7 +10,7 @@ module.exports = {
     createdAt: new Date(),
     updatedAt: new Date()
   }, {
-    artistId: 2,
+    artistId: 6,
     slug: 'painting-make-sense',
     title: 'My Painting',
     description: true,
