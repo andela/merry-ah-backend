@@ -14,4 +14,7 @@ artsRoute.delete(
   ArtController.delete
 );
 
+artsRoute.get('/', ArtController.getAllArticles);
+artsRoute.get('/:slug', ArtController.getSingleArticle);
+
 export default artsRoute;

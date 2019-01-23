@@ -11,11 +11,17 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Art.associate = function (models) {
     // associations can be defined here
+    Art.belongsTo(models.User, {
+      foreignKey: 'artistId',
+      as: 'Author'
+    });
     Art.belongsTo(models.Category, {
-      foreignKey: 'categoryId'
+      foreignKey: 'categoryId',
+      as: 'Category'
     });
     Art.hasMany(models.Media, {
-      foreignKey: 'artId'
+      foreignKey: 'artId',
+      as: 'Media'
     });
     Art.hasMany(models.Rate, {
       foreignKey: 'artId'
