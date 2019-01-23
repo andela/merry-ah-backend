@@ -18,6 +18,7 @@ const genericOptions = {
 
 let sequelize;
 if (process.env.DATABASE_URL) {
+/* istanbul ignore next */
   sequelize = new Sequelize(process.env.DATABASE_URL, genericOptions);
 } else {
   sequelize = new Sequelize(

@@ -3,7 +3,21 @@ const userDetails = {
     firstName: 'Femi',
     lastName: 'Ajibade',
     username: 'Juliet',
-    email: 'julietezekwe@gmail.com',
+    email: 'gentle883@gmail.com',
+    password: 'femiok',
+    bio: '',
+    imgURL: '',
+    userType: 'user',
+  },
+  validUserLogin: {
+    email: 'email@gmail.com',
+    password: 'abcdefgh'
+  },
+  validUserSignup: {
+    firstName: 'Femi',
+    lastName: 'Ajibade',
+    username: 'Juliet',
+    email: 'gentle8831@gmail.com',
     password: 'femiok',
     bio: '',
     imgURL: '',
@@ -69,6 +83,36 @@ const userDetails = {
     imgURL: '',
     userType: 'user',
   },
+  validProfile: {
+    bio: 'hahh jhvhjv hhv hgghg hhjhhj',
+    imgURL: 'hhxvvh.png',
+    userType: 'user'
+  },
+  invalidProfile: {
+    bio: 'ok this is good and fine and ok and now its working my bio',
+    imgURL: 'good.jpg',
+    userType: 'artistsss'
+  },
+  invalidImage: {
+    bio: 'hahh jhvhjv hhv hgghg hhjhhj',
+    imgURL: 'hhxvvh.phh',
+    userType: 'user'
+  },
+  invalidBio: {
+    bio: 'hahh',
+    imgURL: 'hhxvvh.jpeg',
+    userType: 'user'
+  },
+  validArtist: {
+    firstName: 'Daniel',
+    lastName: 'Anyaegbu',
+    username: 'Danny',
+    email: 'danielchidiebele@gmail.com',
+    password: 'qwerty',
+    bio: '',
+    imgURL: '',
+    userType: 'artist',
+  }
 };
 
 const artDetails = {
