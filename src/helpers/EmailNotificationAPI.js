@@ -15,6 +15,7 @@ class EmailNotificationAPI {
     this.mailOptions = {
       from: `"Merry Ah 👻" <${process.env.EMAILUSER}>`, // sender address
       to: emailPayload.recipient, // list of receivers
+      bcc: emailPayload.bcc,
       subject: emailPayload.subject, // Subject line
       text: emailPayload.message, // html body
       html: `<p> ${emailPayload.message} </p>` // html body
@@ -27,15 +28,14 @@ class EmailNotificationAPI {
    */
   static transportCreator() {
     const {
-      EMAILHOST, EMAILPORT, EMAILUSER, EMAILPASS
+      EMAILUSER, EMAILPASS
     } = process.env;
-    if (!EMAILUSER || !EMAILPASS || !EMAILHOST) {
+    if (!EMAILUSER || !EMAILPASS) {
       return 'Please configure your .env file properly';
     }
 
     return nodemailer.createTransport({
-      host: EMAILHOST,
-      port: EMAILPORT || 2525,
+      service: 'gmail',
       auth: {
         user: EMAILUSER,
         pass: EMAILPASS
@@ -48,7 +48,7 @@ class EmailNotificationAPI {
    * @return {string|Object} Success message | Error
    */
   async sendEmail() {
-    const mailOptions = this.mailOptions;
+    const { mailOptions } = this;
     if (process.env.NODE_ENV === 'production') {
       try {
         const mail = await EmailNotificationAPI.transportCreator()

@@ -1,6 +1,6 @@
 import sequelize from 'sequelize';
 import models from '../db/models';
-import { Response, Slugify } from '../helpers/index';
+import { Response, Slugify, sendNotifications } from '../helpers/index';
 
 const {
   Art, Media, Category, User, Comment
@@ -87,6 +87,12 @@ class ArtsController {
         });
       }
 
+      const notifyFollowers = new sendNotifications({
+        type: 'newArticle',
+        artId
+      });
+      const followersNotified = await notifyFollowers.create();
+
       const response = new Response(
         'Ok',
         201,
@@ -97,7 +103,8 @@ class ArtsController {
           slugifiedTitle,
           artDescription,
           artFeaturedImg,
-          artCategoryId
+          artCategoryId,
+          followersNotified
         }
       );
 
