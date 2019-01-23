@@ -1,8 +1,8 @@
 import sequelize from 'sequelize';
 import models from '../db/models';
-import { Response, Slugify } from '../helpers/index';
 import LikeUnlike from '../db/service/LikeUnlike';
 import DisikeUndislike from '../db/service/DislikeUndislike';
+import { Response, Slugify, sendNotifications } from '../helpers/index';
 
 const {
   Art, Media, Category, User, Comment, Like, Dislike
@@ -89,6 +89,12 @@ class ArtsController {
         });
       }
 
+      const notifyFollowers = new sendNotifications({
+        type: 'newArticle',
+        artId
+      });
+      const followersNotified = await notifyFollowers.create();
+
       const response = new Response(
         'Ok',
         201,
@@ -100,7 +106,8 @@ class ArtsController {
           artDescription,
           artFeaturedImg,
           artCategoryId,
-          visited
+          visited,
+          followersNotified
         }
       );
 

@@ -146,7 +146,7 @@ const userDetails = {
 
 const artDetails = {
   validArticle: {
-    title: 'Cirrhosis of the Sky',
+    title: 'Syntax Podcasts',
     description: 'The Syntax Podcasts isn\'t suitable for all ages',
     categoryId: 1,
     media: `[{"url":
@@ -159,14 +159,13 @@ const artDetails = {
   validUpdatedArticle: {
     title: 'Cirrhosis of the Sky',
     slug: 'cirrhosis-of-the-sky',
-    description: 'To prepare your one sentence, I suggest making a '
-      + 'list of all the things you are and do (it may. ',
+    description: 'The Syntax Podcasts isn\'t suitable for all ages',
     categoryId: 1,
     media: '[{"url":'
-      + '"https://farm3.staticflickr.com/2817/33968464326_a6f9cbc754_k",'
+      + '"https://images.pexels.com/photos/1047540/pexels-photo-1047540.jpeg",'
       + '"extension":"jpg"},'
       + '{"url":'
-      + '"https://images.pexels.com/photos/1047540/pexels-photo-1047540.jpeg",'
+      + '"https://farm3.staticflickr.com/2817/33968464326_a6f9cbc754_k",'
       + '"extension":"jpeg"}]'
   },
   invalidArticle: {
