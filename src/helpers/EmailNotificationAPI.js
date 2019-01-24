@@ -49,15 +49,18 @@ class EmailNotificationAPI {
    */
   async sendEmail() {
     const mailOptions = this.mailOptions;
-
-    try {
-      const mail = await EmailNotificationAPI.transportCreator()
-        .sendMail(mailOptions);
-      if (mail.response.includes('OK')) {
-        return 'Message sent';
+    if (process.env.NODE_ENV === 'production') {
+      try {
+        const mail = await EmailNotificationAPI.transportCreator()
+          .sendMail(mailOptions);
+        if (mail.response.includes('OK')) {
+          return 'Message sent';
+        }
+      } catch (error) {
+        return error;
       }
-    } catch (error) {
-      return error;
+    } else {
+      return 'Message sent';
     }
   }
 }

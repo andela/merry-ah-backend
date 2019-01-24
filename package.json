@@ -10,9 +10,16 @@
     "postinstall": "npm run build",
     "db:migrate": "sequelize db:migrate",
     "db:unmigrate": "sequelize db:migrate:undo:all",
-    "test": "NODE_ENV=test npm run db:unmigrate && NODE_ENV=test npm run db:migrate && NODE_ENV=test nyc mocha --exit --timeout 100000 --require @babel/register ./test/*",
+    "db:seed": "sequelize db:seed:all",
+    "test": "NODE_ENV=test npm run db:unmigrate && NODE_ENV=test npm run db:migrate && NODE_ENV=test npm run db:seed && NODE_ENV=test nyc mocha --exit --timeout 100000 --require @babel/register ./test/*",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "lint": "./node_modules/.bin/eslint ."
+  },
+  "nyc": {
+    "exclude": [
+      "src/helpers/EmailNotificationAPI.js",
+      "test"
+    ]
   },
   "author": "Andela Simulations Programme",
   "license": "MIT",
@@ -46,13 +53,18 @@
     "morgan": "^1.9.1",
     "nodemailer": "^5.0.1",
     "passport": "^0.4.0",
+    "passport-facebook": "^2.1.1",
+    "passport-google-oauth20": "^1.0.0",
     "passport-local": "^1.0.0",
+    "passport-twitter": "^1.0.4",
     "pg": "^7.7.1",
     "pg-hstore": "^2.3.2",
     "request": "^2.87.0",
     "sequelize": "^4.42.0",
     "sequelize-cli": "^5.4.0",
     "slug": "^0.9.3",
+    "swagger-jsdoc": "^3.2.6",
+    "swagger-ui-express": "^4.0.2",
     "underscore": "^1.9.1"
   },
   "devDependencies": {

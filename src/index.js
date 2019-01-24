@@ -1,14 +1,33 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import passport from 'passport';
+import dotenv from 'dotenv';
+import session from 'express-session';
 import morgan from 'morgan';
 import requestId from 'express-request-id';
 import expressValidator from 'express-validator';
 import routes from './routes/index';
 import Response from './helpers/response';
+import imageValidator from './middlewares/imageValidator';
 
+dotenv.config();
 const app = express();
+app.use(session({
+  secret: process.env.SECRET,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false },
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
 
+passport.deserializeUser((user, done) => {
+  done(null, user);
+});
 const port = process.env.PORT || 9000;
 
 let response;
@@ -17,7 +36,7 @@ app.use(cors());
 
 app.use(requestId());
 
-app.use(expressValidator());
+app.use(expressValidator(imageValidator));
 
 morgan.token('id', req => req.id);
 
@@ -35,7 +54,19 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use('/api/v1/', routes);
-
+/**
+ * @swagger
+ * /:
+ *  get:
+ *    summary: Author's Haven root endpoint
+ *    description: Returns a welcome message
+ *    responses:
+ *      200:
+ *        description: Welcome to Authors Haven
+ *        schema:
+ *          type: string
+ *          default: "Test Successful"
+ */
 app.all('/', ((req, res) => {
   response = new Response(
     'Ok',

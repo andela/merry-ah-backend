@@ -11,11 +11,17 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Art.associate = function (models) {
     // associations can be defined here
+    Art.belongsTo(models.User, {
+      foreignKey: 'artistId',
+      as: 'Author'
+    });
     Art.belongsTo(models.Category, {
-      foreignKey: 'categoryId'
+      foreignKey: 'categoryId',
+      as: 'Category'
     });
     Art.hasMany(models.Media, {
-      foreignKey: 'artId'
+      foreignKey: 'artId',
+      as: 'Media'
     });
     Art.hasMany(models.Rate, {
       foreignKey: 'artId'
@@ -26,11 +32,22 @@ module.exports = (sequelize, DataTypes) => {
     Art.hasMany(models.Like, {
       foreignKey: 'artId'
     });
+    Art.hasMany(models.Dislike, {
+      foreignKey: 'artId'
+    });
     Art.hasOne(models.LikeSummary, {
+      foreignKey: 'artId'
+    });
+    Art.hasOne(models.DislikeSummary, {
       foreignKey: 'artId'
     });
     Art.hasOne(models.Transaction, {
       foreignKey: 'artId'
+    });
+    Art.hasOne(models.RateSummary, {
+      foreignKey: 'artId',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     });
   };
   return Art;

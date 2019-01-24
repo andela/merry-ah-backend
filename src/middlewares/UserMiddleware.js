@@ -116,12 +116,6 @@ class UserMiddleware {
     try {
       const { artId } = req.params;
 
-      const checkIfArtExist = await Art.findOne({
-        where: {
-          id: artId,
-        }
-      });
-
       /* eslint-disable no-restricted-globals */
       if (isNaN(artId)) {
         const response = new Response(
@@ -132,11 +126,17 @@ class UserMiddleware {
         return res.status(response.code).json(response);
       }
 
+      const checkIfArtExist = await Art.findOne({
+        where: {
+          id: artId,
+        }
+      });
+
       if (!checkIfArtExist) {
         const response = new Response(
           'Not Found',
           404,
-          'The article you requested does not exist',
+          'The art you requested does not exist',
         );
         return res.status(response.code).json(response);
       }
@@ -150,6 +150,29 @@ class UserMiddleware {
       );
       return res.status(response.code).json(response);
     }
+  }
+
+  /**
+ * Validate Password
+ * @param {object} req
+ * @param {object} res
+ * @param {function} next
+ * @memberof UserMiddleware
+ * @returns {object} error object if artist id is not a number
+ */
+  static async validateArtistID(req, res, next) {
+    const { artistId } = req.params;
+    /* eslint-disable no-restricted-globals */
+    if (isNaN(artistId)) {
+      const response = new Response(
+        'Bad Request',
+        400,
+        'Artist ID must be an integer',
+      );
+      return res.status(response.code).json(response);
+    }
+
+    next();
   }
 }
 

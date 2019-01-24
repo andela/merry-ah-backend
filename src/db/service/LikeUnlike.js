@@ -39,13 +39,13 @@ class LikeUnlike {
   /**
    * @static
    * @param {number} id
-   * @memberof Follow
+   * @memberof LikeUnlike
    * @returns updated details | new detail
    */
   static async unlike(id) {
     const findLikeSummary = await LikeSummary.findOne({
       where: {
-        userId: id,
+        artId: id,
       }
     });
     if (findLikeSummary) {

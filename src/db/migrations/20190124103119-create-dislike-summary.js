@@ -1,27 +1,23 @@
+'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Media', {
+    return queryInterface.createTable('DislikeSummaries', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      contentUrl: {
-        type: Sequelize.TEXT
-      },
-      mediaType: {
-        type: Sequelize.STRING
-      },
       artId: {
         type: Sequelize.INTEGER,
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
         references: {
           model: 'Arts',
           key: 'id',
           as: 'artId',
         }
+      },
+      noOfLikes: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
@@ -33,5 +29,7 @@ module.exports = {
       }
     });
   },
-  down: queryInterface => queryInterface.dropTable('Media')
+  down: (queryInterface, Sequelize) => {
+    return queryInterface.dropTable('DislikeSummaries');
+  }
 };
