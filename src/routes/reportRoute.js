@@ -1,6 +1,7 @@
 import express from 'express';
 import ReportController from '../controllers/ReportController';
 import ReportValidator from '../middlewares/ReportValidator';
+import CheckArt from '../middlewares/CheckArt';
 import { TokenAuthenticate } from '../helpers/index';
 
 const reportRouter = express.Router();
@@ -27,7 +28,9 @@ const reportRouter = express.Router();
    */
 reportRouter.post(
   '/:id/report', TokenAuthenticate.tokenVerify,
-  ReportValidator.ReportInputValidator, ReportController.createReport
+  CheckArt.checkArt,
+  ReportValidator.ReportInputValidator,
+  ReportController.createReport
 );
 /**
    * @swagger

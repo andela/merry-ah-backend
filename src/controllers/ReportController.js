@@ -15,15 +15,6 @@ class ReportController {
   static async createReport(req, res) {
     try {
       const { reportText } = req.body;
-      const artId = await Art.findById(req.params.id);
-      if (!artId) {
-        const response = new Response(
-          'Not Found',
-          404,
-          'Art not found',
-        );
-        return res.status(response.code).json(response);
-      }
       const report = await Report.create({
         reportText,
         artId: req.params.id,
@@ -54,7 +45,6 @@ class ReportController {
    * @returns {Object} report type and text
    */
   static async getAllReports(req, res) {
-    console.log('aaaaaaaa')
     const reports = await Report.findAll({
       include: [
         {
