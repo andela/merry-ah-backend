@@ -48,6 +48,9 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
     });
+    Art.hasMany(models.Report, {
+      foreignKey: 'artId'
+    });
+    return Art;
   };
-  return Art;
 };
