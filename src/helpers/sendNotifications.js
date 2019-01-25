@@ -6,48 +6,41 @@ import EmailNotificationAPI from './EmailNotificationAPI';
 dotenv.config();
 
 const {
-  Art, Following, User
+  Art, Comment, Following, User
 } = models;
 
-/** Arts Controller Class */
+const pusher = new Pusher({
+  appId: process.env.PUSHER_APPID,
+  key: process.env.PUSHER_KEY,
+  secret: process.env.PUSHER_SECRET,
+  cluster: process.env.PUSHER_CLUSTER,
+  encrypted: true
+});
+
+/** SendNotifications Controller Class */
 class SendNotifications {
   /**
    * @constructor
-   * @param {Object} details - Details of the notification.
+   * @param {Object} payloadObject - Details of the notification.
    */
-  constructor(details) {
-    this.details = details;
+  constructor(payloadObject) {
+    this.payloadObject = payloadObject;
   }
 
   /**
    * @Represents a newArticleNotification
-   * @param {string} articleID - The id of the article.
+   * @param {Object} articleDetailsObject - The details of the article.
    * @return {Object|string} success string OR Error message .
    */
-  static async newArticleNotification(articleID) {
-    const findArt = await Art.findOne({
-      where: { id: articleID },
-      include: [
-        {
-          model: User,
-          as: 'Author',
-          attributes: ['username'],
-        }
-      ],
-      attributes: {
-        exclude: ['updatedAt', 'status']
-      },
-    });
-
-    if (!findArt) {
-      return { message: 'Art not found' };
-    }
-
+  static async newArticleNotification(articleDetailsObject) {
     const {
-      artistId, slug, title, featuredImg, description, Author
-    } = findArt.dataValues;
+      artId, artistId, slugifiedTitle, artTitle, artFeaturedImg, artDescription
+    } = articleDetailsObject;
 
-    const { username: artistUsername } = Author;
+    const artistUsername = await User.findOne({
+      where: { id: artistId },
+      attributes: ['username'],
+    });
 
     const followers = await Following.findAll({
       where: { userId: artistId },
@@ -62,38 +55,144 @@ class SendNotifications {
 
     const mailList = [];
 
-    const pusher = new Pusher({
-      appId: process.env.PUSHER_APPID,
-      key: process.env.PUSHER_KEY,
-      secret: process.env.PUSHER_SECRET,
-      cluster: process.env.PUSHER_CLUSTER,
-      encrypted: true
-    });
-
     followers.forEach((follower) => {
-      mailList.push(follower.User.email);
+      const { id, email } = follower.User;
+      mailList.push(email);
 
-      pusher.trigger('notifications', `follower-${follower.User.id}-event`, {
-        message: `<a href="${process.env.APP_BASE_URL}/api/v1/arts/${slug}">
-        New Article: ${title} <br> by ${artistUsername}</a>`
+      pusher.trigger('new-article', `article-${artId}-${id}-event`, {
+        message:
+          `<a href="${process.env.APP_BASE_URL}/api/v1/arts/${slugifiedTitle}">
+        New Article: ${artTitle} <br> by ${artistUsername}</a>`
       });
     });
 
-
     const sendEmailNotifications = new EmailNotificationAPI({
-      to: '"Team Merry 👻" <noreplyteammerryah@gmail.com>',
+      to: '"Team Merry 👻" <noreplyteammerry@gmail.com>',
       bcc: mailList,
-      subject: `New Article: ${title} <br> by ${artistUsername}`,
-      message: `<h3>New Article: ${title} <br> 
+      subject: `New Article: ${artTitle} by ${artistUsername}`,
+      message: `<h3>New Article: ${artTitle} <br> 
 by ${artistUsername}</h3>
 <h6>Check it out here:</h6>
-<p><img src="${featuredImg}" width="450px" height="200px"
+<p><img src="${artFeaturedImg}" width="450px" height="200px"
 alt="Featured Image"></p>
-<p><a href="http://${process.env.APP_BASE_URL}/api/v1/arts/${slug}"> 
-${title} </a><br> by ${artistUsername}</p>
-<p>${description}</p>`
+<p><a href="http://${process.env.APP_BASE_URL}/api/v1/arts/${slugifiedTitle}"> 
+${artTitle} </a><br> by ${artistUsername}</p>
+<p>${artDescription}</p>`
     });
+
     return sendEmailNotifications.sendEmail();
+  }
+
+  /**
+   * @Represents getUserInfo
+   * @param {number} userID - The id of the user.
+   * @return {Object} get User's Username
+   */
+  static async getUserInfo(userID) {
+    const findCommenterInfo = await User.findOne({
+      where: { id: userID },
+      attributes: ['username']
+    });
+    const { username } = findCommenterInfo.dataValues;
+    return { username };
+  }
+
+  /**
+   * @Represents getArticleAndArtist
+   * @param {number} artID - The id of the article.
+   * @return {Object} Article And its Artist details .
+   */
+  static async getArticleAndArtist(artID) {
+    const findArticleArtistInfo = await Art.findOne({
+      where: { id: artID },
+      include: [
+        {
+          model: User,
+          as: 'Author',
+          attributes: ['id', 'email']
+        }
+      ],
+      attributes: ['title', 'slug']
+    });
+    const { title, slug, Author } = findArticleArtistInfo.dataValues;
+    const { email: authorEmail, id: authorId } = Author;
+    return {
+      title, slug, authorEmail, authorId
+    };
+  }
+
+  /**
+   * @Represents a newCommentNotification
+   * @param {Object} commentDetailsObjects - The detailed object of the article.
+   * @return {Object|string} success string OR Error message .
+   */
+  static async newCommentNotification(commentDetailsObjects) {
+    const {
+      artId,
+      userId: commenterID,
+      body: commentBody
+    } = commentDetailsObjects;
+
+    const {
+      title: artTitle, slug: artSlug, authorEmail, authorId
+    } = await SendNotifications.getArticleAndArtist(artId);
+
+    const {
+      username: commenterUsername
+    } = await SendNotifications.getUserInfo(commenterID);
+
+    const allExistingComments = await Comment.findAll({
+      where: { artId },
+      include: [
+        {
+          model: User,
+          as: 'User',
+          attributes: ['email']
+        }
+      ],
+      attributes: ['userId'],
+    });
+
+    allExistingComments.splice(allExistingComments.length - 1);
+
+    if (allExistingComments.length > 1) {
+      const mailList = [authorEmail];
+
+      allExistingComments.forEach((comment) => {
+        const { userId, User: UserModel } = comment.dataValues;
+        const { email: commenterEmail } = UserModel;
+
+        mailList.push(commenterEmail);
+
+        pusher.trigger('new-comment', `comment-${artId}-${userId}-event`, {
+          message:
+`<a href="${process.env.APP_BASE_URL}/api/v1/arts/${artSlug}/#comments">
+New Comment: ${commentBody} <br> by ${commenterUsername} on <b>${artTitle}</b>
+</a>`
+        });
+      });
+
+      pusher.trigger('new-comment', `comment-${artId}-${authorId}-event`, {
+        message:
+`<a href="${process.env.APP_BASE_URL}/api/v1/arts/${artSlug}/#comments">
+New Comment: ${commentBody} <br> by ${commenterUsername} on <b>${artTitle}</b>
+</a>`
+      });
+
+      const sendEmailNotifications = new EmailNotificationAPI({
+        to: '"Team Merry 👻" <noreplyteammerry@gmail.com>',
+        bcc: mailList,
+        subject: `New Comment by ${commenterUsername}`,
+        message: `<h3>New Comment on ${artTitle} 
+        by ${commenterUsername}</h3>
+        <h4>Check it out here:</h4>
+        <p><a href="http://${process.env.APP_BASE_URL}/api/v1/arts/${artSlug}"> 
+        ${commentBody}</a><br> by ${commenterUsername}</p>`
+      });
+
+      return sendEmailNotifications.sendEmail();
+    }
+    return 'No Comments';
   }
 
 
@@ -102,13 +201,14 @@ ${title} </a><br> by ${artistUsername}</p>
    * @return {Object|string} success string OR Error message .
    */
   async create() {
-    const { details } = this;
-
-    const { type, artId } = details;
+    const { type, articleDetails, commentDetails } = this.payloadObject;
 
     try {
       if (type === 'newArticle') {
-        return await SendNotifications.newArticleNotification(artId);
+        return await SendNotifications.newArticleNotification(articleDetails);
+      }
+      if (type === 'newComment') {
+        return await SendNotifications.newCommentNotification(commentDetails);
       }
     } catch (err) {
       return err;

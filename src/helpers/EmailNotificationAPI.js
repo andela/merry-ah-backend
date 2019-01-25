@@ -13,7 +13,7 @@ class EmailNotificationAPI {
    */
   constructor(emailPayload) {
     this.mailOptions = {
-      from: `"Merry Ah 👻" <${process.env.EMAILUSER}>`, // sender address
+      from: `"Merry Ah" <${process.env.EMAILUSER}>`, // sender address
       to: emailPayload.recipient, // list of receivers
       bcc: emailPayload.bcc,
       subject: emailPayload.subject, // Subject line

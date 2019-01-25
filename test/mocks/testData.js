@@ -128,7 +128,7 @@ const artDetails = {
       + '"extension":"jpeg"}]'
   },
   validUpdatedArticle: {
-    title: 'Cirrhosis of the Sky',
+    title: 'Syntax Podcasts',
     slug: 'cirrhosis-of-the-sky',
     description: 'The Syntax Podcasts isn\'t suitable for all ages',
     categoryId: 1,
@@ -150,11 +150,16 @@ const artDetails = {
       + '"https://images.pexels.com/photos/1047540/pexels-photo-1047540.jpeg",'
       + '"extension":"jpeg"}]'
   },
+  invalidNoMediaArticle: {
+    title: 'Cirrhosis of the Sky',
+    description: 'The Syntax Podcasts isn\'t suitable for all ages',
+    categoryId: 1,
+  },
   invalidUpdatedArticle: {
     title: 'Cirrhosis of the Sky',
     slug: 'cirrhosis-of-the-sky',
-    description: 'The S',
-    categoryId: 10,
+    description: 'The ',
+    categoryId: 100,
     media: '[{"url":'
       + '"https://farm3.staticflickr.com/2817/33968464326_a6f9cbc754_k",'
       + '"extension":"jpg"},'

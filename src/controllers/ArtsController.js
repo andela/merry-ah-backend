@@ -15,37 +15,27 @@ class ArtsController {
    * @param {object} res
    * @memberof ArtsController
    * This will receive a media object containing a list of media files
-   * @returns {Object} Article details
+   * @returns {Object} Article payloadObject
    */
   static async create(req, res) {
     try {
       const defaultStatus = 0;
-      const validationErrors = [];
 
       const { id: artistId } = req.verifyUser;
 
       const {
-        title, description, categoryId, media,
+        title, description, categoryId,
       } = req.body;
 
-      const mediaFilesArray = JSON.parse(media);
+      let { media } = req.body;
 
-      req.check('title', 'Title is required').notEmpty();
-      req.check('description', 'Description should be longer').notEmpty()
-        .isLength({ min: 15 });
-
-      const errors = req.validationErrors();
-
-      if (errors) {
-        errors.map(err => validationErrors.push(err.msg));
-        const response = new Response(
-          'Not Ok',
-          400,
-          'Validation Errors Occurred',
-          { validationErrors }
-        );
-        return res.status(response.code).json(response);
+      if (!media) {
+        media = `[{
+        "url":"${process.env.DEFAULT_ARTICLE_IMAGE}",
+        "extension":"jpeg"}]`;
       }
+
+      const mediaFilesArray = JSON.parse(media);
 
       const slugifiedTitle = Slugify.slugify(title);
 
@@ -61,8 +51,7 @@ class ArtsController {
           title,
           description,
           categoryId,
-          featuredImg: mediaFilesArray[0].url
-            || process.env.DEFAULT_ARTICLE_IMAGE,
+          featuredImg: mediaFilesArray[0].url,
           status: defaultStatus
         });
 
@@ -89,7 +78,14 @@ class ArtsController {
 
       const notifyFollowers = new sendNotifications({
         type: 'newArticle',
-        artId
+        articleDetails: {
+          artId,
+          artistId,
+          artTitle,
+          slugifiedTitle,
+          artDescription,
+          artFeaturedImg
+        }
       });
       const followersNotified = await notifyFollowers.create();
 
@@ -124,7 +120,7 @@ class ArtsController {
    * @param {object} req
    * @param {object} res
    * @memberof ArtsController
-   * @returns {Object} Article details
+   * @returns {Object} Article payloadObject
    */
   static async update(req, res) {
     try {
@@ -157,20 +153,29 @@ class ArtsController {
       }
 
       const {
-        title, description, categoryId, media,
+        title, description, categoryId,
       } = req.body;
+
+
+      let { media } = req.body;
+
+      if (!media) {
+        media = `[{
+        "url":"${process.env.DEFAULT_ARTICLE_IMAGE}",
+        "extension":"jpeg"}]`;
+      }
 
       const mediaFilesArray = JSON.parse(media);
 
-      req.check('title', 'Title is required').notEmpty();
-      req.check('description', 'Description should be longer').notEmpty()
+      req.check('title', 'Title is required').trim().notEmpty();
+      req.check('description', 'Description should be longer').trim().notEmpty()
         .isLength({ min: 15 });
 
       const errors = req.validationErrors();
       if (errors) {
         errors.map(err => validationErrors.push(err.msg));
         const response = new Response(
-          'Not Ok',
+          'Not ok',
           400,
           'Validation Errors Occurred',
           { validationErrors }
@@ -182,11 +187,11 @@ class ArtsController {
 
       const updatedArticle = {
         id: artToUpdate.id,
-        title: title || artToUpdate.title,
+        title,
         slug: slugifiedTitle,
-        description: description || artToUpdate.description,
-        categoryId: categoryId || artToUpdate.categoryId,
-        featuredImg: mediaFilesArray[0].url || artToUpdate.featuredImg,
+        description,
+        categoryId,
+        featuredImg: mediaFilesArray[0].url,
         createdAt: artToUpdate.createdAt
       };
 
@@ -229,7 +234,7 @@ class ArtsController {
    * @param {object} req
    * @param {object} res
    * @memberof ArtsController
-   * @returns {Object} Article details
+   * @returns {number} Article Deletion status
    */
   static async delete(req, res) {
     try {
@@ -266,7 +271,7 @@ class ArtsController {
 
       const response = new Response(
         'Ok',
-        200,
+        202,
         'Article deleted successfully',
         { artToDelete: artDeleted }
       );

@@ -19,7 +19,7 @@ class UsersController {
    * @param {object} req
    * @param {object} res
    * @memberof UsersController
-   * @returns user details
+   * @returns user payloadObject
    */
   static async signUp(req, res) {
     const defaultstatus = 0;
@@ -55,7 +55,7 @@ class UsersController {
           imgURL,
         });
       const userDetails = {
-        id, registeredUsername, registeredEmail, userSignupType
+        id, registeredUsername, registeredEmail, userSignupType, userType
       };
       const token = await TokenAuthenticate
         .generateToken(userDetails, tokenExpireTime);
@@ -130,10 +130,10 @@ class UsersController {
         return res.status(response.code).json(response);
       }
       const {
-        id, username, email: userEmail, signUpType
+        id, username, email: userEmail, signUpType, userType
       } = user;
       const userDetails = {
-        id, username, userEmail, signUpType
+        id, username, userEmail, signUpType, userType
       };
       const token = await TokenAuthenticate
         .generateToken(userDetails, tokenExpireTime);

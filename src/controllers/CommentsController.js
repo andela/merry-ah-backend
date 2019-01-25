@@ -1,5 +1,6 @@
 import models from '../db/models';
 import Response from '../helpers/response';
+import { sendNotifications } from '../helpers';
 
 const { Comment, Art } = models;
 
@@ -30,10 +31,23 @@ class CommentsController {
           artId,
           body
         });
+
+        const notifyNewComments = new sendNotifications({
+          type: 'newComment',
+          commentDetails: {
+            artId,
+            userId: id,
+            body
+          }
+        });
+
+        const newCommentsNotified = await notifyNewComments.create();
+
         const response = new Response(
           'created',
           201,
           'Comment added successfully',
+          newCommentsNotified
         );
         return res.status(response.code).json(response);
       }
