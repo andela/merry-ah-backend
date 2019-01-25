@@ -51,6 +51,6 @@ module.exports = (sequelize, DataTypes) => {
     Art.hasMany(models.Report, {
       foreignKey: 'artId'
     });
-    return Art;
   };
+  return Art;
 };
