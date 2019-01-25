@@ -56,8 +56,7 @@ class ArtsController {
           title,
           description,
           categoryId,
-          featuredImg: mediaFilesArray[0].url
-            || process.env.DEFAULT_ARTICLE_IMAGE,
+          featuredImg: mediaFilesArray[0].url,
           status: defaultStatus
         });
 
