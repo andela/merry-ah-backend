@@ -9,7 +9,7 @@ let jwtToken, jwtToken2, validUpdatedArticleSlug;
 chai.use(chaiHttp);
 const { expect } = chai;
 const {
-  validArticle, validUpdatedArticle,
+  validArticle, validUpdatedArticle, invalidNoMediaArticle,
   invalidArticle, invalidUpdatedArticle, invalidUpdatedArticleCategory
 } = artDetails;
 const { validUserTT, validUserLogin } = userDetails;
@@ -56,6 +56,18 @@ describe('Arts Endpoint API Test', () => {
           done(err);
         });
     });
+    it('it should create a new article without media files', (done) => {
+      chai.request(app)
+        .post('/api/v1/arts')
+        .set('x-access-token', jwtToken)
+        .send(invalidNoMediaArticle)
+        .end((err, res) => {
+          expect(res.body).to.be.a('object');
+          expect(res.body.messages).eql('Article created successfully');
+          expect(res.status).to.equal(201);
+          done(err);
+        });
+    });
 
     it('it should not create an invalid or semi-filled article', (done) => {
       chai.request(app)
@@ -64,7 +76,7 @@ describe('Arts Endpoint API Test', () => {
         .send(invalidArticle)
         .end((err, res) => {
           expect(res.status).to.equal(400);
-          expect(res.body.status).eql('Not Ok');
+          expect(res.body.status).eql('Bad Request');
           expect(res.body.messages).eql('Validation Errors Occurred');
           done(err);
         });
@@ -292,6 +304,21 @@ describe('Arts Endpoint API Test', () => {
         });
     });
 
+    it('it should update an article without media files', (done) => {
+      chai.request(app)
+        .put(`/api/v1/arts/${validUpdatedArticleSlug}`)
+        .set('x-access-token', jwtToken)
+        .send(invalidNoMediaArticle)
+        .end((err, res) => {
+          expect(res.body).to.be.a('object');
+          expect(res.body.status).eql('Ok');
+          expect(res.status).to.equal(200);
+          expect(res.body.messages).eql('Article updated successfully');
+          validUpdatedArticleSlug = res.body.data.slug;
+          done(err);
+        });
+    });
+
     it('it should not update an article with invalid Category', (done) => {
       chai.request(app)
         .put(`/api/v1/arts/${validUpdatedArticleSlug}`)
@@ -311,8 +338,7 @@ describe('Arts Endpoint API Test', () => {
         .send(validUpdatedArticle)
         .end((err, res) => {
           expect(res.status).to.equal(403);
-          expect(res.body.status).eql('Not Ok');
-          expect(res.body.messages).eql('Unauthorized to Edit Article');
+          expect(res.body.status).eql('Forbidden');
           done(err);
         });
     });
@@ -323,9 +349,8 @@ describe('Arts Endpoint API Test', () => {
         .set('x-access-token', jwtToken)
         .send(invalidUpdatedArticle)
         .end((err, res) => {
-          expect(res.body.messages).eql('Validation Errors Occurred');
           expect(res.status).to.equal(400);
-          expect(res.body.status).eql('Not Ok');
+          expect(res.body.status).eql('Not ok');
           done(err);
         });
     });
@@ -362,9 +387,8 @@ describe('Arts Endpoint API Test', () => {
         .delete(`/api/v1/arts/${validUpdatedArticleSlug}`)
         .set('x-access-token', jwtToken2)
         .end((err, res) => {
+          expect(res.body.status).eql('Forbidden');
           expect(res.status).to.equal(403);
-          expect(res.body.status).eql('Not Ok');
-          expect(res.body.messages).eql('Unauthorized to Delete Article');
           done(err);
         });
     });
@@ -374,7 +398,7 @@ describe('Arts Endpoint API Test', () => {
         .delete(`/api/v1/arts/${validUpdatedArticleSlug}`)
         .set('x-access-token', jwtToken)
         .end((err, res) => {
-          expect(res.status).to.equal(200);
+          expect(res.status).to.equal(202);
           expect(res.body.status).eql('Ok');
           expect(res.body.messages).eql('Article deleted successfully');
           expect(res.body.data).to.have.property('artToDelete');
