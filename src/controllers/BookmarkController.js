@@ -21,7 +21,7 @@ class BookmarkController {
       /** check if bookmark was added successfully */
       if (addBookmarkResponse) {
         const response = new Response(
-          'Ok',
+          'Created',
           201,
           'Bookmark has been added',
           addBookmarkResponse
@@ -31,7 +31,7 @@ class BookmarkController {
       /** Return response if bookmark has preoviously been added */
       if (!addBookmarkResponse) {
         const response = new Response(
-          'Ok',
+          'Conflict',
           409,
           `User has already bookmarked this Item : ${artId}`
         );
@@ -39,7 +39,7 @@ class BookmarkController {
       }
     } catch (error) {
       const response = new Response(
-        'Not Ok',
+        'Internal Server Error',
         500,
         `${error}`
       );
@@ -64,7 +64,7 @@ class BookmarkController {
       /** Check if bookmark was not deleted */
       if (removebookmarkResponse === 0) {
         const response = new Response(
-          'Ok',
+          'Not Found',
           404,
           'Bookmark does not exist or has previously been deleted',
         );
@@ -74,15 +74,15 @@ class BookmarkController {
       /** Check if bookmark was deleted successfully */
       if (removebookmarkResponse === 1) {
         const response = new Response(
-          'Ok',
-          201,
+          'Accepted',
+          202,
           'Bookmark has successfully been deleted'
         );
         return res.status(response.code).json(response);
       }
     } catch (error) {
       const response = new Response(
-        'Not Ok',
+        'Internal Server Error',
         500,
         `${error}`
       );
@@ -118,7 +118,7 @@ class BookmarkController {
       /** Check if no bookmark found for user */
       if (userBookmarks.length === 0) {
         const response = new Response(
-          'Ok',
+          'Not Found',
           404,
           'No Bookmarks was found for User',
           userBookmarks
@@ -127,7 +127,7 @@ class BookmarkController {
       }
     } catch (error) {
       const response = new Response(
-        'Not Ok',
+        'Internal Server Error',
         500,
         `${error}`
       );

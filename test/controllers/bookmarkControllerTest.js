@@ -43,7 +43,7 @@ describe('Bookmark Tests', () => {
         expect(201);
         expect(res.body).to.be.a('object');
         expect(res.body.messages).eql('Bookmark has been added');
-        expect(res.body.status).eql('Ok');
+        expect(res.body.status).eql('Created');
         done(err);
       });
   });
@@ -68,7 +68,7 @@ describe('Bookmark Tests', () => {
       .end((err, res) => {
         expect(res.body).to.be.a('object');
         expect(res.body.messages).eql('User has already bookmarked this Item : 1');
-        expect(res.body.status).eql('Ok');
+        expect(res.body.status).eql('Conflict');
         expect(res.body.code).eql(409);
         done(err);
       });
@@ -97,7 +97,7 @@ describe('Bookmark Tests', () => {
         expect(201);
         expect(res.body).to.be.a('object');
         expect(res.body.messages).eql('Bookmark has successfully been deleted');
-        expect(res.body.status).eql('Ok');
+        expect(res.body.status).eql('Accepted');
 
         done(err);
       });
@@ -112,7 +112,7 @@ describe('Bookmark Tests', () => {
         expect(res.body).to.be.a('object');
         expect(res.body.messages)
           .eql('Bookmark does not exist or has previously been deleted');
-        expect(res.body.status).eql('Ok');
+        expect(res.body.status).eql('Not Found');
         expect(res.body.code).eql(404);
         done(err);
       });
@@ -127,7 +127,7 @@ describe('Bookmark Tests', () => {
         expect(res.body).to.be.a('object');
         expect(res.body.messages)
           .eql('No Bookmarks was found for User');
-        expect(res.body.status).eql('Ok');
+        expect(res.body.status).eql('Not Found');
         expect(res.body.code).eql(404);
         done(err);
       });
