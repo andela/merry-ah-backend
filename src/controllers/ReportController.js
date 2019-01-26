@@ -2,14 +2,15 @@ import Response from '../helpers/response';
 import models from '../db/models';
 import EmailNotificationAPI from '../helpers/EmailNotificationAPI';
 
+const {
+  Report, Art, User, ReportSummary
+} = models;
+
 const reporterMessage = `<h1>Feed back </h1>
 <p> Thanks for reaching out to us on your consigns, 
 The necessary action has been taken on the report</p>
 <strong>Thank you for choosing Art Cave</strong>
   `;
-const {
-  ReportSummary, User, Report, Art
-} = models;
 
 /**
  * Represents a ReportController.
@@ -51,6 +52,40 @@ class ReportController {
     } catch (err) {
       const response = new Response(
         'Internal server error',
+        'Not ok',
+        500,
+        `${err}`,
+      );
+      return res.status(response.code).json(response);
+    }
+  }
+
+  /**
+   * @desc POST /api/v1/art/:id/report
+   * @param {object} req
+   * @param {object} res
+   * @memberof ReportsController
+   * @returns {Object} report type and text
+   */
+  static async createReport(req, res) {
+    try {
+      const { reportText } = req.body;
+      const report = await Report.create({
+        reportText,
+        artId: req.params.id,
+        userId: req.verifyUser.id,
+      });
+      const response = new Response(
+        'Created',
+        201,
+        'Report as been recieved',
+        report
+      );
+      return res.status(response.code).json(response);
+    } catch (err) {
+      const response = new Response(
+        'Internal server error',
+        'Not ok',
         500,
         `${err}`,
       );
@@ -178,6 +213,36 @@ class ReportController {
       return res.status(response.code).json(response);
     }
   }
-}
 
+  /**
+   * @desc GET /api/v1/arts/reports
+   * @param {object} req
+   * @param {object} res
+   * @memberof ReportsController
+   * @returns {Object} report type and text
+   */
+  static async getAllReports(req, res) {
+    const reports = await Report.findAll({
+      include: [
+        {
+          model: User,
+          as: 'user',
+          attributes: ['email']
+        },
+        {
+          model: Art,
+          as: 'arts',
+          attributes: ['title']
+        },
+      ],
+    });
+    const response = new Response(
+      'Ok',
+      200,
+      'All reports',
+      reports
+    );
+    return res.status(response.code).json(response);
+  }
+}
 export default ReportController;

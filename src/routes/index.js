@@ -25,8 +25,9 @@ router.use(
 );
 router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 router.use('/arts', artsRoute);
+router.use('/artsreport', reportRouter);
 router.use('/arts/comments/', commentRouter);
 router.use('/auth', socialRouter);
-router.use('/artsreport/', reportRouter);
+
 
 export default router;
