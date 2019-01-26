@@ -63,44 +63,18 @@ class CommentsController {
     try {
       const { body } = req.body;
       const { commentId } = req.params;
-      const { id } = req.verifyUser;
-      const findComment = await Comment.find({
+      await Comment.update({
+        body
+      },
+      {
         where: {
           id: commentId
         }
       });
-      if (findComment) {
-        if (findComment.userId === id) {
-          await UpdatedComment.create({
-            body: findComment.body,
-            commentId
-          });
-          await Comment.update({
-            body
-          },
-          {
-            where: {
-              id: commentId
-            }
-          });
-          const response = new Response(
-            'Ok',
-            200,
-            'Comment updated successfully',
-          );
-          return res.status(response.code).json(response);
-        }
-        const response = new Response(
-          'Unauthorized',
-          401,
-          'You are not authorized to update this comment',
-        );
-        return res.status(response.code).json(response);
-      }
       const response = new Response(
-        'Not Found',
-        404,
-        'This comment does not exist',
+        'Ok',
+        200,
+        'Comment updated successfully',
       );
       return res.status(response.code).json(response);
     } catch (err) {

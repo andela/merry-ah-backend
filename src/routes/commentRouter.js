@@ -3,6 +3,7 @@ import ParamsChecker from '../middlewares/ParamsChecker';
 import CommentsController from '../controllers/CommentsController';
 import CommentValidator from '../middlewares/CommentValidator';
 import TokenAuthenticate from '../helpers/TokenAuthenticate';
+import CommentChecker from '../middlewares/CommentChecker';
 
 const commentRouter = express.Router();
 
@@ -20,6 +21,7 @@ commentRouter
     TokenAuthenticate.tokenVerify,
     ParamsChecker.idChecker,
     CommentValidator.createCommentValidator,
+    CommentChecker.findComment,
     CommentsController.updateComment
   );
 commentRouter
