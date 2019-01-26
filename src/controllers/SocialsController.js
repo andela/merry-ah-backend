@@ -32,6 +32,7 @@ class SocialController {
         email,
         signUpType: 'social',
         userType: null,
+        isActive: true,
         isVerified: true,
         password: null,
       }
@@ -74,6 +75,7 @@ class SocialController {
         email: emails[0].value,
         signUpType: 'social',
         userType: null,
+        isActive: true,
         isVerified: true,
         password: null,
       }
@@ -115,6 +117,7 @@ class SocialController {
         username: displayName,
         email: emails[0].value,
         signUpType: 'social',
+        isActive: true,
         userType: null,
         isVerified: true,
         password: null,

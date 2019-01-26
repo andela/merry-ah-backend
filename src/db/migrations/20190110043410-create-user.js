@@ -44,6 +44,10 @@ module.exports = {
       allowNull: false,
       type: Sequelize.BOOLEAN
     },
+    isActive: {
+      allowNull: false,
+      type: Sequelize.BOOLEAN
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE

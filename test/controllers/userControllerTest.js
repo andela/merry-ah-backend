@@ -327,7 +327,7 @@ describe('Users Endpoint API Test', () => {
     it('it should not update user with empty fields', (done) => {
       chai.request(app)
         .put('/api/v1/users/profile-update')
-        .set('Authorization', userToken)
+        .set('Authorization', loginToken)
         .send({})
         .end((err, res) => {
           expect(res.body.status).eql('Bad Request');
@@ -470,7 +470,7 @@ describe('Users Endpoint API Test', () => {
     });
     it('it should return profile of one artist on the platform', (done) => {
       chai.request(app)
-        .get(`/api/v1/users/artists/${1}`)
+        .get('/api/v1/users/artists/2')
         .set('x-access-token', loginToken)
         .end((err, res) => {
           expect(res.body).to.be.a('object');
