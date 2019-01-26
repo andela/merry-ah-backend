@@ -3,7 +3,7 @@ import models from '../db/models';
 import { Response, Slugify } from '../helpers/index';
 
 const {
-  Art, Media, Category, User, Comment
+  Art, Media, Category, User, Comment, ReadingStat
 } = models;
 
 
@@ -307,7 +307,12 @@ class ArtsController {
           {
             model: Comment,
             attributes: [],
-          }
+          },
+          {
+            model: ReadingStat,
+            as: 'ReadingStat',
+            attributes: ['visited'],
+          },
         ],
         order: [
           ['createdAt', 'DESC'],

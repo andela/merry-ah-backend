@@ -26,6 +26,10 @@ module.exports = (sequelize, DataTypes) => {
     Art.hasMany(models.Rate, {
       foreignKey: 'artId'
     });
+    Art.hasMany(models.ReadingStat, {
+      foreignKey: 'artId',
+      as: 'ReadingStat'
+    });
     Art.hasMany(models.Comment, {
       foreignKey: 'artId'
     });
