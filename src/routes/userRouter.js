@@ -43,14 +43,14 @@ userRouter.get(
 userRouter.get(
   '/:userId/followers',
   TokenAuthenticate.tokenVerify,
-  UserMiddleware.checkForUserFollowers,
+  UserMiddleware.checkUserID,
   UsersController.getFollowers,
 );
 
 userRouter.get(
   '/:userId/following',
   TokenAuthenticate.tokenVerify,
-  UserMiddleware.checkForUserFollowings,
+  UserMiddleware.checkUserID,
   UsersController.getFollowing,
 );
 

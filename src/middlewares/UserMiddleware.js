@@ -2,7 +2,7 @@ import Validation from '../helpers/Validation';
 import models from '../db/models';
 import Response from '../helpers/response';
 
-const { User, Following } = models;
+const { User, } = models;
 
 /**
  * User Middleware Class
@@ -201,9 +201,9 @@ class UserMiddleware {
    * @param {object} res
    * @param {function} next
    * @memberof UserMiddleware
-   * @returns {object} error if user do not have followers
+   * @returns {object} error if user do is not an integer
    */
-  static async checkForUserFollowers(req, res, next) {
+  static async checkUserID(req, res, next) {
     try {
       const { userId } = req.params;
 
@@ -216,74 +216,6 @@ class UserMiddleware {
         );
         return res.status(response.code).json(response);
       }
-
-      const followers = await Following.findAll({
-        where: {
-          userId,
-        },
-        attributes: ['followerId']
-      });
-
-      if (!followers || followers.length === 0) {
-        const response = new Response(
-          'Not Found',
-          404,
-          'User has no followers',
-        );
-        return res.status(response.code).json(response);
-      }
-
-      req.followers = followers;
-      next();
-    } catch (err) {
-      const response = new Response(
-        'Internal server error',
-        500,
-        `${err}`,
-      );
-      return res.status(response.code).json(response);
-    }
-  }
-
-  /**
-   * @static
-   * @param {object} req
-   * @param {object} res
-   * @param {function} next
-   * @memberof UserMiddleware
-   * @returns {object} error if user is not following anyone
-   */
-  static async checkForUserFollowings(req, res, next) {
-    try {
-      const { userId } = req.params;
-
-      /* eslint-disable no-restricted-globals */
-      if (isNaN(userId)) {
-        const response = new Response(
-          'Bad Request',
-          400,
-          'User ID must be an integer',
-        );
-        return res.status(response.code).json(response);
-      }
-
-      const following = await Following.findAll({
-        where: {
-          followerId: userId,
-        },
-        attributes: ['userId']
-      });
-
-      if (!following || following.length === 0) {
-        const response = new Response(
-          'Not Found',
-          404,
-          'User is not following anyone',
-        );
-        return res.status(response.code).json(response);
-      }
-
-      req.following = following;
       next();
     } catch (err) {
       const response = new Response(

@@ -611,7 +611,7 @@ describe('Users Endpoint API Test', () => {
           done(err);
         });
     });
-    it('should return error when user has no follower', (done) => {
+    it('should return error when user is invalid', (done) => {
       chai.request(app)
         .get(`/api/v1/users/${100}/followers`)
         .set('x-access-token', loginToken)

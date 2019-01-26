@@ -528,43 +528,51 @@ class UsersController {
 
   /**
    * @static
-   * @desc POST /api/v1/users/followers Email
+   * @desc POST /api/v1/users/:userId/followers
    * @param {object} req
    * @param {object} res
    * @memberof UsersController
-   * @returns all users following the authenticated user
+   * @returns all users following the specified user
    */
   static async getFollowers(req, res) {
     try {
-      const { followers } = req;
-      /* eslint-disable prefer-const  */
-      let queries = [];
-      followers.forEach((x) => {
-        const { followerId } = x;
-        const query = User.findOne({
-          where: {
-            id: followerId,
+      const { userId } = req.params;
+      const user = await Following.findAll({
+        where: {
+          userId,
+        },
+        attributes: ['followerId'],
+        include: [
+          {
+            model: User,
+            attributes: ['username', 'email', 'userType'],
+            include: [
+              {
+                model: Profile,
+                as: 'profile',
+                attributes: ['firstName', 'lastName', 'bio', 'imgURL']
+              }
+            ]
           },
-          attributes: ['id', 'username', 'email', 'userType'],
-          include: [{
-            model: Profile,
-            as: 'profile',
-            attributes: ['firstName', 'lastName', 'bio', 'imgURL']
-          }]
-        });
-        queries.push(query);
-        return query;
+        ]
       });
 
-      Promise.all(queries).then((user) => {
+      if (user.length === 0) {
         const response = new Response(
-          'Ok',
-          200,
-          'Returned all followers',
-          { user }
+          'Not Found',
+          404,
+          'User has no followers',
         );
         return res.status(response.code).json(response);
-      });
+      }
+
+      const response = new Response(
+        'Ok',
+        200,
+        'Returned all followers',
+        { followers: user }
+      );
+      return res.status(response.code).json(response);
     } catch (err) {
       const response = new Response(
         'Internal server error',
@@ -577,44 +585,51 @@ class UsersController {
 
   /**
    * @static
-   * @desc POST /api/v1/users/following
+   * @desc POST /api/v1/users/:userId/following
    * @param {object} req
    * @param {object} res
    * @memberof UsersController
-   * @returns all users the authenticated user is following
+   * @returns all users the specified user is following
    */
   static async getFollowing(req, res) {
     try {
-      const { following } = req;
-
-      /* eslint-disable prefer-const  */
-      let queries = [];
-      following.forEach((x) => {
-        const { userId } = x;
-        const query = User.findOne({
-          where: {
-            id: userId,
+      const { userId } = req.params;
+      const user = await Following.findAll({
+        where: {
+          followerId: userId,
+        },
+        attributes: ['userId'],
+        include: [
+          {
+            model: User,
+            attributes: ['username', 'email', 'userType'],
+            include: [
+              {
+                model: Profile,
+                as: 'profile',
+                attributes: ['firstName', 'lastName', 'bio', 'imgURL']
+              }
+            ]
           },
-          attributes: ['id', 'username', 'email', 'userType'],
-          include: [{
-            model: Profile,
-            as: 'profile',
-            attributes: ['firstName', 'lastName', 'bio', 'imgURL']
-          }]
-        });
-        queries.push(query);
-        return query;
+        ]
       });
 
-      Promise.all(queries).then((user) => {
+      if (user.length === 0) {
         const response = new Response(
-          'Ok',
-          200,
-          'Returned all users this person follows',
-          { user }
+          'Not Found',
+          404,
+          'User is not following anyone',
         );
         return res.status(response.code).json(response);
-      });
+      }
+
+      const response = new Response(
+        'Ok',
+        200,
+        'Returned all users this person follows',
+        { following: user }
+      );
+      return res.status(response.code).json(response);
     } catch (err) {
       const response = new Response(
         'Internal server error',
