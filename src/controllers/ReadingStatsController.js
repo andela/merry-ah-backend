@@ -1,4 +1,3 @@
-/* eslint-disable require-jsdoc */
 import models from '../db/models';
 import Response from '../helpers/response';
 
@@ -6,6 +5,14 @@ const { ReadingStat } = models;
 
 /** Reading Stat Class */
 class ReadingStatsController {
+  /**
+   * @static
+   *
+   * @param {object} req
+   * @param {object} res
+   * @returns {*} - object containing the message, status and code
+   * @memberof ReadingStatsController
+   */
   static async getStat(req, res) {
     try {
       const read = await ReadingStat
