@@ -221,7 +221,7 @@ describe('Arts Endpoint API Test', () => {
         .send(invalidUpdatedArticle)
         .end((err, res) => {
           expect(res.status).to.equal(400);
-          expect(res.body.status).eql('Not ok');
+          expect(res.body.status).eql('Bad Request');
           done(err);
         });
     });
@@ -230,7 +230,7 @@ describe('Arts Endpoint API Test', () => {
       chai.request(app)
         .put('/api/v1/arts/ss-slug')
         .set('x-access-token', jwtToken)
-        .send(invalidUpdatedArticle)
+        .send(validArticle)
         .end((err, res) => {
           expect(res.body.messages).eql('Sorry. Article Not Found');
           expect(res.status).to.equal(404);

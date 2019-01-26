@@ -120,6 +120,7 @@ const artDetails = {
     title: 'Syntax Podcasts',
     description: 'The Syntax Podcasts isn\'t suitable for all ages',
     categoryId: 1,
+    price: 5000.00,
     media: '[{"url":'
       + '"https://farm3.staticflickr.com/2817/33968464326_a6f9cbc754_k",'
       + '"extension":"jpg"},'
@@ -132,6 +133,7 @@ const artDetails = {
     slug: 'cirrhosis-of-the-sky',
     description: 'The Syntax Podcasts isn\'t suitable for all ages',
     categoryId: 1,
+    price: 5000.00,
     media: '[{"url":'
       + '"https://images.pexels.com/photos/1047540/pexels-photo-1047540.jpeg",'
       + '"extension":"jpg"},'
@@ -143,6 +145,7 @@ const artDetails = {
     title: '',
     description: 'The Syntax Podcasts isn\'t suitable for all ages',
     categoryId: 1,
+    price: 5000.00,
     media: '[{"url":'
       + '"https://farm3.staticflickr.com/2817/33968464326_a6f9cbc754_k",'
       + '"extension":"jpg"},'
@@ -154,6 +157,7 @@ const artDetails = {
     title: 'Cirrhosis of the Sky',
     description: 'The Syntax Podcasts isn\'t suitable for all ages',
     categoryId: 1,
+    price: 5000.00,
   },
   invalidUpdatedArticle: {
     title: 'Cirrhosis of the Sky',
@@ -173,6 +177,7 @@ const artDetails = {
     description: 'To prepare your one sentence, I suggest making a list of all'
       + ' the things you are and do (it may feel silly, ',
     categoryId: 1000,
+    price: 5000.00,
     media: '[{"url":'
       + '"https://farm3.staticflickr.com/2817/33968464326_a6f9cbc754_k",'
       + '"extension":"jpg"},'

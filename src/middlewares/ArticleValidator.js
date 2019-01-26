@@ -17,6 +17,7 @@ class ArticleValidator {
   static createArticleValidator(req, res, next) {
     req.check('title', 'Title is required').trim().notEmpty();
     req.check('categoryId', 'Category is required & numeric').isNumeric();
+    req.check('price', 'Price should be numeric').isNumeric();
     req.check('description', 'Description should be longer').trim().notEmpty()
       .isLength({ min: 15 });
 

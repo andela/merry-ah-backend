@@ -24,7 +24,7 @@ class ArtsController {
       const { id: artistId } = req.verifyUser;
 
       const {
-        title, description, categoryId,
+        title, description, categoryId, price
       } = req.body;
 
       let { media } = req.body;
@@ -52,7 +52,8 @@ class ArtsController {
           description,
           categoryId,
           featuredImg: mediaFilesArray[0].url,
-          status: defaultStatus
+          status: defaultStatus,
+          price
         });
 
       const {
@@ -60,7 +61,8 @@ class ArtsController {
         title: artTitle,
         description: artDescription,
         featuredImg: artFeaturedImg,
-        categoryId: artCategoryId
+        categoryId: artCategoryId,
+        price: artPrice
       } = createArticle.dataValues;
 
       if (mediaFilesArray.length > 0) {
@@ -100,6 +102,7 @@ class ArtsController {
           artDescription,
           artFeaturedImg,
           artCategoryId,
+          artPrice,
           followersNotified
         }
       );
@@ -124,8 +127,6 @@ class ArtsController {
    */
   static async update(req, res) {
     try {
-      const validationErrors = [];
-
       const { id: artistId } = req.verifyUser;
       const { slug } = req.params;
 
@@ -144,7 +145,7 @@ class ArtsController {
 
       if (artistId !== artToUpdate.artistId) {
         const response = new Response(
-          'Not Ok',
+          'Forbidden',
           403,
           'Unauthorized to Edit Article',
           {}
@@ -153,9 +154,8 @@ class ArtsController {
       }
 
       const {
-        title, description, categoryId,
+        title, description, categoryId, price
       } = req.body;
-
 
       let { media } = req.body;
 
@@ -167,22 +167,6 @@ class ArtsController {
 
       const mediaFilesArray = JSON.parse(media);
 
-      req.check('title', 'Title is required').trim().notEmpty();
-      req.check('description', 'Description should be longer').trim().notEmpty()
-        .isLength({ min: 15 });
-
-      const errors = req.validationErrors();
-      if (errors) {
-        errors.map(err => validationErrors.push(err.msg));
-        const response = new Response(
-          'Not ok',
-          400,
-          'Validation Errors Occurred',
-          { validationErrors }
-        );
-        return res.status(response.code).json(response);
-      }
-
       const slugifiedTitle = Slugify.slugify(title);
 
       const updatedArticle = {
@@ -192,7 +176,8 @@ class ArtsController {
         description,
         categoryId,
         featuredImg: mediaFilesArray[0].url,
-        createdAt: artToUpdate.createdAt
+        createdAt: artToUpdate.createdAt,
+        price
       };
 
       const mediaToDelete = await Media.destroy({
@@ -200,7 +185,8 @@ class ArtsController {
       });
 
       if (mediaToDelete) {
-        mediaFilesArray.splice(6);
+        const numberOfMediaToSave = 6;
+        mediaFilesArray.splice(numberOfMediaToSave);
         await mediaFilesArray.forEach((mediaFile) => {
           Media.create({
             artId: artToUpdate.id,

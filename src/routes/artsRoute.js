@@ -17,6 +17,7 @@ artsRoute.post(
 artsRoute.put(
   '/:slug',
   TokenAuthenticate.tokenVerify,
+  ArticleValidator.createArticleValidator,
   ArtistVerify.userTypeChecker,
   ArtController.update
 );

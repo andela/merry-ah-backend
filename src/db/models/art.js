@@ -7,10 +7,10 @@ module.exports = (sequelize, DataTypes) => {
     description: DataTypes.TEXT,
     categoryId: DataTypes.INTEGER,
     featuredImg: DataTypes.STRING,
-    status: DataTypes.BOOLEAN
+    price: DataTypes.DECIMAL(10, 2),
+    status: DataTypes.BOOLEAN,
   }, {});
-  Art.associate = function (models) {
-    // associations can be defined here
+  Art.associate = (models) => {
     Art.belongsTo(models.User, {
       foreignKey: 'artistId',
       as: 'Author'
