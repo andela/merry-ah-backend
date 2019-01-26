@@ -8,6 +8,7 @@ import TokenAuthenticate from '../helpers/TokenAuthenticate';
 import userRouter from './userRouter';
 import commentRouter from './commentRouter';
 import socialRouter from './socialRouter';
+import searchRouter from './searchRouter';
 
 const router = express.Router();
 const swaggerSpec = swaggerJSDoc(require('../utils/swaggerConfig')
@@ -22,5 +23,6 @@ router.use('/arts/comments/', commentRouter);
 router.use('/auth', socialRouter);
 
 router.use('/users', userRouter);
+router.use('/search', searchRouter);
 
 export default router;
