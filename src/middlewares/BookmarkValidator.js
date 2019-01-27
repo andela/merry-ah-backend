@@ -20,12 +20,12 @@ class BookmarkValidator {
     if (!req.validationErrors()) {
       const { artId } = req.params;
       try {
-        const count = await bookmarkQuery.getArt(artId);
-        if (count) {
+        const doesArtExist = await bookmarkQuery.getArt(artId);
+        if (doesArtExist) {
           req.check('artId', 'Item/Art ID Does not exist')
             .custom(() => true);
         }
-        if (!count) {
+        if (!doesArtExist) {
           req.check('artId', 'Item/Art ID Does not exist')
             .custom(() => false);
         }
