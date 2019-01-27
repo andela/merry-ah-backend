@@ -2,7 +2,7 @@ import models from '../db/models';
 import Response from '../helpers/response';
 import LikeUnlikeComment from '../db/service/commentReactionSummary';
 
-const { Comment, CommentReaction } = models;
+const { CommentReaction } = models;
 /** CommentReaction Controller */
 class CommentReactionController {
   /**
@@ -14,19 +14,11 @@ class CommentReactionController {
    */
   static async likeComment(req, res, done) {
     try {
-      const comment = await Comment.findById(req.params.commentId);
-      if (!comment) {
-        const response = new Response(
-          'Not Found',
-          404,
-          'This comment does not exist',
-        );
-        return res.status(response.code).json(response);
-      }
       LikeUnlikeComment.like(req.params.commentId);
       CommentReaction.findOrCreate({
         where: {
-          $and: [{ commentId: req.params.commentId }, { userId: req.verifyUser.id }]
+          commentId: req.params.commentId,
+          userId: req.verifyUser.id
         },
         defaults: {
           userId: req.verifyUser.id,
