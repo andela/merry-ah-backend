@@ -30,4 +30,6 @@ router.use(
 );
 router.use('/users', userRouter);
 
+router.use('/users', userRouter);
+
 export default router;
