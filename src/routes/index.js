@@ -27,4 +27,6 @@ router.use('/artsreport', reportRouter);
 router.use('/arts/comments/', commentRouter);
 router.use('/auth', socialRouter);
 
+router.use('/users', userRouter);
+
 export default router;
