@@ -15,12 +15,15 @@ const swaggerSpec = swaggerJSDoc(require('../utils/swaggerConfig')
 
 router.use('/auth', authRouter);
 router.use('/users', userRouter);
-router.use('/rate', TokenAuthenticate.tokenVerify, ratingRouter);
+router.use(
+  '/rate',
+  TokenAuthenticate.tokenVerify,
+  ratingRouter
+);
 router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 router.use('/arts', artsRoute);
 router.use('/arts/comments/', commentRouter);
 router.use('/auth', socialRouter);
 
-router.use('/users', userRouter);
 
 export default router;

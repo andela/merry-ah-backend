@@ -118,7 +118,7 @@ describe('Comments Endpoint API Test', () => {
         .set('Authorization', userToken)
         .send(validComment)
         .end((err, res) => {
-          expect(res.body.messages).eql('You are not authorized to delete this comment');
+          expect(res.body.messages).eql('You are not authorized to modify this comment');
           expect(res.status).to.equal(401);
           done(err);
         });

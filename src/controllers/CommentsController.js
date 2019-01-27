@@ -62,6 +62,7 @@ class CommentsController {
   static async getAllComments(req, res) {
     const { lastId } = req.query;
     const { artId } = req.params;
+
     const allComments = await Comment.findAll({ where: { artId } });
     const lastCommentId = allComments[allComments.length - 1].id;
     let retriveOffset = lastCommentId - (lastId - 1);
@@ -103,39 +104,17 @@ class CommentsController {
   static async deleteComment(req, res) {
     try {
       const { commentId } = req.params;
-      const { id } = req.verifyUser;
-      const findComment = await Comment.find({
-        where: {
-          id: commentId
+      await Comment.destroy(
+        {
+          where: {
+            id: commentId
+          }
         }
-      });
-      if (findComment) {
-        if (findComment.userId === id) {
-          await Comment.destroy(
-            {
-              where: {
-                id: commentId
-              }
-            }
-          );
-          const response = new Response(
-            'Ok',
-            200,
-            'Comment deleted successfully',
-          );
-          return res.status(response.code).json(response);
-        }
-        const response = new Response(
-          'Unauthorized',
-          401,
-          'You are not authorized to delete this comment',
-        );
-        return res.status(response.code).json(response);
-      }
+      );
       const response = new Response(
-        'Not Found',
-        404,
-        'This comment does not exist',
+        'Ok',
+        200,
+        'Comment deleted successfully',
       );
       return res.status(response.code).json(response);
     } catch (err) {
