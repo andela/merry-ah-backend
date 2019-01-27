@@ -1,7 +1,7 @@
 import models from '../db/models';
 import Response from '../helpers/response';
 
-const { Comment, UpdatedComment } = models;
+const { Comment } = models;
 
 /**
  * A module that checks if email already exists at sign up
@@ -25,10 +25,7 @@ class CommentChecker {
       });
       if (findComment) {
         if (findComment.userId === id) {
-          await UpdatedComment.create({
-            body: findComment.body,
-            commentId
-          });
+          req.commentDetails = findComment;
           return next();
         }
         const response = new Response(

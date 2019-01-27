@@ -63,6 +63,11 @@ class CommentsController {
     try {
       const { body } = req.body;
       const { commentId } = req.params;
+      const { commentDetails } = req;
+      await UpdatedComment.create({
+        body: commentDetails.body,
+        commentId
+      });
       await Comment.update({
         body
       },

@@ -26,9 +26,15 @@ class ParamsChecker {
       }
       return next();
     };
-    if (userId) checkParam(userId);
-    if (artId) checkParam(artId);
-    if (commentId) checkParam(commentId);
+    if (userId) {
+      checkParam(userId);
+    }
+    if (artId) {
+      checkParam(artId);
+    }
+    if (commentId) {
+      checkParam(commentId);
+    }
   }
 }
 
