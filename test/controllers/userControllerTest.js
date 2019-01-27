@@ -885,36 +885,35 @@ describe('Users Endpoint API Test', () => {
             .be
             .a('object');
           done();
-
-          it('it should check for valid .env EmailAPI Configurations', (done) => {
-            const existingEMAILUSER = process.env.EMAILUSER;
-            const existingEMAILPASS = process.env.EMAILPASS;
-            process.env.EMAILPASS = null;
-            process.env.EMAILUSER = null;
-            process.env.NODE_ENV = 'production';
-            chai.request(app)
-              .post('/api/v1/auth/signup')
-              .send({
-                firstName: 'Team',
-                lastName: 'Merryah',
-                username: 'merryah',
-                email: 'merryah@gmail.com',
-                password: 'femiok',
-                bio: '',
-                imgURL: '',
-                userType: 'user',
-              })
-              .end((err, res) => {
-                expect(res.body.status)
-                  .eql('Bad request');
-                expect(res.body.messages)
-                  .eql('There was a problem sending');
-                done(err);
-                process.env.EMAILUSER = existingEMAILUSER;
-                process.env.EMAILPASS = existingEMAILPASS;
-                process.env.NODE_ENV = 'test';
-              });
-          });
+        });
+    });
+    it('it should check for valid .env EmailAPI Configurations', (done) => {
+      const existingEMAILUSER = process.env.EMAILUSER;
+      const existingEMAILPASS = process.env.EMAILPASS;
+      process.env.EMAILPASS = null;
+      process.env.EMAILUSER = null;
+      process.env.NODE_ENV = 'production';
+      chai.request(app)
+        .post('/api/v1/auth/signup')
+        .send({
+          firstName: 'Team',
+          lastName: 'Merryah',
+          username: 'merryah',
+          email: 'merryah@gmail.com',
+          password: 'femiok',
+          bio: '',
+          imgURL: '',
+          userType: 'user',
+        })
+        .end((err, res) => {
+          expect(res.body.status)
+            .eql('Bad request');
+          expect(res.body.messages)
+            .eql('There was a problem sending mail');
+          done(err);
+          process.env.EMAILUSER = existingEMAILUSER;
+          process.env.EMAILPASS = existingEMAILPASS;
+          process.env.NODE_ENV = 'test';
         });
     });
   });
