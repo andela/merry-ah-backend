@@ -445,10 +445,19 @@ class ArtsController {
         });
 
       if (!like) {
+        await Like.destroy({
+          where: {
+            artId,
+            userId: id
+          },
+        });
+
+        LikeUnlike.unlike(artId);
+
         const response = new Response(
-          'Bad Request',
-          400,
-          'You have already liked this article',
+          'Ok',
+          200,
+          `You just unliked article ${artId}`,
         );
         return res.status(response.code).json(response);
       }
@@ -489,53 +498,6 @@ class ArtsController {
   }
 
   /**
-  * @static
-  * @desc POST /api/v1/arts/:artId/unlike
-  * @param {object} req
-  * @param {object} res
-  * @memberof ArtsController
-  * @returns {object} successful unlike
-  */
-  static async unlikeArticle(req, res) {
-    try {
-      const { artId } = req.params;
-      const { id } = req.verifyUser;
-
-      const unlike = await Like.destroy({
-        where: {
-          artId,
-          userId: id
-        },
-      });
-
-      if (!unlike) {
-        const response = new Response(
-          'Bad Request',
-          400,
-          'You never liked this article',
-        );
-        return res.status(response.code).json(response);
-      }
-
-      LikeUnlike.unlike(artId);
-
-      const response = new Response(
-        'Ok',
-        200,
-        `You just unliked article ${artId}`,
-      );
-      return res.status(response.code).json(response);
-    } catch (err) {
-      const response = new Response(
-        'Internal server error',
-        500,
-        `${err}`,
-      );
-      return res.status(response.code).json(response);
-    }
-  }
-
-  /**
    * @static
    * @desc POST /api/v1/arts/:artId/dislike
    * @param {object} req
@@ -560,10 +522,19 @@ class ArtsController {
         });
 
       if (!dislike) {
+        await Dislike.destroy({
+          where: {
+            artId,
+            userId: id
+          },
+        });
+
+        DisikeUndislike.undislike(artId);
+
         const response = new Response(
-          'Bad Request',
-          400,
-          'You have already disliked this article',
+          'Ok',
+          200,
+          `You just undisliked article ${artId}`,
         );
         return res.status(response.code).json(response);
       }
@@ -590,53 +561,6 @@ class ArtsController {
         'Ok',
         201,
         `You just disliked article ${artId}`,
-      );
-      return res.status(response.code).json(response);
-    } catch (err) {
-      const response = new Response(
-        'Internal server error',
-        500,
-        `${err}`,
-      );
-      return res.status(response.code).json(response);
-    }
-  }
-
-  /**
-  * @static
-  * @desc POST /api/v1/arts/:artId/undislike
-  * @param {object} req
-  * @param {object} res
-  * @memberof ArtsController
-  * @returns {object} successful undislike
-  */
-  static async undislikeArticle(req, res) {
-    try {
-      const { artId } = req.params;
-      const { id } = req.verifyUser;
-
-      const undislike = await Dislike.destroy({
-        where: {
-          artId,
-          userId: id
-        },
-      });
-
-      if (!undislike) {
-        const response = new Response(
-          'Bad Request',
-          400,
-          'You never disliked this article',
-        );
-        return res.status(response.code).json(response);
-      }
-
-      DisikeUndislike.undislike(artId);
-
-      const response = new Response(
-        'Ok',
-        200,
-        `You just undisliked article ${artId}`,
       );
       return res.status(response.code).json(response);
     } catch (err) {

@@ -6,7 +6,7 @@ import { passwordHash, comparePassword } from '../helpers/passwordHash';
 import EmailNotificationAPI from '../helpers/EmailNotificationAPI';
 import basePath from '../helpers/basepath';
 
-const { User, Profile, } = models;
+const { User, Profile } = models;
 
 
 const tokenExpireTime = '10hr';

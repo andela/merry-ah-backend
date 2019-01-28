@@ -1,7 +1,7 @@
 /* eslint-disable valid-jsdoc */
 import models from '../models';
 
-const { Like, LikeSummary, } = models;
+const { Like, LikeSummary } = models;
 
 /**
  * LikeUnlike Service

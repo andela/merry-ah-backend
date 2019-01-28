@@ -13,24 +13,10 @@ artsRoute.post(
 );
 
 artsRoute.post(
-  '/:artId/unlike',
-  TokenAuthenticate.tokenVerify,
-  UserMiddleware.validateArtID,
-  ArtsController.unlikeArticle,
-);
-
-artsRoute.post(
   '/:artId/dislike',
   TokenAuthenticate.tokenVerify,
   UserMiddleware.validateArtID,
   ArtsController.dislikeArticle,
-);
-
-artsRoute.post(
-  '/:artId/undislike',
-  TokenAuthenticate.tokenVerify,
-  UserMiddleware.validateArtID,
-  ArtsController.undislikeArticle,
 );
 
 artsRoute.post('/', TokenAuthenticate.tokenVerify, ArtsController.create);
