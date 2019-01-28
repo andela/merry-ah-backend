@@ -9,4 +9,9 @@ searchRouter.get(
   SearchController.searchByCategory,
 );
 
+searchRouter.get(
+  '/:keyword',
+  SearchController.searchByKeyword,
+);
+
 export default searchRouter;
