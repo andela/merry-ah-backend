@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     artistId: DataTypes.INTEGER,
     slug: DataTypes.STRING,
     title: DataTypes.STRING,
+    visited: DataTypes.INTEGER,
     description: DataTypes.TEXT,
     categoryId: DataTypes.INTEGER,
     featuredImg: DataTypes.STRING,
@@ -25,10 +26,6 @@ module.exports = (sequelize, DataTypes) => {
     });
     Art.hasMany(models.Rate, {
       foreignKey: 'artId'
-    });
-    Art.hasMany(models.ReadingStat, {
-      foreignKey: 'artId',
-      as: 'ReadingStat'
     });
     Art.hasMany(models.Comment, {
       foreignKey: 'artId'

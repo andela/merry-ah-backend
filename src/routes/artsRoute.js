@@ -1,6 +1,7 @@
 import express from 'express';
 import ArtController from '../controllers/ArtsController';
 import { TokenAuthenticate } from '../helpers/index';
+import ReadingStat from '../middlewares/ReadingStat';
 
 const artsRoute = express.Router();
 
@@ -15,6 +16,6 @@ artsRoute.delete(
 );
 
 artsRoute.get('/', ArtController.getAllArticles);
-artsRoute.get('/:slug', ArtController.getSingleArticle);
+artsRoute.get('/:slug', ReadingStat.getStat, ArtController.getSingleArticle);
 
 export default artsRoute;
