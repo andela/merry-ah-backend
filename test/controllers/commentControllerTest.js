@@ -79,5 +79,56 @@ describe('Comments Endpoint API Test', () => {
           done(err);
         });
     });
+    it('it should update comment that exists', (done) => {
+      chai.request(app)
+        .put('/api/v1/arts/comments/1')
+        .set('Authorization', userToken)
+        .send(validComment)
+        .end((err, res) => {
+          expect(res.body.messages).eql('Comment updated successfully');
+          expect(res.status).to.equal(200);
+          done(err);
+        });
+    });
+    it('it should not update comment that does not exists', (done) => {
+      chai.request(app)
+        .put('/api/v1/arts/comments/100')
+        .set('Authorization', userToken)
+        .send(validComment)
+        .end((err, res) => {
+          expect(res.body.messages).eql('This comment does not exist');
+          expect(res.status).to.equal(404);
+          done(err);
+        });
+    });
+    it('it should allow only comment creator to update the comment ', (done) => {
+      chai.request(app)
+        .put('/api/v1/arts/comments/3')
+        .set('Authorization', userToken)
+        .send(validComment)
+        .end((err, res) => {
+          expect(res.body.messages).eql('You are not authorized to update this comment');
+          expect(res.status).to.equal(401);
+          done(err);
+        });
+    });
+    it('it should get updated comment history', (done) => {
+      chai.request(app)
+        .get('/api/v1/arts/comments/1/history')
+        .end((err, res) => {
+          expect(res.body.messages).eql('Successfully retrieved updated comment history');
+          expect(res.status).to.equal(200);
+          done(err);
+        });
+    });
+    it('it should not get updated comment history for comment that has not been edited', (done) => {
+      chai.request(app)
+        .get('/api/v1/arts/comments/100/history')
+        .end((err, res) => {
+          expect(res.body.messages).eql('This comment has not been edited');
+          expect(res.status).to.equal(404);
+          done(err);
+        });
+    });
   });
 });
