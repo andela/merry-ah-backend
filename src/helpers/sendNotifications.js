@@ -66,18 +66,21 @@ class SendNotifications {
       });
     });
 
-    const sendEmailNotifications = new EmailNotificationAPI({
-      to: '"Team Merry 👻" <noreplyteammerry@gmail.com>',
-      bcc: mailList,
-      subject: `New Article: ${artTitle} by ${artistUsername}`,
-      message: `<h3>New Article: ${artTitle} <br> 
+    const mailDestination = '"Team Merry 👻" <noreplyteammerry@gmail.com>';
+    const mailSubject = `New Article: ${artTitle} by ${artistUsername}`;
+    const mailBody = `<h3>New Article: ${artTitle} <br> 
 by ${artistUsername}</h3>
 <h6>Check it out here:</h6>
 <p><img src="${artFeaturedImg}" width="450px" height="200px"
 alt="Featured Image"></p>
 <p><a href="http://${process.env.APP_BASE_URL}/api/v1/arts/${slugifiedTitle}"> 
 ${artTitle} </a><br> by ${artistUsername}</p>
-<p>${artDescription}</p>`
+<p>${artDescription}</p>`;
+    const sendEmailNotifications = new EmailNotificationAPI({
+      to: mailDestination,
+      bcc: mailList,
+      subject: mailSubject,
+      message: mailBody
     });
 
     return sendEmailNotifications.sendEmail();
@@ -164,37 +167,43 @@ ${artTitle} </a><br> by ${artistUsername}</p>
 
         mailList.push(commenterEmail);
 
-        pusher.trigger('new-comment', `comment-${artId}-${userId}-event`, {
-          message:
-`<a href="${process.env.APP_BASE_URL}/api/v1/arts/${artSlug}/#comments">
+        const pusherMessageForCommenters = `
+<a href="${process.env.APP_BASE_URL}/api/v1/arts/${artSlug}/#comments">
 New Comment: ${commentBody} <br> by ${commenterUsername} on <b>${artTitle}</b>
-</a>`
+</a>`;
+        pusher.trigger('new-comment', `comment-${artId}-${userId}-event`, {
+          message: pusherMessageForCommenters
         });
       });
 
-      pusher.trigger('new-comment', `comment-${artId}-${authorId}-event`, {
-        message:
-`<a href="${process.env.APP_BASE_URL}/api/v1/arts/${artSlug}/#comments">
+      const pusherMessageForArtist = `
+<a href="${process.env.APP_BASE_URL}/api/v1/arts/${artSlug}/#comments">
 New Comment: ${commentBody} <br> by ${commenterUsername} on <b>${artTitle}</b>
-</a>`
+        </a>`;
+
+      pusher.trigger('new-comment', `comment-${artId}-${authorId}-event`, {
+        message: pusherMessageForArtist
       });
 
-      const sendEmailNotifications = new EmailNotificationAPI({
-        to: '"Team Merry 👻" <noreplyteammerry@gmail.com>',
-        bcc: mailList,
-        subject: `New Comment by ${commenterUsername}`,
-        message: `<h3>New Comment on ${artTitle} 
+      const mailDestination = '"Team Merry 👻" <noreplyteammerry@gmail.com>';
+      const mailSubject = `New Comment by ${commenterUsername}`;
+      const mailBody = `<h3>New Comment on ${artTitle} 
         by ${commenterUsername}</h3>
         <h4>Check it out here:</h4>
         <p><a href="http://${process.env.APP_BASE_URL}/api/v1/arts/${artSlug}"> 
-        ${commentBody}</a><br> by ${commenterUsername}</p>`
+        ${commentBody}</a><br> by ${commenterUsername}</p>`;
+
+      const sendEmailNotifications = new EmailNotificationAPI({
+        to: mailDestination,
+        bcc: mailList,
+        subject: mailSubject,
+        message: mailBody
       });
 
       return sendEmailNotifications.sendEmail();
     }
     return 'No Comments';
   }
-
 
   /**
    * @Represents a notificationsCreator
