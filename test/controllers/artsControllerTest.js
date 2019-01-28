@@ -2,7 +2,7 @@ import 'babel-polyfill';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import app from '../../src/index';
-import { artDetails, userDetails } from '../mocks/testData';
+import { artDetails, userDetails, commentDetails } from '../mocks/testData';
 
 let jwtToken, jwtToken2, validUpdatedArticleSlug;
 
@@ -13,6 +13,7 @@ const {
   invalidArticle, invalidUpdatedArticle, invalidUpdatedArticleCategory
 } = artDetails;
 const { validUserTT, validUserLogin } = userDetails;
+const { validComment } = commentDetails;
 
 before((done) => {
   chai.request(app)
@@ -36,8 +37,27 @@ before((done) => {
     });
 });
 
-
 describe('Arts Endpoint API Test', () => {
+
+  before((done) => {
+    chai.request(app)
+      .post('/api/v1/users/artists/follow/4')
+      .set('x-access-token', jwtToken2)
+      .end((err) => {
+        done(err);
+      });
+  });
+
+  before((done) => {
+    chai.request(app)
+      .post('/api/v1/arts/comments/1')
+      .set('x-access-token', jwtToken2)
+      .send(validComment)
+      .end((err) => {
+        done(err);
+      });
+  });
+
   describe('ARTS POST REQUESTS', () => {
     it('it should create a new article', (done) => {
       chai.request(app)
