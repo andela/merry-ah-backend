@@ -45,7 +45,8 @@ reportRouter.post(
    *           type: object
    */
 reportRouter.get(
-  '/reports', ReportController.getAllReports
+  '/reports',
+  ReportController.getAllReports
 );
 reportRouter
   .delete(
