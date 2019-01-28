@@ -27,15 +27,14 @@ class EmailNotificationAPI {
    */
   static transportCreator() {
     const {
-      EMAILHOST, EMAILPORT, EMAILUSER, EMAILPASS
+      EMAILUSER, EMAILPASS
     } = process.env;
-    if (!EMAILUSER || !EMAILPASS || !EMAILHOST) {
+    if (!EMAILUSER || !EMAILPASS) {
       return 'Please configure your .env file properly';
     }
 
     return nodemailer.createTransport({
-      host: EMAILHOST,
-      port: EMAILPORT || 2525,
+      service: 'gmail',
       auth: {
         user: EMAILUSER,
         pass: EMAILPASS
