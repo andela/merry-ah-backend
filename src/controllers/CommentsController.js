@@ -62,21 +62,19 @@ class CommentsController {
   static async getAllComments(req, res) {
     const { lastId } = req.query;
     const { artId } = req.params;
-
-    const allComments = await Comment.findAll({ where: { artId } });
-    const lastCommentId = allComments[allComments.length - 1].id;
-    let retriveOffset = lastCommentId - (lastId - 1);
-    if (retriveOffset < 0 || retriveOffset >= lastCommentId) retriveOffset = 0;
-    const limit = 10;
-    const offset = retriveOffset;
+    const { limit } = req.query;
     try {
       const getComments = await Comment.findAll({
-        where: { artId },
-        limit,
-        offset,
         order: [
           ['id', 'DESC'],
         ],
+        where: {
+          artId,
+          id: {
+            $lt: lastId
+          }
+        },
+        limit,
       });
       const response = new Response(
         'Ok',
