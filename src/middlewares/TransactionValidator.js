@@ -17,13 +17,6 @@ class TransactionValidator {
    * @memberof TransactionValidator
    */
   static async genericTransactionValidator(req, res, next) {
-    /** Check if the right keys are sent */
-    req.check('artId', 'Item/Art Id is required').trim().notEmpty();
-    req.check(
-      'authorization',
-      'Token is required to access this route'
-    ).trim().notEmpty();
-
     let artObj;
 
     /** Verify that Art exists in db */
@@ -161,25 +154,6 @@ class TransactionValidator {
    * @memberof TransactionValidator
    */
   static async saveTransactionValidator(req, res, next) {
-    /** Check that Item has been sold */
-    if (!req.validationErrors()) {
-      try {
-        const { artId } = req.params;
-        const receiptObj = await transaction.getItemReceipt(artId);
-        if (receiptObj) {
-          req.check('artId', 'This Item has been sold')
-            .custom(() => false);
-        }
-      } catch (error) {
-        const response = new Response(
-          'Internal Server Error',
-          500,
-          `${error}`
-        );
-        return res.status(response.code).json(response);
-      }
-    }
-
     /** Check that Artist cant buy his Item */
     if (!req.validationErrors()) {
       try {
@@ -193,9 +167,10 @@ class TransactionValidator {
             .custom(() => !isArtistItem);
         }
 
-        /** Add amount of art to request body for controller */
+        /** Add artist Id and amount of art to request body for controller */
         if (artObj) {
-          req.body.amount = artObj.amount;
+          req.body.price = artObj.price;
+          req.body.artistId = artObj.artistId;
         }
       } catch (error) {
         const response = new Response(

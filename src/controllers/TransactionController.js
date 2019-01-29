@@ -13,11 +13,11 @@ class TransactionController {
    */
   static async purchaseItem(req, res) {
     const { artId } = req.params;
-    const { artistId, amount } = req.body;
+    const { artistId, price } = req.body;
     const { id } = req.verifyUser;
     try {
       const purchaseItemResponse = await transaction
-        .saveTransaction(artId, artistId, id, amount);
+        .saveTransaction(artId, artistId, id, price);
       if (purchaseItemResponse) {
         const response = new Response(
           'Created',
@@ -54,7 +54,7 @@ class TransactionController {
         const response = new Response(
           'Ok',
           200,
-          `Receipt with ID ${artId} was found`,
+          'Receipt was found',
           getItemReceiptResponse
         );
         return res.status(response.code).json(response);

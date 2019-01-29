@@ -30,6 +30,6 @@ router.use(
   bookmarkRouter
 );
 router.use('/users', userRouter);
-router.use('/transaction', transactionRouter);
+router.use('/transaction', TokenAuthenticate.tokenVerify, transactionRouter);
 
 export default router;

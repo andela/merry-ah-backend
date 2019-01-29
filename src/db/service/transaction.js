@@ -29,6 +29,7 @@ module.exports = {
               'title',
               'description',
               'featuredImg',
+              'price',
               'createdAt'
             ],
           }
@@ -77,6 +78,7 @@ module.exports = {
             'title',
             'description',
             'featuredImg',
+            'price',
             'createdAt'
           ],
         }

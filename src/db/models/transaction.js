@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     buyerId: DataTypes.INTEGER,
     sellerId: DataTypes.INTEGER,
     artId: DataTypes.INTEGER,
-    amount: DataTypes.INTEGER
+    amount: DataTypes.DECIMAL(10, 2),
   }, {});
   Transaction.associate = function (models) {
     // associations can be defined here
