@@ -80,22 +80,22 @@ class TransactionController {
   static async getTransactions(req, res) {
     const { id } = req.verifyUser;
     try {
-      const allUserTxns = await transaction.getTransactions(id);
-      if (allUserTxns) {
+      const allUserTransactions = await transaction.getTransactions(id);
+      if (allUserTransactions) {
         const response = new Response(
           'Ok',
           200,
-          `${allUserTxns.length} transaction(s) found`,
-          allUserTxns
+          `${allUserTransactions.length} transaction(s) found`,
+          allUserTransactions
         );
         return res.status(response.code).json(response);
       }
-      if (!allUserTxns) {
+      if (!allUserTransactions) {
         const response = new Response(
           'Not found',
           404,
-          `${allUserTxns.length} transaction(s) found`,
-          allUserTxns
+          `${allUserTransactions.length} transaction(s) found`,
+          allUserTransactions
         );
         return res.status(response.code).json(response);
       }
