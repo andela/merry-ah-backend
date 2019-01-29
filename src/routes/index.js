@@ -9,6 +9,7 @@ import userRouter from './userRouter';
 import commentRouter from './commentRouter';
 import socialRouter from './socialRouter';
 import reportRouter from './reportRoute';
+import transactionRouter from './transactionRouter';
 
 const router = express.Router();
 const swaggerSpec = swaggerJSDoc(require('../utils/swaggerConfig')
@@ -23,7 +24,6 @@ router.use('/artsreport', reportRouter);
 router.use('/arts/comments/', commentRouter);
 router.use('/auth', socialRouter);
 router.use('/users', userRouter);
-
-router.use('/users', userRouter);
+router.use('/transaction', transactionRouter);
 
 export default router;

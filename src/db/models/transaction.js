@@ -11,16 +11,19 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'sellerId',
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
+      as: 'seller'
     });
     Transaction.belongsTo(models.User, {
       foreignKey: 'buyerId',
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
+      as: 'buyer'
     });
     Transaction.belongsTo(models.Art, {
       foreignKey: 'artId',
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
+      as: 'art'
     });
   };
   return Transaction;
