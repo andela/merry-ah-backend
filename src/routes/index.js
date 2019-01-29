@@ -8,6 +8,7 @@ import TokenAuthenticate from '../helpers/TokenAuthenticate';
 import userRouter from './userRouter';
 import commentRouter from './commentRouter';
 import socialRouter from './socialRouter';
+import bookmarkRouter from './bookmarkRouter';
 import reportRouter from './reportRoute';
 import transactionRouter from './transactionRouter';
 
@@ -23,6 +24,11 @@ router.use('/arts', artsRoute);
 router.use('/artsreport', reportRouter);
 router.use('/arts/comments/', commentRouter);
 router.use('/auth', socialRouter);
+router.use(
+  '/bookmark',
+  TokenAuthenticate.tokenVerify,
+  bookmarkRouter
+);
 router.use('/users', userRouter);
 router.use('/transaction', transactionRouter);
 
