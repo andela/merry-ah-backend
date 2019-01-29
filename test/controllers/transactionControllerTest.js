@@ -18,7 +18,6 @@ describe('Pre-Transactions Test', () => {
       .end((err, req) => {
         const { token } = req.body.data;
         loginToken = token;
-        console.log('------------------> ', loginToken);
         done(err);
       });
   });
@@ -33,7 +32,6 @@ describe('Pre-Transactions Test', () => {
       .end((err, req) => {
         const { token } = req.body.data;
         mockLoginUser = token;
-        console.log('------------------> ', token);
         done(err);
       });
   });
@@ -179,7 +177,6 @@ describe('Pre-Transactions Test', () => {
       .set('x-access-token', `${loginToken}`)
       .send()
       .end((err, res) => {
-        console.log('1 transs', res.body);
         expect(200);
         expect(res.body).to.be.a('object');
         expect(res.body.messages)
@@ -195,7 +192,6 @@ describe('Pre-Transactions Test', () => {
       .set('x-access-token', `${mockLoginUser}`)
       .send()
       .end((err, res) => {
-          console.log('0 transs', res.body);
         expect(200);
         expect(res.body).to.be.a('object');
         expect(res.body.messages)
