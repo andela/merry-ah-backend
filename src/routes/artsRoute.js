@@ -1,7 +1,7 @@
 import express from 'express';
 import ArtController from '../controllers/ArtsController';
 import { TokenAuthenticate } from '../helpers/index';
-import ReadingStat from '../middlewares/ReadingStat';
+import ReadingStat from '../middlewares/ReadingStatMiddleware';
 
 const artsRoute = express.Router();
 

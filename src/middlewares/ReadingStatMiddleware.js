@@ -12,7 +12,7 @@ class ReadingStatMiddleware {
    * @param {object} res
    * @param {object} next
    * @returns {*} - object containing the message, status and code
-   * @memberof ReadingStat
+   * @memberof ReadingStatMiddleware
    */
   static async getStat(req, res, next) {
     try {
