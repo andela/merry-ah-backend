@@ -5,8 +5,10 @@ import Response from '../helpers/response';
 import { passwordHash, comparePassword } from '../helpers/passwordHash';
 import EmailNotificationAPI from '../helpers/EmailNotificationAPI';
 import basePath from '../helpers/basepath';
+import Follow from '../db/service/Follow';
+import Unfollow from '../db/service/Unfollow';
 
-const { User, Profile } = models;
+const { User, Profile, Following, } = models;
 
 
 const tokenExpireTime = '10hr';
@@ -356,6 +358,106 @@ class UsersController {
   }
 
   /**
+   * @static
+   * @desc POST /api/v1/users/artists/follow/:artistId
+   * @param {object} req
+   * @param {object} res
+   * @memberof UsersController
+   * @returns successful follow
+   */
+  static async userFollow(req, res) {
+    try {
+      const { artistId } = req.params;
+      const { id } = req.verifyUser;
+
+      const follow = await Following.findOrCreate({
+        where: {
+          userId: artistId,
+          followerId: id,
+        }
+      })
+        .spread((user, created) => {
+          user.get({ plain: true });
+          return created;
+        });
+
+      if (!follow) {
+        const response = new Response(
+          'Bad Request',
+          400,
+          'You are already following this artist',
+        );
+        return res.status(response.code).json(response);
+      }
+
+      Follow.follower(id);
+      Follow.followed(artistId);
+
+      const response = new Response(
+        'Ok',
+        201,
+        `You are now following artist ${artistId}`,
+      );
+      return res.status(response.code).json(response);
+    } catch (err) {
+      const response = new Response(
+        'Internal server error',
+        500,
+        `${err}`,
+      );
+      return res.status(response.code).json(response);
+    }
+  }
+
+  /**
+   * @static
+   * @desc POST /api/v1/users/artists/unfollow/:artistId
+   * @param {object} req
+   * @param {object} res
+   * @memberof UsersController
+   * @returns successful unfollow
+   */
+  static async userUnfollow(req, res) {
+    try {
+      const { artistId } = req;
+      const { id } = req.verifyUser;
+
+      const unfollow = await Following.destroy({
+        where: {
+          userId: artistId,
+          followerId: id,
+        }
+      });
+
+      if (!unfollow) {
+        const response = new Response(
+          'Bad Request',
+          400,
+          'You are not following this artist',
+        );
+        return res.status(response.code).json(response);
+      }
+
+      Unfollow.unfollower(id);
+      Unfollow.unfollowed(artistId);
+
+      const response = new Response(
+        'Ok',
+        200,
+        `You have unfollowed artist ${artistId}`,
+      );
+      return res.status(response.code).json(response);
+    } catch (err) {
+      const response = new Response(
+        'Internal server error',
+        500,
+        `${err}`,
+      );
+      return res.status(response.code).json(response);
+    }
+  }
+
+  /**
    * @desc POST /api/v1/auth/verify
    * @param {object} req
    * @param {object} res
@@ -476,6 +578,63 @@ class UsersController {
 
   /**
    * @static
+   * @desc POST /api/v1/users/:userId/followers
+   * @param {object} req
+   * @param {object} res
+   * @memberof UsersController
+   * @returns all users following the specified user
+   */
+  static async getFollowers(req, res) {
+    try {
+      const { userId } = req.params;
+      const user = await Following.findAll({
+        where: {
+          userId,
+        },
+        attributes: ['followerId'],
+        include: [
+          {
+            model: User,
+            attributes: ['username', 'email', 'userType'],
+            include: [
+              {
+                model: Profile,
+                as: 'profile',
+                attributes: ['firstName', 'lastName', 'bio', 'imgURL']
+              }
+            ]
+          },
+        ]
+      });
+
+      if (user.length === 0) {
+        const response = new Response(
+          'Not Found',
+          404,
+          'User has no followers',
+        );
+        return res.status(response.code).json(response);
+      }
+
+      const response = new Response(
+        'Ok',
+        200,
+        'Returned all followers',
+        { followers: user }
+      );
+      return res.status(response.code).json(response);
+    } catch (err) {
+      const response = new Response(
+        'Internal server error',
+        500,
+        `${err}`,
+      );
+      return res.status(response.code).json(response);
+    }
+  }
+
+  /**
+   * @static
    * @desc update /api/v1/users/roles
    * @param {object} req
    * @param {object} res
@@ -506,6 +665,64 @@ class UsersController {
         'Ok',
         200,
         'Successfully asigned user role all users',
+
+      );
+      return res.status(response.code).json(response);
+    } catch (err) {
+      const response = new Response(
+        'Internal server error',
+        500,
+        `${err}`,
+      );
+      return res.status(response.code).json(response);
+    }
+  }
+
+  /**
+   * @static
+   * @desc POST /api/v1/users/:userId/following
+   * @param {object} req
+   * @param {object} res
+   * @memberof UsersController
+   * @returns all users the specified user is following
+   */
+  static async getFollowing(req, res) {
+    try {
+      const { userId } = req.params;
+      const user = await Following.findAll({
+        where: {
+          followerId: userId,
+        },
+        attributes: ['userId'],
+        include: [
+          {
+            model: User,
+            attributes: ['username', 'email', 'userType'],
+            include: [
+              {
+                model: Profile,
+                as: 'profile',
+                attributes: ['firstName', 'lastName', 'bio', 'imgURL']
+              }
+            ]
+          },
+        ]
+      });
+
+      if (user.length === 0) {
+        const response = new Response(
+          'Not Found',
+          404,
+          'User is not following anyone',
+        );
+        return res.status(response.code).json(response);
+      }
+
+      const response = new Response(
+        'Ok',
+        200,
+        'Returned all users this person follows',
+        { following: user }
       );
       return res.status(response.code).json(response);
     } catch (err) {

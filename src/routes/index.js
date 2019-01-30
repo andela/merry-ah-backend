@@ -10,6 +10,7 @@ import commentRouter from './commentRouter';
 import socialRouter from './socialRouter';
 import reportRouter from './reportRouter';
 import VerifyUserStatus from '../middlewares/VerifyUserStatus';
+import bookmarkRouter from './bookmarkRouter';
 
 const router = express.Router();
 const swaggerSpec = swaggerJSDoc(require('../utils/swaggerConfig')
@@ -29,5 +30,10 @@ router.use('/artsreport', reportRouter);
 router.use('/arts/comments/', commentRouter);
 router.use('/auth', socialRouter);
 
+router.use(
+  '/bookmark',
+  TokenAuthenticate.tokenVerify,
+  bookmarkRouter
+);
 
 export default router;

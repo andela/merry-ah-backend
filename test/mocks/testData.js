@@ -121,7 +121,27 @@ const userDetails = {
     bio: '',
     imgURL: '',
     userType: 'artist',
-  }
+  },
+  validArtist1: {
+    firstName: 'Derek',
+    lastName: 'Hales',
+    username: 'halesBaba',
+    email: 'smartwiz14@gmail.com',
+    password: 'qwerty',
+    bio: '',
+    imgURL: '',
+    userType: 'artist',
+  },
+  validArtist2: {
+    firstName: 'Scott',
+    lastName: 'McCall',
+    username: 'scotBaba',
+    email: 'danny@gmail.com',
+    password: 'qwerty',
+    bio: '',
+    imgURL: '',
+    userType: 'artist',
+  },
 };
 
 const artDetails = {

@@ -8,6 +8,19 @@ import VerifyUserStatus from '../middlewares/VerifyUserStatus';
 
 const userRouter = express.Router();
 
+userRouter.post(
+  '/artists/follow/:artistId',
+  TokenAuthenticate.tokenVerify,
+  UserMiddleware.validateFollowerAndArtistID,
+  UsersController.userFollow,
+);
+
+userRouter.post(
+  '/artists/unfollow/:artistId',
+  TokenAuthenticate.tokenVerify,
+  UserMiddleware.validateFollowerAndArtistID,
+  UsersController.userUnfollow,
+);
 userRouter
   .put(
     '/profile-update',
@@ -43,6 +56,20 @@ userRouter.put(
   VerifyUserStatus.isActive,
   VerifyAdmin.isAdmin,
   UsersController.assignRole,
+);
+
+userRouter.get(
+  '/:userId/followers',
+  TokenAuthenticate.tokenVerify,
+  UserMiddleware.checkUserID,
+  UsersController.getFollowers,
+);
+
+userRouter.get(
+  '/:userId/following',
+  TokenAuthenticate.tokenVerify,
+  UserMiddleware.checkUserID,
+  UsersController.getFollowing,
 );
 
 export default userRouter;
