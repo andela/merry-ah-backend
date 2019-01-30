@@ -13,7 +13,6 @@ class ParamsChecker {
      */
   static idChecker(req, res, next) {
     const {
-      userId,
       artId,
       commentId,
       bookmarkId
