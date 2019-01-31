@@ -134,9 +134,8 @@ describe('Pre-Transactions Test', () => {
         expect(res.body.messages).eql('Invalid Credentials');
         expect(res.body.status).eql('Bad Request');
         expect(res.body.data).to.be.a('array');
-        expect(
-          res.body.data[0]
-        ).eql('There is no receipt for a non-existent artwork');
+        expect(res.body.data[0])
+          .eql('There is no receipt for a non-existent artwork');
         done(err);
       });
   });
@@ -151,9 +150,9 @@ describe('Pre-Transactions Test', () => {
         expect(res.body.messages).eql('Invalid Credentials');
         expect(res.body.status).eql('Bad Request');
         expect(res.body.data).to.be.a('array');
-        expect(
-          res.body.data[0]
-        ).eql('This Item is still available for sale');
+        expect(res.body.data[0]).eql(
+          'This Item is still available for sale'
+        );
         done(err);
       });
   });
