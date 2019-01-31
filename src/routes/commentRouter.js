@@ -1,8 +1,9 @@
 import express from 'express';
-import TokenAuthenticate from '../helpers/TokenAuthenticate';
 import ParamsChecker from '../middlewares/ParamsChecker';
 import CommentsController from '../controllers/CommentsController';
 import CommentValidator from '../middlewares/CommentValidator';
+import TokenAuthenticate from '../helpers/TokenAuthenticate';
+import CommentChecker from '../middlewares/CommentChecker';
 
 const commentRouter = express.Router();
 
@@ -13,6 +14,21 @@ commentRouter
     ParamsChecker.idChecker,
     CommentValidator.createCommentValidator,
     CommentsController.createComment
+  );
+commentRouter
+  .put(
+    '/:commentId',
+    TokenAuthenticate.tokenVerify,
+    ParamsChecker.idChecker,
+    CommentValidator.createCommentValidator,
+    CommentChecker.findComment,
+    CommentsController.updateComment
+  );
+commentRouter
+  .get(
+    '/:commentId/history',
+    ParamsChecker.idChecker,
+    CommentsController.getEditHistory
   );
 
 export default commentRouter;
