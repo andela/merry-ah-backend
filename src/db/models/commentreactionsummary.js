@@ -3,6 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     noOfLikes: DataTypes.INTEGER,
     commentId: DataTypes.INTEGER
   }, {});
+  // eslint-disable-next-line func-names
   CommentReactionSummary.associate = function (models) {
     CommentReactionSummary.belongsTo(models.Comment, {
       foreignKey: 'commentId',
