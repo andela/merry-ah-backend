@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
   }, {});
+  // eslint-disable-next-line func-names
   CommentReaction.associate = function (models) {
     // associations can be defined here
     CommentReaction.belongsTo(models.Comment, {
