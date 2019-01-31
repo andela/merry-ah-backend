@@ -2,7 +2,12 @@ import { Op } from 'sequelize';
 import models from '../db/models';
 import Response from '../helpers/response';
 
-const { Category, Art, User } = models;
+const {
+  Category,
+  Art,
+  User,
+  Profile
+} = models;
 
 /**
  * Search Controller
@@ -44,7 +49,7 @@ class SearchController {
         ]
       });
 
-      if (!arts) {
+      if (arts.length === 0) {
         const response = new Response(
           'Not Found',
           404,
@@ -84,13 +89,22 @@ class SearchController {
 
       const arts = await Art.findAll({
         where: {
-          title: {
-            [Op.iLike]: `%${keyword}%`
-          },
+          $or: [
+            {
+              title: {
+                [Op.iLike]: `%${keyword}%`
+              }
+            },
+            {
+              description: {
+                [Op.iLike]: `%${keyword}%`
+              }
+            }
+          ]
         }
       });
 
-      if (!arts) {
+      if (arts.length === 0) {
         const response = new Response(
           'Not Found',
           404,
@@ -118,13 +132,54 @@ class SearchController {
 
   /**
    * @static
-   * @desc POST /api/v1/search/:keyword
+   * @desc POST /api/v1/search/users/:user
    * @param {object} req
    * @param {object} res
    * @memberof SearchController
    * @returns {object} arts matching the specified artist
    */
-  static async searchByArtist(req, res) {}
+  static async searchByUser(req, res) {
+    try {
+      const { user } = req.params;
+
+      const users = await Profile.findAll({
+        where: {
+          $or: {
+            firstName: {
+              [Op.iLike]: `%${user}%`
+            },
+            lastName: {
+              [Op.iLike]: `%${user}%`
+            },
+          }
+        }
+      });
+
+      if (users.length === 0) {
+        const response = new Response(
+          'Not Found',
+          404,
+          'No user found',
+        );
+        return res.status(response.code).json(response);
+      }
+
+      const response = new Response(
+        'Ok',
+        200,
+        'Returned all users',
+        { users }
+      );
+      return res.status(response.code).json(response);
+    } catch (err) {
+      const response = new Response(
+        'Internal server error',
+        500,
+        `${err}`,
+      );
+      return res.status(response.code).json(response);
+    }
+  }
 }
 
 export default SearchController;

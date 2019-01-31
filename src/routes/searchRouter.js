@@ -14,4 +14,9 @@ searchRouter.get(
   SearchController.searchByKeyword,
 );
 
+searchRouter.get(
+  '/users/:user',
+  SearchController.searchByUser,
+);
+
 export default searchRouter;
