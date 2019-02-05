@@ -289,10 +289,7 @@ class ArtsController {
 
       const offset = limitDefault * (pageDefault - 1);
 
-      const allArticlesCount = await Art.findAndCountAll();
-
-      const pages = Math.ceil(allArticlesCount.count / limitDefault);
-      const articles = await Art.findAll({
+      const articles = await Art.findAndCountAll({
         include: [
           {
             model: Category,
@@ -329,14 +326,14 @@ class ArtsController {
         limit: limitDefault,
         offset,
       });
-
+      const pages = Math.ceil(articles.count / limitDefault);
       const response = new Response(
         'Ok',
         200,
         'All Articles',
         {
-          articles,
-          articlesGrandTotal: allArticlesCount.count,
+          articles: articles.rows,
+          articlesGrandTotal: articles.count,
           page: pageDefault,
           pages
         }

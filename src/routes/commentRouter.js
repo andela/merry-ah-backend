@@ -16,6 +16,20 @@ commentRouter
     CommentsController.createComment
   );
 commentRouter
+  .get(
+    '/:artId',
+    ParamsChecker.idChecker,
+    CommentsController.getAllComments
+  );
+commentRouter
+  .delete(
+    '/:commentId',
+    TokenAuthenticate.tokenVerify,
+    ParamsChecker.idChecker,
+    CommentChecker.findComment,
+    CommentsController.deleteComment
+  );
+commentRouter
   .put(
     '/:commentId',
     TokenAuthenticate.tokenVerify,
