@@ -194,7 +194,10 @@ ${artTitle} </a><br> by ${artistUsername}</p>
   New Comment: ${commentBody} <br> by ${commenterUsername} on <b>${artTitle}</b>
         </a>`;
 
-      this.socketIONotifier(`newComment-user-${authorId}-event`, pusherMessageForArtist);
+      this.socketIONotifier(
+        `newComment-user-${authorId}-event`,
+        pusherMessageForArtist
+      );
 
       const mailDestination = '"Team Merry 👻" <noreplyteammerry@gmail.com>';
       const mailSubject = `New Comment by ${commenterUsername}`;
