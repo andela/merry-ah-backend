@@ -7,12 +7,25 @@ import session from 'express-session';
 import morgan from 'morgan';
 import requestId from 'express-request-id';
 import expressValidator from 'express-validator';
+import http from 'http';
+import SocketIO from 'socket.io';
 import routes from './routes/index';
 import Response from './helpers/response';
 import imageValidator from './middlewares/imageValidator';
 
 dotenv.config();
 const app = express();
+
+const server = http.createServer(app);
+const io = new SocketIO(server);
+const port = process.env.PORT || 9000;
+
+io.on('connection', (socket) => {
+  socket.on('ping socket', (msg) => {
+    io.emit('ping socket', msg);
+  });
+});
+
 app.use(session({
   secret: process.env.SECRET,
   resave: false,
@@ -28,9 +41,6 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((user, done) => {
   done(null, user);
 });
-const port = process.env.PORT || 9000;
-
-let response;
 
 app.use(cors());
 
@@ -68,7 +78,7 @@ app.use('/api/v1/', routes);
  *          default: "Test Successful"
  */
 app.all('/', ((req, res) => {
-  response = new Response(
+  const response = new Response(
     'Ok',
     200,
     'Welcome to Authors Haven',
@@ -78,7 +88,7 @@ app.all('/', ((req, res) => {
 }));
 
 app.all('/*', ((req, res) => {
-  response = new Response(
+  const response = new Response(
     'Not Found',
     404,
     `Specified route does not exist ${req.originalUrl}`,
@@ -87,8 +97,8 @@ app.all('/*', ((req, res) => {
   return res.status(response.code).json(response);
 }));
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Authors Haven App is listening on port ${port}! `);
 });
 
-export default app;
+export { app, io };

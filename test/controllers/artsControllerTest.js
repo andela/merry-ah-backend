@@ -1,7 +1,7 @@
 import 'babel-polyfill';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import app from '../../src/index';
+import { app } from '../../src/index';
 import { artDetails, userDetails, commentDetails } from '../mocks/testData';
 
 let jwtToken, jwtToken2, validUpdatedArticleSlug;
@@ -38,7 +38,6 @@ before((done) => {
 });
 
 describe('Arts Endpoint API Test', () => {
-
   before((done) => {
     chai.request(app)
       .post('/api/v1/users/artists/follow/4')

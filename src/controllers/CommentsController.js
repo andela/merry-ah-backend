@@ -1,6 +1,6 @@
 import models from '../db/models';
 import Response from '../helpers/response';
-import { sendNotifications } from '../helpers';
+import { SendNotifications } from '../helpers';
 
 const { Comment, Art, UpdatedComment } = models;
 
@@ -32,7 +32,7 @@ class CommentsController {
           body
         });
 
-        const notifyNewComments = new sendNotifications({
+        const notifyNewComments = new SendNotifications({
           type: 'newComment',
           commentDetails: {
             artId,

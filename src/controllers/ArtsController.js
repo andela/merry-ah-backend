@@ -2,7 +2,9 @@ import sequelize from 'sequelize';
 import models from '../db/models';
 import LikeUnlike from '../db/service/LikeUnlike';
 import DisikeUndislike from '../db/service/DislikeUndislike';
-import { Response, Slugify, sendNotifications } from '../helpers/index';
+import Response from '../helpers/response';
+import slugify from '../helpers/slugify';
+import SendNotifications from '../helpers/SendNotifications';
 
 const {
   Art, Media, Category, User, Comment, Like, Dislike
@@ -22,24 +24,25 @@ class ArtsController {
   static async create(req, res) {
     try {
       const defaultStatus = 0;
+      let mediaFiles;
 
       const { id: artistId } = req.verifyUser;
 
       const {
-        title, description, categoryId,
+        title, description, categoryId, media
       } = req.body;
 
-      let { media } = req.body;
+      mediaFiles = media;
 
       if (!media) {
-        media = `[{
+        mediaFiles = `[{
         "url":"${process.env.DEFAULT_ARTICLE_IMAGE}",
         "extension":"jpeg"}]`;
       }
 
-      const mediaFilesArray = JSON.parse(media);
+      const mediaFilesArray = JSON.parse(mediaFiles);
 
-      const slugifiedTitle = Slugify.slugify(title);
+      const slugifiedTitle = slugify(title);
 
       const checkCategory = await Category.findOne({ where: { id: 1 } });
       if (!checkCategory) {
@@ -80,7 +83,7 @@ class ArtsController {
         });
       }
 
-      const notifyFollowers = new sendNotifications({
+      const notifyFollowers = new SendNotifications({
         type: 'newArticle',
         articleDetails: {
           artId,
@@ -188,7 +191,7 @@ class ArtsController {
         return res.status(response.code).json(response);
       }
 
-      const slugifiedTitle = Slugify.slugify(title);
+      const slugifiedTitle = slugify(title);
 
       const updatedArticle = {
         id: artToUpdate.id,
@@ -384,10 +387,6 @@ class ArtsController {
             model: Category,
             as: 'Category',
             attributes: ['id', 'categoryName'],
-          },
-          {
-            model: Comment,
-            attributes: ['id', 'userId', 'body', 'createdAt'],
           },
           {
             model: User,

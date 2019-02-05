@@ -1,13 +1,13 @@
 import EmailNotificationAPI from './EmailNotificationAPI';
 import TokenAuthenticate from './TokenAuthenticate';
 import Response from './response';
-import Slugify from './Slugify';
-import sendNotifications from './sendNotifications';
+import slugify from './slugify';
+import SendNotifications from './SendNotifications';
 
 export {
   EmailNotificationAPI,
-  Slugify,
+  slugify,
   TokenAuthenticate,
   Response,
-  sendNotifications
+  SendNotifications
 };

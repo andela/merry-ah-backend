@@ -1,5 +1,6 @@
-import Pusher from 'pusher';
+import Sequelize, { Op } from 'sequelize';
 import dotenv from 'dotenv';
+import { io } from '../index';
 import models from '../db/models';
 import EmailNotificationAPI from './EmailNotificationAPI';
 
@@ -8,14 +9,6 @@ dotenv.config();
 const {
   Art, Comment, Following, User
 } = models;
-
-const pusher = new Pusher({
-  appId: process.env.PUSHER_APPID,
-  key: process.env.PUSHER_KEY,
-  secret: process.env.PUSHER_SECRET,
-  cluster: process.env.PUSHER_CLUSTER,
-  encrypted: true
-});
 
 /** SendNotifications Controller Class */
 class SendNotifications {
@@ -29,18 +22,30 @@ class SendNotifications {
 
   /**
    * @Represents a newArticleNotification
+   * @param {string} event - The event details
+   * @param {string} message - The event message
+   * @return {Object|string} SocketIO event .
+   */
+  static socketIONotifier(event, message) {
+    return io.emit(event, message);
+  }
+
+  /**
+   * @Represents a newArticleNotification
    * @param {Object} articleDetailsObject - The details of the article.
    * @return {Object|string} success string OR Error message .
    */
   static async newArticleNotification(articleDetailsObject) {
     const {
-      artId, artistId, slugifiedTitle, artTitle, artFeaturedImg, artDescription
+      artistId, slugifiedTitle, artTitle, artFeaturedImg, artDescription
     } = articleDetailsObject;
 
-    const artistUsername = await User.findOne({
+    const artistUser = await User.findOne({
       where: { id: artistId },
       attributes: ['username'],
     });
+
+    const { username: artistUsername } = artistUser.dataValues;
 
     const followers = await Following.findAll({
       where: { userId: artistId },
@@ -59,23 +64,23 @@ class SendNotifications {
       const { id, email } = follower.User;
       mailList.push(email);
 
-      pusher.trigger('new-article', `article-${artId}-${id}-event`, {
-        message:
-          `<a href="${process.env.APP_BASE_URL}/api/v1/arts/${slugifiedTitle}">
-        New Article: ${artTitle} <br> by ${artistUsername}</a>`
-      });
+      const message = `
+<a href="${process.env.APP_BASE_URL}/api/v1/arts/${slugifiedTitle}">
+New Article: ${artTitle} <br> by ${artistUsername}</a>`;
+
+      this.socketIONotifier(`newArticle-user-${id}-event`, message);
     });
 
     const mailDestination = '"Team Merry 👻" <noreplyteammerry@gmail.com>';
     const mailSubject = `New Article: ${artTitle} by ${artistUsername}`;
-    const mailBody = `<h3>New Article: ${artTitle} <br> 
-by ${artistUsername}</h3>
-<h6>Check it out here:</h6>
+
+    const mailBody = `<h6>Check it out here:</h6>
 <p><img src="${artFeaturedImg}" width="450px" height="200px"
 alt="Featured Image"></p>
 <p><a href="http://${process.env.APP_BASE_URL}/api/v1/arts/${slugifiedTitle}"> 
 ${artTitle} </a><br> by ${artistUsername}</p>
 <p>${artDescription}</p>`;
+
     const sendEmailNotifications = new EmailNotificationAPI({
       to: mailDestination,
       bcc: mailList,
@@ -101,7 +106,7 @@ ${artTitle} </a><br> by ${artistUsername}</p>
   }
 
   /**
-   * @Represents getArticleAndArtist
+   * @Represents get Article And Artist details
    * @param {number} artID - The id of the article.
    * @return {Object} Article And its Artist details .
    */
@@ -145,45 +150,51 @@ ${artTitle} </a><br> by ${artistUsername}</p>
     } = await SendNotifications.getUserInfo(commenterID);
 
     const allExistingComments = await Comment.findAll({
-      where: { artId },
-      include: [
-        {
-          model: User,
-          as: 'User',
-          attributes: ['email']
-        }
+      attributes: [
+        [Sequelize.fn('DISTINCT', Sequelize.col('userId')), 'userId'],
       ],
-      attributes: ['userId'],
+      where: {
+        artId,
+        userId: {
+          [Op.ne]: commenterID,
+        }
+      }
     });
 
-    allExistingComments.splice(allExistingComments.length - 1);
-
-    if (allExistingComments.length > 1) {
+    if (allExistingComments) {
       const mailList = [authorEmail];
 
-      allExistingComments.forEach((comment) => {
-        const { userId, User: UserModel } = comment.dataValues;
-        const { email: commenterEmail } = UserModel;
+      allExistingComments.forEach(async (comment) => {
+        const { userId } = comment.dataValues;
 
-        mailList.push(commenterEmail);
-
-        const pusherMessageForCommenters = `
-<a href="${process.env.APP_BASE_URL}/api/v1/arts/${artSlug}/#comments">
-New Comment: ${commentBody} <br> by ${commenterUsername} on <b>${artTitle}</b>
-</a>`;
-        pusher.trigger('new-comment', `comment-${artId}-${userId}-event`, {
-          message: pusherMessageForCommenters
+        const UserModel = await User.findOne({
+          where: { id: userId },
+          attributes: ['email']
         });
+
+        const { email: commenterEmail } = UserModel.dataValues;
+
+        if (userId !== commenterID) {
+          mailList.push(commenterEmail);
+
+          const messageForCommenters = `
+  <a href="${process.env.APP_BASE_URL}/api/v1/arts/${artSlug}/#comments">
+  New Comment: ${commentBody} <br> by ${commenterUsername} on <b>${artTitle}</b>
+          </a>`;
+
+          this.socketIONotifier(
+            `newComment-user-${userId}-event`,
+            messageForCommenters
+          );
+        }
       });
 
       const pusherMessageForArtist = `
-<a href="${process.env.APP_BASE_URL}/api/v1/arts/${artSlug}/#comments">
-New Comment: ${commentBody} <br> by ${commenterUsername} on <b>${artTitle}</b>
+  <a href="${process.env.APP_BASE_URL}/api/v1/arts/${artSlug}/#comments">
+  New Comment: ${commentBody} <br> by ${commenterUsername} on <b>${artTitle}</b>
         </a>`;
 
-      pusher.trigger('new-comment', `comment-${artId}-${authorId}-event`, {
-        message: pusherMessageForArtist
-      });
+      this.socketIONotifier(`newComment-user-${authorId}-event`, pusherMessageForArtist);
 
       const mailDestination = '"Team Merry 👻" <noreplyteammerry@gmail.com>';
       const mailSubject = `New Comment by ${commenterUsername}`;
