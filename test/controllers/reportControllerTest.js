@@ -2,8 +2,8 @@
 import 'babel-polyfill';
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import { reportDetails } from '../mocks/testData';
 import { app } from '../../src/index';
+import { reportDetails } from '../mocks/testData';
 
 chai.use(chaiHttp);
 const { expect } = chai;
