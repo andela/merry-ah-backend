@@ -12,13 +12,16 @@ const {
   validArticle, validUpdatedArticle, invalidNoMediaArticle,
   invalidArticle, invalidUpdatedArticle, invalidUpdatedArticleCategory
 } = artDetails;
-const { validUserTT, validUserLogin } = userDetails;
+const { validUserTT } = userDetails;
 const { validComment } = commentDetails;
 
 before((done) => {
   chai.request(app)
     .post('/api/v1/auth/signin')
-    .send(validUserLogin)
+    .send({
+      email: 'email1@gmail.com',
+      password: 'abcdefgh'
+    })
     .end((err, res) => {
       done();
       jwtToken = res.body.data.token;
