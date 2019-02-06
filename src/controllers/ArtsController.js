@@ -166,9 +166,10 @@ class ArtsController {
 
       let { media } = req.body;
 
+      const { DEFAULT_ARTICLE_IMAGE } = process.env;
       if (!media) {
         media = `[{
-        "url":"${process.env.DEFAULT_ARTICLE_IMAGE}",
+        "url":"${DEFAULT_ARTICLE_IMAGE}",
         "extension":"jpeg"}]`;
       }
 
