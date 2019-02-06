@@ -230,7 +230,7 @@ const reportDetails = {
     password: 'chidimma'
   }
 };
-// eslint-disable-next-line import/prefer-default-export
+
 export {
   userDetails,
   artDetails,

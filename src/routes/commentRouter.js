@@ -2,7 +2,6 @@ import express from 'express';
 import ParamsChecker from '../middlewares/ParamsChecker';
 import CommentsController from '../controllers/CommentsController';
 import CommentValidator from '../middlewares/CommentValidator';
-import VerifyUserStatus from '../middlewares/VerifyUserStatus';
 import TokenAuthenticate from '../helpers/TokenAuthenticate';
 import CommentChecker from '../middlewares/CommentChecker';
 
@@ -12,10 +11,23 @@ commentRouter
   .post(
     '/:artId',
     TokenAuthenticate.tokenVerify,
-    VerifyUserStatus.isActive,
     ParamsChecker.idChecker,
     CommentValidator.createCommentValidator,
     CommentsController.createComment
+  );
+commentRouter
+  .get(
+    '/:artId',
+    ParamsChecker.idChecker,
+    CommentsController.getAllComments
+  );
+commentRouter
+  .delete(
+    '/:commentId',
+    TokenAuthenticate.tokenVerify,
+    ParamsChecker.idChecker,
+    CommentChecker.findComment,
+    CommentsController.deleteComment
   );
 commentRouter
   .put(

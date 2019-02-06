@@ -4,7 +4,6 @@ import ReportValidator from '../middlewares/ReportValidator';
 import CheckArt from '../middlewares/CheckArt';
 import { TokenAuthenticate } from '../helpers/index';
 import VerifyAdmin from '../middlewares/VerifyAdmin';
-import VerifyUserStatus from '../middlewares/VerifyUserStatus';
 
 const reportRouter = express.Router();
 /**
@@ -52,7 +51,6 @@ reportRouter
   .delete(
     '/:reportId/:reporterId',
     TokenAuthenticate.tokenVerify,
-    VerifyUserStatus.isActive,
     VerifyAdmin.isAdmin,
     ReportController.deleteReport
   );
@@ -60,7 +58,6 @@ reportRouter
   .put(
     '/:reportId',
     TokenAuthenticate.tokenVerify,
-    VerifyUserStatus.isActive,
     VerifyAdmin.isAdmin,
     ReportController.reportArtAction
   );

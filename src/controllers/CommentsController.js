@@ -57,7 +57,47 @@ class CommentsController {
    * @static
    * @param {Object} req
    * @param {object} res
-   * @return {object} updated comment
+   * @return {object} comment
+   */
+  static async getAllComments(req, res) {
+    const { lastId } = req.query;
+    const { artId } = req.params;
+    const { limit } = req.query;
+    try {
+      const getComments = await Comment.findAll({
+        order: [
+          ['id', 'DESC'],
+        ],
+        where: {
+          artId,
+          id: {
+            $lt: lastId
+          }
+        },
+        limit,
+      });
+      const response = new Response(
+        'Ok',
+        200,
+        'Success',
+        getComments
+      );
+      return res.status(response.code).json(response);
+    } catch (err) {
+      const response = new Response(
+        'Not ok',
+        500,
+        `${err}`,
+      );
+      return res.status(response.code).json(response);
+    }
+  }
+
+  /**
+   * @static
+   * @param {Object} req
+   * @param {object} res
+   * @return {object} comment
    */
   static async updateComment(req, res) {
     try {
@@ -96,7 +136,39 @@ class CommentsController {
    * @static
    * @param {Object} req
    * @param {object} res
-   * @return {object} Edit history comment
+   * @return {object} deleted comment
+   */
+  static async deleteComment(req, res) {
+    try {
+      const { commentId } = req.params;
+      await Comment.destroy(
+        {
+          where: {
+            id: commentId
+          }
+        }
+      );
+      const response = new Response(
+        'Ok',
+        200,
+        'Comment deleted successfully',
+      );
+      return res.status(response.code).json(response);
+    } catch (err) {
+      const response = new Response(
+        'Not ok',
+        500,
+        `${err}`,
+      );
+      return res.status(response.code).json(response);
+    }
+  }
+
+  /**
+   * @static
+   * @param {Object} req
+   * @param {object} res
+   * @return {object} comment
    */
   static async getEditHistory(req, res) {
     try {

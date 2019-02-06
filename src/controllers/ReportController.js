@@ -7,7 +7,7 @@ const {
 } = models;
 
 const reporterMessage = `<h1>Feed back </h1>
-<p> Thanks for reaching out to us on your consigns, 
+<p> Thanks for reaching out to us on your concern, 
 The necessary action has been taken on the report</p>
 <strong>Thank you for choosing Art Cave</strong>
   `;
@@ -24,8 +24,13 @@ class ReportController {
    */
   static async deleteReport(req, res) {
     try {
-      const { reportId, reporterId } = req.params;
+      const { reportId } = req.params;
 
+      const reportQuery = await Report.findOne({
+        attributes: ['userId'],
+        where: { id: reportId }
+      });
+      const reporterId = reportQuery.userId;
       await Report.destroy({
         where: { id: reportId }
       });
@@ -110,6 +115,7 @@ class ReportController {
       });
 
       const defaulter = await User.findOne({
+        attributes: ['email'],
         where: { id: defaulterId }
       });
       const defaulterEmail = defaulter.email;
@@ -174,6 +180,7 @@ class ReportController {
       });
 
       const reporter = await User.find({
+        attributes: ['email'],
         where: { id: reporterId }
       });
 

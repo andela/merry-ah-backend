@@ -9,7 +9,6 @@ import userRouter from './userRouter';
 import commentRouter from './commentRouter';
 import socialRouter from './socialRouter';
 import reportRouter from './reportRouter';
-import VerifyUserStatus from '../middlewares/VerifyUserStatus';
 import bookmarkRouter from './bookmarkRouter';
 
 const router = express.Router();
@@ -21,7 +20,6 @@ router.use('/users', userRouter);
 router.use(
   '/rate',
   TokenAuthenticate.tokenVerify,
-  VerifyUserStatus.isActive,
   ratingRouter
 );
 router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));

@@ -5,7 +5,7 @@ import emailCheck from '../middlewares/emailCheck';
 import UserValidator from '../middlewares/UsersValidator';
 import TokenAuthenticate from '../helpers/TokenAuthenticate';
 import UserMiddleware from '../middlewares/UserMiddleware';
-import VerifyUserStatus from '../middlewares/VerifyUserStatus';
+
 
 const authRouter = express.Router();
 /**
@@ -142,6 +142,6 @@ authRouter.post(
   UserController.signIn
 );
 authRouter
-  .get('/verify', TokenAuthenticate.tokenVerify, VerifyUserStatus.isActive, UserController.verifyEmail);
+  .get('/verify', TokenAuthenticate.tokenVerify, UserController.verifyEmail);
 
 export default authRouter;

@@ -665,7 +665,6 @@ class UsersController {
         'Ok',
         200,
         'Successfully asigned user role all users',
-
       );
       return res.status(response.code).json(response);
     } catch (err) {
