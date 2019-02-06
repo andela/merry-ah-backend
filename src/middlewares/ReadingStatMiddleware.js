@@ -17,7 +17,7 @@ class ReadingStatMiddleware {
   static async getStat(req, res, next) {
     try {
       const read = await Art
-        .findOne({ where: { slug: req.params.slug } });
+        .findOne({ where: { slug: req.params.slug }, attributes: ['visited', 'id'] });
       await Art.update(
         { visited: read.visited + 1 },
         { where: { id: read.id } }

@@ -20,10 +20,6 @@ module.exports = {
     title: {
       type: Sequelize.STRING
     },
-    visited: {
-      type: Sequelize.INTEGER,
-      allowNull: true
-    },
     description: {
       type: Sequelize.TEXT
     },

@@ -64,7 +64,6 @@ class ArtsController {
           featuredImg: mediaFilesArray[0].url
             || process.env.DEFAULT_ARTICLE_IMAGE,
           status: defaultStatus,
-          visited: 0
         });
 
       const {

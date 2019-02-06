@@ -7,7 +7,7 @@ module.exports = {
     categoryId: 1,
     featuredImg: 'www.imageurl.com/myImage',
     status: true,
-    visited: null,
+    visited: 0,
     createdAt: new Date(),
     updatedAt: new Date()
   }, {
@@ -18,7 +18,7 @@ module.exports = {
     categoryId: 1,
     featuredImg: 'www.imageurl.com/myImage',
     status: true,
-    visited: null,
+    visited: 0,
     createdAt: new Date(),
     updatedAt: new Date()
   }], {}),
