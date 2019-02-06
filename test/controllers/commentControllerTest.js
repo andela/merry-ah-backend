@@ -79,6 +79,16 @@ describe('Comments Endpoint API Test', () => {
           done(err);
         });
     });
+    it('it should get default comments for a product with wrong last id', (done) => {
+      chai.request(app)
+        .get('/api/v1/arts/comments/1?lastId=-9')
+        .set('Authorization', userToken)
+        .send(validComment)
+        .end((err, res) => {
+          expect(res.body).to.be.a('object');
+          done(err);
+        });
+    });
     it('it should update comment that exists', (done) => {
       chai.request(app)
         .put('/api/v1/arts/comments/1')
@@ -86,6 +96,50 @@ describe('Comments Endpoint API Test', () => {
         .send(validComment)
         .end((err, res) => {
           expect(res.body.messages).eql('Comment updated successfully');
+          expect(res.status).to.equal(200);
+          done(err);
+        });
+    });
+    it('it should get default comments for a product last id greater than existing comments', (done) => {
+      chai.request(app)
+        .get('/api/v1/arts/comments/1?lastId=900')
+        .set('Authorization', userToken)
+        .send(validComment)
+        .end((err, res) => {
+          expect(res.body).to.be.a('object');
+          expect(res.status).to.equal(200);
+          done(err);
+        });
+    });
+    it('it should not delete comment that does not exists', (done) => {
+      chai.request(app)
+        .delete('/api/v1/arts/comments/100')
+        .set('Authorization', userToken)
+        .send(validComment)
+        .end((err, res) => {
+          expect(res.body.messages).eql('This comment does not exist');
+          expect(res.status).to.equal(404);
+          done(err);
+        });
+    });
+    it('it should allow only comment creator to delete the comment ', (done) => {
+      chai.request(app)
+        .delete('/api/v1/arts/comments/3')
+        .set('Authorization', userToken)
+        .send(validComment)
+        .end((err, res) => {
+          expect(res.body.messages).eql('You are not authorized to modify this comment');
+          expect(res.status).to.equal(401);
+          done(err);
+        });
+    });
+    it('it should delete comment that exists', (done) => {
+      chai.request(app)
+        .delete('/api/v1/arts/comments/10')
+        .set('Authorization', userToken)
+        .send(validComment)
+        .end((err, res) => {
+          expect(res.body.messages).eql('Comment deleted successfully');
           expect(res.status).to.equal(200);
           done(err);
         });
@@ -107,7 +161,7 @@ describe('Comments Endpoint API Test', () => {
         .set('Authorization', userToken)
         .send(validComment)
         .end((err, res) => {
-          expect(res.body.messages).eql('You are not authorized to update this comment');
+          expect(res.body.messages).eql('You are not authorized to modify this comment');
           expect(res.status).to.equal(401);
           done(err);
         });

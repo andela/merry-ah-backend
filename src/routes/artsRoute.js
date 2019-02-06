@@ -20,6 +20,11 @@ artsRoute.post(
 );
 
 artsRoute.post('/', TokenAuthenticate.tokenVerify, ArtsController.create);
+artsRoute
+  .post(
+    '/', TokenAuthenticate.tokenVerify,
+    ArtsController.create
+  );
 
 artsRoute.put('/:slug', TokenAuthenticate.tokenVerify, ArtsController.update);
 

@@ -12,6 +12,7 @@ describe('get token for social auth', () => {
       id: 1,
       username: 'abejide femi',
       newUser: true,
+      isActive: true,
       email: 'abejidefemi1@gmail.com',
       signUpType: 'social'
     }
@@ -21,6 +22,7 @@ describe('get token for social auth', () => {
     user: {
       id: 1,
       username: 'abejide femi',
+      isActive: true,
       isNewUser: false,
       email: 'abejidefemi1@gmail.com',
       signUpType: 'social'

@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     featuredImg: DataTypes.STRING,
     status: DataTypes.BOOLEAN
   }, {});
-  Art.associate = function (models) {
+  Art.associate = (models) => {
     // associations can be defined here
     Art.belongsTo(models.User, {
       foreignKey: 'artistId',
@@ -45,6 +45,11 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'artId'
     });
     Art.hasOne(models.RateSummary, {
+      foreignKey: 'artId',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    });
+    Art.hasMany(models.Bookmark, {
       foreignKey: 'artId',
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',

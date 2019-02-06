@@ -3,6 +3,7 @@ import TokenAuthenticate from '../helpers/TokenAuthenticate';
 import UserValidator from '../middlewares/UsersValidator';
 import UsersController from '../controllers/UsersController';
 import UserMiddleware from '../middlewares/UserMiddleware';
+import VerifyAdmin from '../middlewares/VerifyAdmin';
 
 const userRouter = express.Router();
 
@@ -32,12 +33,23 @@ userRouter.get(
   TokenAuthenticate.tokenVerify,
   UsersController.listArtists,
 );
-
+userRouter.get(
+  '/',
+  TokenAuthenticate.tokenVerify,
+  VerifyAdmin.isAdmin,
+  UsersController.getAllUsers,
+);
 userRouter.get(
   '/artists/:artistId',
   TokenAuthenticate.tokenVerify,
   UserMiddleware.validateArtistID,
   UsersController.getOneArtist,
+);
+userRouter.put(
+  '/:userId/roles',
+  TokenAuthenticate.tokenVerify,
+  VerifyAdmin.isAdmin,
+  UsersController.assignRole,
 );
 
 userRouter.get(
