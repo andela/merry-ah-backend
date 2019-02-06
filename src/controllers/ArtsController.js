@@ -21,7 +21,6 @@ class ArtsController {
     try {
       const defaultStatus = 0;
       const validationErrors = [];
-
       const { id: artistId } = req.verifyUser;
 
       const {

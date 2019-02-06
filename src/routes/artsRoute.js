@@ -5,7 +5,11 @@ import ReadingStat from '../middlewares/ReadingStatMiddleware';
 
 const artsRoute = express.Router();
 
-artsRoute.post('/', TokenAuthenticate.tokenVerify, ArtController.create);
+artsRoute
+  .post(
+    '/', TokenAuthenticate.tokenVerify,
+    ArtController.create
+  );
 
 artsRoute.put('/:slug', TokenAuthenticate.tokenVerify, ArtController.update);
 

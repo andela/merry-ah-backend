@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     featuredImg: DataTypes.STRING,
     status: DataTypes.BOOLEAN
   }, {});
-  Art.associate = function (models) {
+  Art.associate = (models) => {
     // associations can be defined here
     Art.belongsTo(models.User, {
       foreignKey: 'artistId',

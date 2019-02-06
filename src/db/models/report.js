@@ -1,4 +1,3 @@
-
 module.exports = (sequelize, DataTypes) => {
   const Report = sequelize.define('Report', {
     reportText: {
@@ -21,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
   }, {});
-  Report.associate = function (models) {
+  Report.associate = (models) => {
     // associations can be defined here
     Report.belongsTo(models.Art, {
       foreignKey: 'artId',
