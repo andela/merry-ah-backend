@@ -42,11 +42,12 @@ class UsersController {
           password: hash,
           userType,
           signUpType,
-          isVerified: defaultstatus
+          isVerified: defaultstatus,
+          isActive: true
         });
       const {
         id, username: registeredUsername, email: registeredEmail,
-        userType: userSignupType
+        userType: userSignupType, isActive
       } = signup.dataValues;
       await Profile
         .create({
@@ -57,7 +58,12 @@ class UsersController {
           imgURL,
         });
       const userDetails = {
-        id, registeredUsername, registeredEmail, userSignupType
+        id,
+        registeredUsername,
+        registeredEmail,
+        userSignupType,
+        userType,
+        isActive
       };
       const token = await TokenAuthenticate
         .generateToken(userDetails, tokenExpireTime);
@@ -131,11 +137,19 @@ class UsersController {
         );
         return res.status(response.code).json(response);
       }
+      if (!user.isActive) {
+        const response = new Response(
+          'Bad Request',
+          400,
+          'Your account has been deactivated'
+        );
+        return res.status(response.code).json(response);
+      }
       const {
-        id, username, email: userEmail, signUpType
+        id, username, email: userEmail, signUpType, userType, isActive
       } = user;
       const userDetails = {
-        id, username, userEmail, signUpType
+        id, username, userEmail, signUpType, userType, isActive
       };
       const token = await TokenAuthenticate
         .generateToken(userDetails, tokenExpireTime);
@@ -528,6 +542,42 @@ class UsersController {
 
   /**
    * @static
+   * @desc GET /api/v1/users
+   * @param {object} req
+   * @param {object} res
+   * @memberof UsersController
+   * @returns all users on the platform
+   */
+  static async getAllUsers(req, res) {
+    try {
+      const allUsers = await User.findAll({
+        attributes: ['id', 'username', 'email', 'userType'],
+        include: [{
+          model: Profile,
+          as: 'profile',
+          attributes: ['firstName', 'lastName', 'bio', 'imgURL']
+        }]
+      });
+
+      const response = new Response(
+        'Ok',
+        200,
+        'Successfully retrieved all users',
+        { allUsers }
+      );
+      return res.status(response.code).json(response);
+    } catch (err) {
+      const response = new Response(
+        'Internal server error',
+        500,
+        `${err}`,
+      );
+      return res.status(response.code).json(response);
+    }
+  }
+
+  /**
+   * @static
    * @desc POST /api/v1/users/:userId/followers
    * @param {object} req
    * @param {object} res
@@ -571,6 +621,50 @@ class UsersController {
         200,
         'Returned all followers',
         { followers: user }
+      );
+      return res.status(response.code).json(response);
+    } catch (err) {
+      const response = new Response(
+        'Internal server error',
+        500,
+        `${err}`,
+      );
+      return res.status(response.code).json(response);
+    }
+  }
+
+  /**
+   * @static
+   * @desc update /api/v1/users/roles
+   * @param {object} req
+   * @param {object} res
+   * @memberof UsersController
+   * @returns all users on the platform
+   */
+  static async assignRole(req, res) {
+    try {
+      const { role } = req.body;
+      const { userId } = req.params;
+      const updateUserRole = await User.update({
+        userType: role,
+      },
+      {
+        where: {
+          id: userId,
+        }
+      });
+      if (!updateUserRole[0]) {
+        const response = new Response(
+          'Not found',
+          404,
+          'Update failed',
+        );
+        return res.status(response.code).json(response);
+      }
+      const response = new Response(
+        'Ok',
+        200,
+        'Successfully asigned user role all users',
       );
       return res.status(response.code).json(response);
     } catch (err) {

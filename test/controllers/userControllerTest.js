@@ -237,8 +237,6 @@ describe('Users Endpoint API Test', () => {
           expect(res.body.data).to.have.property('token');
           expect(res.status).to.equal(200);
           expect(res.body.status).eql('Ok');
-          const { token } = res.body.data;
-          userToken = token;
           done(err);
         });
     });
@@ -329,7 +327,7 @@ describe('Users Endpoint API Test', () => {
     it('it should not update user with empty fields', (done) => {
       chai.request(app)
         .put('/api/v1/users/profile-update')
-        .set('Authorization', userToken)
+        .set('Authorization', loginToken)
         .send({})
         .end((err, res) => {
           expect(res.body.status).eql('Bad Request');
@@ -458,17 +456,6 @@ describe('Users Endpoint API Test', () => {
     });
     it('user should follow an artist', (done) => {
       chai.request(app)
-        .post(`/api/v1/users/artists/follow/${11}`)
-        .set('x-access-token', loginToken)
-        .end((err, res) => {
-          expect(res.body.messages).eql(`You are now following artist ${11}`);
-          expect(res.status).to.equal(201);
-          expect(res.body.status).eql('Ok');
-          done(err);
-        });
-    });
-    it('user should follow another artist', (done) => {
-      chai.request(app)
         .post(`/api/v1/users/artists/follow/${12}`)
         .set('x-access-token', loginToken)
         .end((err, res) => {
@@ -478,12 +465,23 @@ describe('Users Endpoint API Test', () => {
           done(err);
         });
     });
+    it('user should follow another artist', (done) => {
+      chai.request(app)
+        .post(`/api/v1/users/artists/follow/${13}`)
+        .set('x-access-token', loginToken)
+        .end((err, res) => {
+          expect(res.body.messages).eql(`You are now following artist ${13}`);
+          expect(res.status).to.equal(201);
+          expect(res.body.status).eql('Ok');
+          done(err);
+        });
+    });
     it('another user should follow an artist', (done) => {
       chai.request(app)
-        .post(`/api/v1/users/artists/follow/${11}`)
+        .post(`/api/v1/users/artists/follow/${12}`)
         .set('x-access-token', loginToken2)
         .end((err, res) => {
-          expect(res.body.messages).eql(`You are now following artist ${11}`);
+          expect(res.body.messages).eql(`You are now following artist ${12}`);
           expect(res.status).to.equal(201);
           expect(res.body.status).eql('Ok');
           done(err);
@@ -524,7 +522,7 @@ describe('Users Endpoint API Test', () => {
     });
     it('should return response of already following the artist', (done) => {
       chai.request(app)
-        .post(`/api/v1/users/artists/follow/${11}`)
+        .post(`/api/v1/users/artists/follow/${12}`)
         .set('x-access-token', loginToken)
         .end((err, res) => {
           expect(res.body.messages).eql('You are already following this artist');
@@ -536,10 +534,10 @@ describe('Users Endpoint API Test', () => {
 
     it('user should unfollow an artist', (done) => {
       chai.request(app)
-        .post(`/api/v1/users/artists/unfollow/${11}`)
+        .post(`/api/v1/users/artists/unfollow/${12}`)
         .set('x-access-token', loginToken)
         .end((err, res) => {
-          expect(res.body.messages).eql(`You have unfollowed artist ${11}`);
+          expect(res.body.messages).eql(`You have unfollowed artist ${12}`);
           expect(res.status).to.equal(200);
           expect(res.body.status).eql('Ok');
           done(err);
@@ -580,7 +578,7 @@ describe('Users Endpoint API Test', () => {
     });
     it('should return response of not following the artist', (done) => {
       chai.request(app)
-        .post(`/api/v1/users/artists/unfollow/${11}`)
+        .post(`/api/v1/users/artists/unfollow/${12}`)
         .set('x-access-token', loginToken)
         .end((err, res) => {
           expect(res.body.messages).eql('You are not following this artist');
@@ -591,7 +589,7 @@ describe('Users Endpoint API Test', () => {
     });
     it('should fetch a list of followers for a user', (done) => {
       chai.request(app)
-        .get(`/api/v1/users/${11}/followers`)
+        .get(`/api/v1/users/${12}/followers`)
         .set('x-access-token', loginToken)
         .end((err, res) => {
           expect(res.body.messages).eql('Returned all followers');
@@ -707,7 +705,7 @@ describe('Users Endpoint API Test', () => {
     });
     it('it should return profile of one artist on the platform', (done) => {
       chai.request(app)
-        .get(`/api/v1/users/artists/${1}`)
+        .get('/api/v1/users/artists/2')
         .set('x-access-token', loginToken)
         .end((err, res) => {
           expect(res.body).to.be.a('object');

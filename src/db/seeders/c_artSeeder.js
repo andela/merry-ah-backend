@@ -342,8 +342,7 @@ module.exports = {
     status: true,
     createdAt: new Date(),
     updatedAt: new Date()
-  }
-  ], {}),
+  }], {}),
 
   down: queryInterface => queryInterface.bulkDelete('Arts', null, {})
 };

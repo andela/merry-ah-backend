@@ -1,6 +1,8 @@
 module.exports = {
-  // eslint-disable-next-line max-len
-  up: (queryInterface, Sequelize) => queryInterface.createTable('FollowSummaries', {
+  up: (
+    queryInterface,
+    Sequelize
+  ) => queryInterface.createTable('ReportSummaries', {
     id: {
       allowNull: false,
       autoIncrement: true,
@@ -9,16 +11,15 @@ module.exports = {
     },
     userId: {
       type: Sequelize.INTEGER,
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       references: {
         model: 'Users',
         key: 'id',
         as: 'userId',
       }
     },
-    followers: {
-      type: Sequelize.INTEGER
-    },
-    following: {
+    reportCount: {
       type: Sequelize.INTEGER
     },
     createdAt: {
@@ -30,5 +31,5 @@ module.exports = {
       type: Sequelize.DATE
     }
   }),
-  down: queryInterface => queryInterface.dropTable('FollowSummaries')
+  down: queryInterface => queryInterface.dropTable('ReportSummaries')
 };

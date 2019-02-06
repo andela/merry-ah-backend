@@ -13,7 +13,6 @@ class ParamsChecker {
      */
   static idChecker(req, res, next) {
     const {
-      userId,
       artId,
       commentId,
       bookmarkId
@@ -31,9 +30,6 @@ class ParamsChecker {
       }
       return next();
     };
-    if (userId) {
-      checkParam(userId);
-    }
     if (artId) {
       checkParam(artId);
     }
