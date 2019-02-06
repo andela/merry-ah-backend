@@ -22,8 +22,7 @@ router.use('/rate', TokenAuthenticate.tokenVerify, ratingRouter);
 router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 router.use('/arts', artsRoute);
 router.use('/artsreport', reportRouter);
-router.use('/arts/comments/', commentRouter);
-router.use('/comments', commentReaction);
+router.use('/arts/comments/', [commentRouter, commentReaction]);
 router.use('/auth', socialRouter);
 router.use(
   '/bookmark',
