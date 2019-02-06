@@ -20,7 +20,7 @@ describe('Comments Like Endpoint API Test', () => {
   });
   it('it should not like comment with non logged in user', (done) => {
     chai.request(app)
-      .post('/api/v1/comments/1/like')
+      .post('/api/v1/arts/comments/1/like')
       .end((err, res) => {
         expect(res.body.status).eql('error');
         expect(res.body.message).eql('No token provided');
@@ -29,7 +29,7 @@ describe('Comments Like Endpoint API Test', () => {
   });
   it('it should return 404 for a comment not found', (done) => {
     chai.request(app)
-      .post('/api/v1/comments/100/like')
+      .post('/api/v1/arts/comments/100/like')
       .set('Authorization', userToken)
       .end((err, res) => {
         expect(res.body.status).eql('Not Found');
@@ -38,7 +38,7 @@ describe('Comments Like Endpoint API Test', () => {
   });
   it('it should like a comment with a valid id', (done) => {
     chai.request(app)
-      .post('/api/v1/comments/1/like')
+      .post('/api/v1/arts/comments/1/like')
       .set('Authorization', userToken)
       .end((err, res) => {
         expect(res.body.messages).eql('Comment liked');
@@ -47,7 +47,7 @@ describe('Comments Like Endpoint API Test', () => {
   });
   it('it should not like a comment twice', (done) => {
     chai.request(app)
-      .post('/api/v1/comments/1/like')
+      .post('/api/v1/arts/comments/1/like')
       .set('Authorization', userToken)
       .end((err, res) => {
         expect(res.body.messages).eql('Comment already liked');
@@ -56,7 +56,7 @@ describe('Comments Like Endpoint API Test', () => {
   });
   it('it should dislike a comment with a valid id', (done) => {
     chai.request(app)
-      .post('/api/v1/comments/1/unlike')
+      .post('/api/v1/arts/comments/1/unlike')
       .set('Authorization', userToken)
       .end((err, res) => {
         expect(res.body.code).eql(200);
@@ -65,7 +65,7 @@ describe('Comments Like Endpoint API Test', () => {
   });
   it('it should not dislike a comment that is not liked', (done) => {
     chai.request(app)
-      .post('/api/v1/comments/2/unlike')
+      .post('/api/v1/arts/comments/2/unlike')
       .set('Authorization', userToken)
       .end((err, res) => {
         expect(res.body.code).eql(400);
