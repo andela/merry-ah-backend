@@ -1,14 +1,11 @@
 module.exports = (sequelize, DataTypes) => {
-  const Report = sequelize.define('Report', {
-    reportText: {
-      type: DataTypes.STRING
-    },
-    artId: {
+  const CommentReaction = sequelize.define('CommentReaction', {
+    commentId: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'Art',
+        model: 'Comment',
         key: 'id',
-        as: 'artId',
+        as: 'commentId',
       }
     },
     userId: {
@@ -20,19 +17,20 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
   }, {});
-  Report.associate = (models) => {
+  // eslint-disable-next-line func-names
+  CommentReaction.associate = function (models) {
     // associations can be defined here
-    Report.belongsTo(models.Art, {
-      foreignKey: 'artId',
-      as: 'arts',
+    CommentReaction.belongsTo(models.Comment, {
+      foreignKey: 'commentId',
+      as: 'comment',
       onDelete: 'CASCADE'
     });
-    Report.belongsTo(models.User, {
+    CommentReaction.belongsTo(models.User, {
       foreignKey: 'userId',
       as: 'user',
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
     });
   };
-  return Report;
+  return CommentReaction;
 };

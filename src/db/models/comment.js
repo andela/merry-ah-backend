@@ -19,6 +19,12 @@ module.exports = (sequelize, DataTypes) => {
     Comment.hasMany(models.UpdatedComment, {
       foreignKey: 'commentId'
     });
+    Comment.hasMany(models.CommentReaction, {
+      foreignKey: 'commentId'
+    });
+    Comment.hasOne(models.CommentReactionSummary, {
+      foreignKey: 'commentId'
+    });
   };
   return Comment;
 };

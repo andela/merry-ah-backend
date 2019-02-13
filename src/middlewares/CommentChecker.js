@@ -31,7 +31,7 @@ class CommentChecker {
         const response = new Response(
           'Unauthorized',
           401,
-          'You are not authorized to update this comment',
+          'You are not authorized to modify this comment',
         );
         return res.status(response.code).json(response);
       }

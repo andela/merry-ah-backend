@@ -5,7 +5,8 @@ module.exports = (sequelize, DataTypes) => {
     password: DataTypes.STRING,
     userType: DataTypes.STRING,
     signUpType: DataTypes.STRING,
-    isVerified: DataTypes.BOOLEAN
+    isVerified: DataTypes.BOOLEAN,
+    isActive: DataTypes.BOOLEAN
   }, {});
   User.associate = (models) => {
     User.hasOne(models.Profile, {
@@ -36,7 +37,13 @@ module.exports = (sequelize, DataTypes) => {
     User.hasMany(models.Like, {
       foreignKey: 'userId'
     });
+    User.hasMany(models.Dislike, {
+      foreignKey: 'userId'
+    });
     User.hasMany(models.Comment, {
+      foreignKey: 'userId'
+    });
+    User.hasMany(models.CommentReaction, {
       foreignKey: 'userId'
     });
     User.hasMany(models.Bookmark, {

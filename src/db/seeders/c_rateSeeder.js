@@ -8,6 +8,7 @@ module.exports = {
     featuredImg: 'www.imageurl.com/myImage',
     status: true,
     price: 6000,
+    visited: 0,
     createdAt: new Date(),
     updatedAt: new Date()
   }, {
@@ -19,6 +20,7 @@ module.exports = {
     featuredImg: 'www.imageurl.com/myImage',
     status: true,
     price: 9000,
+    visited: 0,
     createdAt: new Date(),
     updatedAt: new Date()
   }], {}),

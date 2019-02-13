@@ -4,13 +4,14 @@ module.exports = (sequelize, DataTypes) => {
     artistId: DataTypes.INTEGER,
     slug: DataTypes.STRING,
     title: DataTypes.STRING,
+    visited: DataTypes.INTEGER,
     description: DataTypes.TEXT,
     categoryId: DataTypes.INTEGER,
     featuredImg: DataTypes.STRING,
     price: DataTypes.DECIMAL(10, 2),
     status: DataTypes.BOOLEAN
   }, {});
-  Art.associate = function (models) {
+  Art.associate = (models) => {
     // associations can be defined here
     Art.belongsTo(models.User, {
       foreignKey: 'artistId',
@@ -33,7 +34,13 @@ module.exports = (sequelize, DataTypes) => {
     Art.hasMany(models.Like, {
       foreignKey: 'artId'
     });
+    Art.hasMany(models.Dislike, {
+      foreignKey: 'artId'
+    });
     Art.hasOne(models.LikeSummary, {
+      foreignKey: 'artId'
+    });
+    Art.hasOne(models.DislikeSummary, {
       foreignKey: 'artId'
     });
     Art.hasOne(models.Transaction, {

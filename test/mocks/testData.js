@@ -4,6 +4,7 @@ const userDetails = {
     lastName: 'Ajibade',
     username: 'Juliet',
     email: 'gentle883@gmail.com',
+    isActive: true,
     password: 'femiok',
     bio: '',
     imgURL: '',
@@ -17,6 +18,7 @@ const userDetails = {
     firstName: 'Femi',
     lastName: 'Ajibade',
     username: 'Juliet',
+    isActive: true,
     email: 'gentle8831@gmail.com',
     password: 'femiok',
     bio: '',
@@ -27,6 +29,7 @@ const userDetails = {
     firstName: 'Femi',
     lastName: 'Ajibade',
     username: 'Juliet',
+    isActive: true,
     email: 'chidimma@gmail.com',
     password: 'femiok',
     bio: '',
@@ -37,6 +40,7 @@ const userDetails = {
     firstName: 'Ben',
     lastName: 'Smith',
     username: 'Juliet',
+    isActive: true,
     email: 'chidimma1@gmail.com',
     password: 'femiok',
     bio: '',
@@ -47,6 +51,7 @@ const userDetails = {
     firstName: '   ',
     lastName: '    ',
     username: 'femi',
+    isActive: true,
     email: 'julietezekwe@gmail.com',
     password: 'femi1',
     bio: '',
@@ -56,6 +61,7 @@ const userDetails = {
   invalidUser: {
     firstName: '    ',
     lastName: 'Ajibade',
+    isActive: true,
     username: 'femi',
     email: 'julietezekwe@gmail.com',
     password: 'femi1',
@@ -66,6 +72,7 @@ const userDetails = {
   invalidUserType: {
     firstName: 'Femi',
     lastName: 'Ajibade',
+    isActive: true,
     username: 'femi',
     email: 'julietezekwe@gmail.com',
     password: 'femi1',
@@ -76,6 +83,7 @@ const userDetails = {
   invalidUserEmail: {
     firstName: 'Femi',
     lastName: 'Ajibade',
+    isActive: true,
     username: 'femi',
     email: 'julietezek',
     password: 'femi',
@@ -105,6 +113,7 @@ const userDetails = {
   },
   validArtist: {
     firstName: 'Daniel',
+    isActive: true,
     lastName: 'Anyaegbu',
     username: 'Danny',
     email: 'danielchidiebele@gmail.com',
@@ -140,12 +149,12 @@ const artDetails = {
     title: 'Cirrhosis of the Sky',
     description: 'The Syntax Podcasts isn\'t suitable for all ages',
     categoryId: 1,
-    media: '[{"url":'
-      + '"https://farm3.staticflickr.com/2817/33968464326_a6f9cbc754_k",'
-      + '"extension":"jpg"},'
-      + '{"url":'
-      + '"https://images.pexels.com/photos/1047540/pexels-photo-1047540.jpeg",'
-      + '"extension":"jpeg"}]'
+    media: `[{"url":
+    "https://farm3.staticflickr.com/2817/33968464326_a6f9cbc754_k",
+    "extension":"jpg"}, 
+    {"url": 
+    "https://images.pexels.com/photos/1047540/pexels-photo-1047540.jpeg",
+    "extension":"jpeg"}]`
   },
   validUpdatedArticle: {
     title: 'Cirrhosis of the Sky',
@@ -206,5 +215,25 @@ const commentDetails = {
     body: '  '
   },
 };
-// eslint-disable-next-line import/prefer-default-export
-export { userDetails, artDetails, commentDetails };
+
+const reportDetails = {
+  admin: {
+    email: 'julietezekwe@gmail.com',
+    password: 'femiok'
+  },
+  nonAdmin: {
+    email: 'createart@gmail.com',
+    password: 'femiok'
+  },
+  deactivatedUser: {
+    email: 'chidimmajuliet89@gmail.com',
+    password: 'chidimma'
+  }
+};
+
+export {
+  userDetails,
+  artDetails,
+  commentDetails,
+  reportDetails
+};

@@ -1,24 +1,21 @@
+
 module.exports = {
-  // eslint-disable-next-line max-len
-  up: (queryInterface, Sequelize) => queryInterface.createTable('FollowSummaries', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('DislikeSummaries', {
     id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: Sequelize.INTEGER
     },
-    userId: {
+    artId: {
       type: Sequelize.INTEGER,
       references: {
-        model: 'Users',
+        model: 'Arts',
         key: 'id',
-        as: 'userId',
+        as: 'artId',
       }
     },
-    followers: {
-      type: Sequelize.INTEGER
-    },
-    following: {
+    noOfLikes: {
       type: Sequelize.INTEGER
     },
     createdAt: {
@@ -30,5 +27,5 @@ module.exports = {
       type: Sequelize.DATE
     }
   }),
-  down: queryInterface => queryInterface.dropTable('FollowSummaries')
+  down: queryInterface => queryInterface.dropTable('DislikeSummaries')
 };
