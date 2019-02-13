@@ -3,6 +3,7 @@ import ReportController from '../controllers/ReportController';
 import ReportValidator from '../middlewares/ReportValidator';
 import CheckArt from '../middlewares/CheckArt';
 import { TokenAuthenticate } from '../helpers/index';
+import VerifyAdmin from '../middlewares/VerifyAdmin';
 
 const reportRouter = express.Router();
 /**
@@ -46,4 +47,19 @@ reportRouter.post(
 reportRouter.get(
   '/reports', ReportController.getAllReports
 );
+reportRouter
+  .delete(
+    '/:reportId/:reporterId',
+    TokenAuthenticate.tokenVerify,
+    VerifyAdmin.isAdmin,
+    ReportController.deleteReport
+  );
+reportRouter
+  .put(
+    '/:reportId',
+    TokenAuthenticate.tokenVerify,
+    VerifyAdmin.isAdmin,
+    ReportController.reportArtAction
+  );
+
 export default reportRouter;

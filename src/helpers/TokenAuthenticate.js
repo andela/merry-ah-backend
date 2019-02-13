@@ -1,5 +1,9 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import Response from './response';
+import models from '../db/models';
+
+const { User } = models;
 
 dotenv.config();
 
@@ -39,8 +43,20 @@ class TokenAuthenticate {
     }
     try {
       const verifyUser = await jwt.verify(token, process.env.SECRET);
+      const { id } = verifyUser;
+      const user = await User.findOne({
+        where: { id }
+      });
+      if (!user.isActive) {
+        const response = new Response(
+          'Unauthorized',
+          401,
+          'This account has been deactivated',
+        );
+        return res.status(response.code).json(response);
+      }
       req.verifyUser = verifyUser;
-      next();
+      return next();
     } catch (error) {
       return res.status(401).send({
         status: 'error',

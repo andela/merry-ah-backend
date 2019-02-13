@@ -6,6 +6,7 @@ import UserValidator from '../middlewares/UsersValidator';
 import TokenAuthenticate from '../helpers/TokenAuthenticate';
 import UserMiddleware from '../middlewares/UserMiddleware';
 
+
 const authRouter = express.Router();
 /**
    * @swagger
