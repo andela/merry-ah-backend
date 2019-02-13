@@ -7,6 +7,7 @@ module.exports = {
     categoryId: 1,
     featuredImg: 'some link',
     status: true,
+    visited: 0,
     createdAt: new Date(),
     updatedAt: new Date()
   },
@@ -18,6 +19,7 @@ module.exports = {
     categoryId: 1,
     featuredImg: 'some link',
     status: true,
+    visited: 0,
     createdAt: new Date(),
     updatedAt: new Date()
   },

@@ -1,5 +1,7 @@
 import express from 'express';
-import TokenAuthenticate from '../helpers/TokenAuthenticate';
+import ArtController from '../controllers/ArtsController';
+import { TokenAuthenticate } from '../helpers/index';
+import ReadingStat from '../middlewares/ReadingStatMiddleware';
 import ArtsController from '../controllers/ArtsController';
 import UserMiddleware from '../middlewares/UserMiddleware';
 
@@ -34,7 +36,8 @@ artsRoute.delete(
   ArtsController.delete
 );
 
+artsRoute.get('/', ArtController.getAllArticles);
+artsRoute.get('/:slug', ReadingStat.getStat, ArtController.getSingleArticle);
 artsRoute.get('/', ArtsController.getAllArticles);
-artsRoute.get('/:slug', ArtsController.getSingleArticle);
 
 export default artsRoute;

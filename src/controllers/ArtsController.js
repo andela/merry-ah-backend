@@ -64,7 +64,7 @@ class ArtsController {
           categoryId,
           featuredImg: mediaFilesArray[0].url
             || process.env.DEFAULT_ARTICLE_IMAGE,
-          status: defaultStatus
+          status: defaultStatus,
         });
 
       const {
@@ -72,7 +72,8 @@ class ArtsController {
         title: artTitle,
         description: artDescription,
         featuredImg: artFeaturedImg,
-        categoryId: artCategoryId
+        categoryId: artCategoryId,
+        visited
       } = createArticle.dataValues;
 
       if (mediaFilesArray.length > 0) {
@@ -98,7 +99,8 @@ class ArtsController {
           slugifiedTitle,
           artDescription,
           artFeaturedImg,
-          artCategoryId
+          artCategoryId,
+          visited
         }
       );
 

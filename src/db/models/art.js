@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     artistId: DataTypes.INTEGER,
     slug: DataTypes.STRING,
     title: DataTypes.STRING,
+    visited: DataTypes.INTEGER,
     description: DataTypes.TEXT,
     categoryId: DataTypes.INTEGER,
     featuredImg: DataTypes.STRING,

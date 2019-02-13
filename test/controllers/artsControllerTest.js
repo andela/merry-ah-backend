@@ -264,9 +264,8 @@ describe('Arts Endpoint API Test', () => {
       chai.request(app)
         .get('/api/v1/arts/ss-slug')
         .end((err, res) => {
-          expect(res.status).to.equal(404);
-          expect(res.body.status).eql('Not Found');
-          expect(res.body.messages).eql('Sorry. Article Not Found');
+          expect(res.status).to.equal(500);
+          expect(res.body.status).eql('Not ok');
           done(err);
         });
     });
