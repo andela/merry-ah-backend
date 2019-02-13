@@ -11,6 +11,7 @@ import commentRouter from './commentRouter';
 import socialRouter from './socialRouter';
 import reportRouter from './reportRouter';
 import bookmarkRouter from './bookmarkRouter';
+import transactionRouter from './transactionRouter';
 
 const router = express.Router();
 const swaggerSpec = swaggerJSDoc(require('../utils/swaggerConfig')
@@ -34,5 +35,7 @@ router.use(
   TokenAuthenticate.tokenVerify,
   bookmarkRouter
 );
+router.use('/users', userRouter);
+router.use('/transaction', TokenAuthenticate.tokenVerify, transactionRouter);
 
 export default router;

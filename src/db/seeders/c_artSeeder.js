@@ -6,7 +6,8 @@ module.exports = {
     description: 'Some descriptions',
     categoryId: 1,
     featuredImg: 'some link',
-    status: true,
+    status: false,
+    price: 2000,
     visited: 0,
     createdAt: new Date(),
     updatedAt: new Date()
@@ -19,6 +20,7 @@ module.exports = {
     categoryId: 1,
     featuredImg: 'some link',
     status: true,
+    price: 3000,
     visited: 0,
     createdAt: new Date(),
     updatedAt: new Date()
