@@ -34,9 +34,10 @@ class ArtsController {
 
       mediaFiles = media;
 
+      const { DEFAULT_ARTICLE_IMAGE } = process.env;
       if (!media) {
         mediaFiles = `[{
-        "url":"${process.env.DEFAULT_ARTICLE_IMAGE}",
+        "url":"${DEFAULT_ARTICLE_IMAGE}",
         "extension":"jpeg"}]`;
       }
 
@@ -131,10 +132,9 @@ class ArtsController {
    */
   static async update(req, res) {
     try {
-      const validationErrors = [];
-
       const { id: artistId } = req.verifyUser;
       const { slug } = req.params;
+      let featuredImgUpdate;
 
       const artToUpdate = await Art.findOne({
         where: { slug }
@@ -160,65 +160,42 @@ class ArtsController {
       }
 
       const {
-        title, description, categoryId,
+        title, description, categoryId, media
       } = req.body;
 
+      featuredImgUpdate = artToUpdate.dataValues.featuredImg;
 
-      let { media } = req.body;
+      if (media) {
+        const mediaFilesArray = JSON.parse(media);
 
-      const { DEFAULT_ARTICLE_IMAGE } = process.env;
-      if (!media) {
-        media = `[{
-        "url":"${DEFAULT_ARTICLE_IMAGE}",
-        "extension":"jpeg"}]`;
-      }
+        featuredImgUpdate = mediaFilesArray[0].url;
+        const mediaToDelete = await Media.destroy({
+          where: { artId: artToUpdate.id }
+        });
 
-      const mediaFilesArray = JSON.parse(media);
-
-      req.check('title', 'Title is required').trim().notEmpty();
-      req.check('description', 'Description should be longer').trim().notEmpty()
-        .isLength({ min: 15 });
-
-      const errors = req.validationErrors();
-      if (errors) {
-        errors.map(err => validationErrors.push(err.msg));
-        const response = new Response(
-          'Not ok',
-          400,
-          'Validation Errors Occurred',
-          { validationErrors }
-        );
-        return res.status(response.code).json(response);
+        if (mediaToDelete) {
+          mediaFilesArray.splice(6);
+          await mediaFilesArray.forEach((mediaFile) => {
+            Media.create({
+              artId: artToUpdate.id,
+              contentUrl: mediaFile.url,
+              mediaType: mediaFile.extension
+            });
+          });
+        }
       }
 
       const slugifiedTitle = slugify(title);
 
-      const updatedArticle = {
-        id: artToUpdate.id,
-        title,
-        slug: slugifiedTitle,
-        description,
-        categoryId,
-        featuredImg: mediaFilesArray[0].url,
-        createdAt: artToUpdate.createdAt
-      };
-
-      const mediaToDelete = await Media.destroy({
-        where: { artId: artToUpdate.id }
-      });
-
-      if (mediaToDelete) {
-        mediaFilesArray.splice(6);
-        await mediaFilesArray.forEach((mediaFile) => {
-          Media.create({
-            artId: artToUpdate.id,
-            contentUrl: mediaFile.url,
-            mediaType: mediaFile.extension
-          });
-        });
-      }
-
-      const updateArticleSuccess = await artToUpdate.update(updatedArticle);
+      const updateArticleSuccess = await artToUpdate.update(
+        {
+          title,
+          slug: slugifiedTitle,
+          description,
+          categoryId,
+          featuredImg: featuredImgUpdate,
+        }
+      );
 
       const response = new Response(
         'Ok',
