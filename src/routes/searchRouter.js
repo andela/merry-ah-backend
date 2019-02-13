@@ -6,7 +6,7 @@ const searchRouter = express.Router();
 
 searchRouter.get(
   '/categories/:categoryId',
-  SearchController.searchByCategory,
+  SearchController.getArtsByCategory,
 );
 
 searchRouter.get(
