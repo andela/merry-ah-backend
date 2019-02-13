@@ -1,8 +1,10 @@
 import sequelize from 'sequelize';
 import models from '../db/models';
-import { Response, Slugify } from '../helpers/index';
 import LikeUnlike from '../db/service/LikeUnlike';
 import DisikeUndislike from '../db/service/DislikeUndislike';
+import Response from '../helpers/response';
+import slugify from '../helpers/slugify';
+import SendNotifications from '../helpers/SendNotifications';
 
 const {
   Art, Media, Category, User, Comment, Like, Dislike
@@ -17,38 +19,31 @@ class ArtsController {
    * @param {object} res
    * @memberof ArtsController
    * This will receive a media object containing a list of media files
-   * @returns {Object} Article details
+   * @returns {Object} Article payloadObject
    */
   static async create(req, res) {
     try {
       const defaultStatus = 0;
-      const validationErrors = [];
+      let mediaFiles;
+
       const { id: artistId } = req.verifyUser;
 
       const {
-        title, description, categoryId, media,
+        title, description, categoryId, media
       } = req.body;
 
-      const mediaFilesArray = JSON.parse(media);
+      mediaFiles = media;
 
-      req.check('title', 'Title is required').notEmpty();
-      req.check('description', 'Description should be longer').notEmpty()
-        .isLength({ min: 15 });
-
-      const errors = req.validationErrors();
-
-      if (errors) {
-        errors.map(err => validationErrors.push(err.msg));
-        const response = new Response(
-          'Not Ok',
-          400,
-          'Validation Errors Occurred',
-          { validationErrors }
-        );
-        return res.status(response.code).json(response);
+      const { DEFAULT_ARTICLE_IMAGE } = process.env;
+      if (!media) {
+        mediaFiles = `[{
+        "url":"${DEFAULT_ARTICLE_IMAGE}",
+        "extension":"jpeg"}]`;
       }
 
-      const slugifiedTitle = Slugify.slugify(title);
+      const mediaFilesArray = JSON.parse(mediaFiles);
+
+      const slugifiedTitle = slugify(title);
 
       const checkCategory = await Category.findOne({ where: { id: 1 } });
       if (!checkCategory) {
@@ -62,9 +57,8 @@ class ArtsController {
           title,
           description,
           categoryId,
-          featuredImg: mediaFilesArray[0].url
-            || process.env.DEFAULT_ARTICLE_IMAGE,
-          status: defaultStatus,
+          featuredImg: mediaFilesArray[0].url,
+          status: defaultStatus
         });
 
       const {
@@ -89,6 +83,19 @@ class ArtsController {
         });
       }
 
+      const notifyFollowers = new SendNotifications({
+        type: 'newArticle',
+        articleDetails: {
+          artId,
+          artistId,
+          artTitle,
+          slugifiedTitle,
+          artDescription,
+          artFeaturedImg
+        }
+      });
+      const followersNotified = await notifyFollowers.create();
+
       const response = new Response(
         'Ok',
         201,
@@ -100,7 +107,8 @@ class ArtsController {
           artDescription,
           artFeaturedImg,
           artCategoryId,
-          visited
+          visited,
+          followersNotified
         }
       );
 
@@ -120,14 +128,13 @@ class ArtsController {
    * @param {object} req
    * @param {object} res
    * @memberof ArtsController
-   * @returns {Object} Article details
+   * @returns {Object} Article payloadObject
    */
   static async update(req, res) {
     try {
-      const validationErrors = [];
-
       const { id: artistId } = req.verifyUser;
       const { slug } = req.params;
+      let featuredImgUpdate;
 
       const artToUpdate = await Art.findOne({
         where: { slug }
@@ -153,55 +160,40 @@ class ArtsController {
       }
 
       const {
-        title, description, categoryId, media,
+        title, description, categoryId, media
       } = req.body;
 
-      const mediaFilesArray = JSON.parse(media);
+      featuredImgUpdate = artToUpdate.dataValues.featuredImg;
 
-      req.check('title', 'Title is required').notEmpty();
-      req.check('description', 'Description should be longer').notEmpty()
-        .isLength({ min: 15 });
+      if (media) {
+        const mediaFilesArray = JSON.parse(media);
 
-      const errors = req.validationErrors();
-      if (errors) {
-        errors.map(err => validationErrors.push(err.msg));
-        const response = new Response(
-          'Not Ok',
-          400,
-          'Validation Errors Occurred',
-          { validationErrors }
-        );
-        return res.status(response.code).json(response);
-      }
-
-      const slugifiedTitle = Slugify.slugify(title);
-
-      const updatedArticle = {
-        id: artToUpdate.id,
-        title: title || artToUpdate.title,
-        slug: slugifiedTitle,
-        description: description || artToUpdate.description,
-        categoryId: categoryId || artToUpdate.categoryId,
-        featuredImg: mediaFilesArray[0].url || artToUpdate.featuredImg,
-        createdAt: artToUpdate.createdAt
-      };
-
-      const mediaToDelete = await Media.destroy({
-        where: { artId: artToUpdate.id }
-      });
-
-      if (mediaToDelete) {
-        mediaFilesArray.splice(6);
-        await mediaFilesArray.forEach((mediaFile) => {
-          Media.create({
-            artId: artToUpdate.id,
-            contentUrl: mediaFile.url,
-            mediaType: mediaFile.extension
-          });
+        featuredImgUpdate = mediaFilesArray[0].url;
+        const mediaToDelete = await Media.destroy({
+          where: { artId: artToUpdate.id }
         });
+
+        if (mediaToDelete) {
+          mediaFilesArray.splice(6);
+          await mediaFilesArray.forEach((mediaFile) => {
+            Media.create({
+              artId: artToUpdate.id,
+              contentUrl: mediaFile.url,
+              mediaType: mediaFile.extension
+            });
+          });
+        }
       }
 
-      const updateArticleSuccess = await artToUpdate.update(updatedArticle);
+      const slugifiedTitle = slugify(title);
+
+      const updateArticleSuccess = await artToUpdate.update({
+        title,
+        slug: slugifiedTitle,
+        description,
+        categoryId,
+        featuredImg: featuredImgUpdate,
+      });
 
       const response = new Response(
         'Ok',
@@ -225,7 +217,7 @@ class ArtsController {
    * @param {object} req
    * @param {object} res
    * @memberof ArtsController
-   * @returns {Object} Article details
+   * @returns {number} Article Deletion status
    */
   static async delete(req, res) {
     try {
@@ -262,7 +254,7 @@ class ArtsController {
 
       const response = new Response(
         'Ok',
-        200,
+        202,
         'Article deleted successfully',
         { artToDelete: artDeleted }
       );
@@ -370,10 +362,6 @@ class ArtsController {
             model: Category,
             as: 'Category',
             attributes: ['id', 'categoryName'],
-          },
-          {
-            model: Comment,
-            attributes: ['id', 'userId', 'body', 'createdAt'],
           },
           {
             model: User,

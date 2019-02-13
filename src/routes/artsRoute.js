@@ -1,11 +1,39 @@
 import express from 'express';
-import ArtController from '../controllers/ArtsController';
-import { TokenAuthenticate } from '../helpers/index';
 import ReadingStat from '../middlewares/ReadingStatMiddleware';
 import ArtsController from '../controllers/ArtsController';
 import UserMiddleware from '../middlewares/UserMiddleware';
+import TokenAuthenticate from '../helpers/TokenAuthenticate';
+import ArtistVerify from '../middlewares/ArtistVerify';
+import ArticleValidator from '../middlewares/ArticleValidator';
 
 const artsRoute = express.Router();
+
+artsRoute.get('/', ArtsController.getAllArticles);
+artsRoute.get('/:slug', ReadingStat.getStat, ArtsController.getSingleArticle);
+artsRoute.get('/', ArtsController.getAllArticles);
+
+
+artsRoute.post(
+  '/',
+  TokenAuthenticate.tokenVerify,
+  ArticleValidator.createArticleValidator,
+  ArtistVerify.userTypeChecker,
+  ArtsController.create
+);
+
+artsRoute.put(
+  '/:slug',
+  TokenAuthenticate.tokenVerify,
+  ArtistVerify.userTypeChecker,
+  ArtsController.update
+);
+
+artsRoute.delete(
+  '/:slug',
+  TokenAuthenticate.tokenVerify,
+  ArtistVerify.userTypeChecker,
+  ArtsController.delete
+);
 
 artsRoute.post(
   '/:artId/like',
@@ -20,24 +48,5 @@ artsRoute.post(
   UserMiddleware.validateArtID,
   ArtsController.dislikeArticle,
 );
-
-artsRoute.post('/', TokenAuthenticate.tokenVerify, ArtsController.create);
-artsRoute
-  .post(
-    '/', TokenAuthenticate.tokenVerify,
-    ArtsController.create
-  );
-
-artsRoute.put('/:slug', TokenAuthenticate.tokenVerify, ArtsController.update);
-
-artsRoute.delete(
-  '/:slug',
-  TokenAuthenticate.tokenVerify,
-  ArtsController.delete
-);
-
-artsRoute.get('/', ArtController.getAllArticles);
-artsRoute.get('/:slug', ReadingStat.getStat, ArtController.getSingleArticle);
-artsRoute.get('/', ArtsController.getAllArticles);
 
 export default artsRoute;
