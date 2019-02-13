@@ -2,7 +2,7 @@ import Validation from '../helpers/Validation';
 import models from '../db/models';
 import Response from '../helpers/response';
 
-const { User, } = models;
+const { User, Art } = models;
 
 /**
  * User Middleware Class
@@ -216,6 +216,54 @@ class UserMiddleware {
         );
         return res.status(response.code).json(response);
       }
+      next();
+    } catch (err) {
+      const response = new Response(
+        'Internal server error',
+        500,
+        `${err}`,
+      );
+      return res.status(response.code).json(response);
+    }
+  }
+
+  /**
+   * @static
+   * @param {object} req
+   * @param {object} res
+   * @param {function} next
+   * @memberof UserMiddleware
+   * @returns {object} error if IDs are invalid
+   */
+  static async validateArtID(req, res, next) {
+    try {
+      const { artId } = req.params;
+
+      /* eslint-disable no-restricted-globals */
+      if (isNaN(artId)) {
+        const response = new Response(
+          'Bad Request',
+          400,
+          'Art ID must be an integer',
+        );
+        return res.status(response.code).json(response);
+      }
+
+      const checkIfArtExist = await Art.findOne({
+        where: {
+          id: artId,
+        }
+      });
+
+      if (!checkIfArtExist) {
+        const response = new Response(
+          'Not Found',
+          404,
+          'The art you requested does not exist',
+        );
+        return res.status(response.code).json(response);
+      }
+
       next();
     } catch (err) {
       const response = new Response(

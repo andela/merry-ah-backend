@@ -1,5 +1,6 @@
+
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('LikeSummaries', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('Dislikes', {
     id: {
       allowNull: false,
       autoIncrement: true,
@@ -14,8 +15,15 @@ module.exports = {
         as: 'artId',
       }
     },
-    noOfLikes: {
-      type: Sequelize.INTEGER
+    userId: {
+      type: Sequelize.INTEGER,
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+      references: {
+        model: 'Users',
+        key: 'id',
+        as: 'userId',
+      }
     },
     createdAt: {
       allowNull: false,
@@ -26,5 +34,5 @@ module.exports = {
       type: Sequelize.DATE
     }
   }),
-  down: queryInterface => queryInterface.dropTable('LikeSummaries')
+  down: queryInterface => queryInterface.dropTable('Dislikes')
 };

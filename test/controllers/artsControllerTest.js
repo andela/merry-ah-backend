@@ -101,6 +101,136 @@ describe('Arts Endpoint API Test', () => {
           done(err);
         });
     });
+
+    it('should like an art', (done) => {
+      chai.request(app)
+        .post(`/api/v1/arts/${1}/like`)
+        .set('x-access-token', jwtToken)
+        .end((err, res) => {
+          expect(res.body).to.be.a('object');
+          expect(res.body.messages).eql(`You just liked article ${1}`);
+          expect(res.status).to.equal(201);
+          expect(res.body.status).eql('Ok');
+          done(err);
+        });
+    });
+
+    it('user should like another art', (done) => {
+      chai.request(app)
+        .post(`/api/v1/arts/${2}/like`)
+        .set('x-access-token', jwtToken)
+        .end((err, res) => {
+          expect(res.body).to.be.a('object');
+          expect(res.body.messages).eql(`You just liked article ${2}`);
+          expect(res.status).to.equal(201);
+          expect(res.body.status).eql('Ok');
+          done(err);
+        });
+    });
+
+    it('another user should like an art', (done) => {
+      chai.request(app)
+        .post(`/api/v1/arts/${1}/like`)
+        .set('x-access-token', jwtToken2)
+        .end((err, res) => {
+          expect(res.body).to.be.a('object');
+          expect(res.body.messages).eql(`You just liked article ${1}`);
+          expect(res.status).to.equal(201);
+          expect(res.body.status).eql('Ok');
+          done(err);
+        });
+    });
+
+    it('should unlike an already liked art', (done) => {
+      chai.request(app)
+        .post(`/api/v1/arts/${1}/like`)
+        .set('x-access-token', jwtToken)
+        .end((err, res) => {
+          expect(res.body).to.be.a('object');
+          expect(res.body.messages).eql('You just unliked article 1');
+          expect(res.status).to.equal(200);
+          expect(res.body.status).eql('Ok');
+          done(err);
+        });
+    });
+
+    it('should return error if art id is not integer', (done) => {
+      chai.request(app)
+        .post('/api/v1/arts/ddd/like')
+        .set('x-access-token', jwtToken)
+        .end((err, res) => {
+          expect(res.body).to.be.a('object');
+          expect(res.body.messages).eql('Art ID must be an integer');
+          expect(res.status).to.equal(400);
+          expect(res.body.status).eql('Bad Request');
+          done(err);
+        });
+    });
+
+    it('should return error if art id does not exist', (done) => {
+      chai.request(app)
+        .post(`/api/v1/arts/${100}/like`)
+        .set('x-access-token', jwtToken)
+        .end((err, res) => {
+          expect(res.body).to.be.a('object');
+          expect(res.body.messages).eql('The art you requested does not exist');
+          expect(res.status).to.equal(404);
+          expect(res.body.status).eql('Not Found');
+          done(err);
+        });
+    });
+
+    it('user should dislike an art', (done) => {
+      chai.request(app)
+        .post(`/api/v1/arts/${3}/dislike`)
+        .set('x-access-token', jwtToken)
+        .end((err, res) => {
+          expect(res.body).to.be.a('object');
+          expect(res.body.messages).eql(`You just disliked article ${3}`);
+          expect(res.status).to.equal(201);
+          expect(res.body.status).eql('Ok');
+          done(err);
+        });
+    });
+
+    it('user should dislike another art', (done) => {
+      chai.request(app)
+        .post(`/api/v1/arts/${2}/dislike`)
+        .set('x-access-token', jwtToken)
+        .end((err, res) => {
+          expect(res.body).to.be.a('object');
+          expect(res.body.messages).eql(`You just disliked article ${2}`);
+          expect(res.status).to.equal(201);
+          expect(res.body.status).eql('Ok');
+          done(err);
+        });
+    });
+
+    it('another user should dislike an art', (done) => {
+      chai.request(app)
+        .post(`/api/v1/arts/${2}/dislike`)
+        .set('x-access-token', jwtToken2)
+        .end((err, res) => {
+          expect(res.body).to.be.a('object');
+          expect(res.body.messages).eql(`You just disliked article ${2}`);
+          expect(res.status).to.equal(201);
+          expect(res.body.status).eql('Ok');
+          done(err);
+        });
+    });
+
+    it('should undislike an already disliked art', (done) => {
+      chai.request(app)
+        .post(`/api/v1/arts/${3}/dislike`)
+        .set('x-access-token', jwtToken)
+        .end((err, res) => {
+          expect(res.body).to.be.a('object');
+          expect(res.body.messages).eql('You just undisliked article 3');
+          expect(res.status).to.equal(200);
+          expect(res.body.status).eql('Ok');
+          done(err);
+        });
+    });
   });
 
   describe('ARTS GET REQUESTS', () => {
