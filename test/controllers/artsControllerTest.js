@@ -312,7 +312,6 @@ describe('Arts Endpoint API Test', () => {
         .set('x-access-token', jwtToken)
         .send(validUpdatedArticle)
         .end((err, res) => {
-          console.log('>>>', res.body);
           expect(res.body).to.be.a('object');
           expect(res.body.status).eql('Ok');
           expect(res.status).to.equal(200);

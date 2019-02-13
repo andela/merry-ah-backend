@@ -187,15 +187,13 @@ class ArtsController {
 
       const slugifiedTitle = slugify(title);
 
-      const updateArticleSuccess = await artToUpdate.update(
-        {
-          title,
-          slug: slugifiedTitle,
-          description,
-          categoryId,
-          featuredImg: featuredImgUpdate,
-        }
-      );
+      const updateArticleSuccess = await artToUpdate.update({
+        title,
+        slug: slugifiedTitle,
+        description,
+        categoryId,
+        featuredImg: featuredImgUpdate,
+      });
 
       const response = new Response(
         'Ok',
