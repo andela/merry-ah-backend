@@ -32,7 +32,13 @@ module.exports = (sequelize, DataTypes) => {
     Art.hasMany(models.Like, {
       foreignKey: 'artId'
     });
+    Art.hasMany(models.Dislike, {
+      foreignKey: 'artId'
+    });
     Art.hasOne(models.LikeSummary, {
+      foreignKey: 'artId'
+    });
+    Art.hasOne(models.DislikeSummary, {
       foreignKey: 'artId'
     });
     Art.hasOne(models.Transaction, {

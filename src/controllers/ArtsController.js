@@ -1,9 +1,11 @@
 import sequelize from 'sequelize';
 import models from '../db/models';
 import { Response, Slugify } from '../helpers/index';
+import LikeUnlike from '../db/service/LikeUnlike';
+import DisikeUndislike from '../db/service/DislikeUndislike';
 
 const {
-  Art, Media, Category, User, Comment
+  Art, Media, Category, User, Comment, Like, Dislike
 } = models;
 
 
@@ -407,6 +409,159 @@ class ArtsController {
     } catch (err) {
       const response = new Response(
         'Not ok',
+        500,
+        `${err}`,
+      );
+      return res.status(response.code).json(response);
+    }
+  }
+
+  /**
+   * @static
+   * @desc POST /api/v1/arts/:artId/like
+   * @param {object} req
+   * @param {object} res
+   * @memberof ArtsController
+   * @returns {object} successful like
+   */
+  static async likeArticle(req, res) {
+    try {
+      const { artId } = req.params;
+      const { id } = req.verifyUser;
+
+      const like = await Like.findOrCreate({
+        where: {
+          artId,
+          userId: id
+        },
+      })
+        .spread((user, created) => {
+          user.get({ plain: true });
+          return created;
+        });
+
+      if (!like) {
+        await Like.destroy({
+          where: {
+            artId,
+            userId: id
+          },
+        });
+
+        LikeUnlike.unlike(artId);
+
+        const response = new Response(
+          'Ok',
+          200,
+          `You just unliked article ${artId}`,
+        );
+        return res.status(response.code).json(response);
+      }
+
+      LikeUnlike.like(artId);
+
+      const checkIfDisliked = await Like.findOne({
+        where: {
+          artId,
+          userId: id
+        },
+      });
+
+      if (checkIfDisliked) {
+        await Dislike.destroy({
+          where: {
+            artId,
+            userId: id
+          },
+        });
+        DisikeUndislike.undislike(artId);
+      }
+
+      const response = new Response(
+        'Ok',
+        201,
+        `You just liked article ${artId}`,
+      );
+      return res.status(response.code).json(response);
+    } catch (err) {
+      const response = new Response(
+        'Internal server error',
+        500,
+        `${err}`,
+      );
+      return res.status(response.code).json(response);
+    }
+  }
+
+  /**
+   * @static
+   * @desc POST /api/v1/arts/:artId/dislike
+   * @param {object} req
+   * @param {object} res
+   * @memberof ArtsController
+   * @returns {object} successful dislike
+   */
+  static async dislikeArticle(req, res) {
+    try {
+      const { artId } = req.params;
+      const { id } = req.verifyUser;
+
+      const dislike = await Dislike.findOrCreate({
+        where: {
+          artId,
+          userId: id
+        },
+      })
+        .spread((user, created) => {
+          user.get({ plain: true });
+          return created;
+        });
+
+      if (!dislike) {
+        await Dislike.destroy({
+          where: {
+            artId,
+            userId: id
+          },
+        });
+
+        DisikeUndislike.undislike(artId);
+
+        const response = new Response(
+          'Ok',
+          200,
+          `You just undisliked article ${artId}`,
+        );
+        return res.status(response.code).json(response);
+      }
+
+      DisikeUndislike.dislike(artId);
+      const checkIfLiked = await Like.findOne({
+        where: {
+          artId,
+          userId: id
+        },
+      });
+
+      if (checkIfLiked) {
+        await Like.destroy({
+          where: {
+            artId,
+            userId: id
+          },
+        });
+        LikeUnlike.unlike(artId);
+      }
+
+      const response = new Response(
+        'Ok',
+        201,
+        `You just disliked article ${artId}`,
+      );
+      return res.status(response.code).json(response);
+    } catch (err) {
+      const response = new Response(
+        'Internal server error',
         500,
         `${err}`,
       );

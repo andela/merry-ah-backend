@@ -1,5 +1,6 @@
+
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('LikeSummaries', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('DislikeSummaries', {
     id: {
       allowNull: false,
       autoIncrement: true,
@@ -26,5 +27,5 @@ module.exports = {
       type: Sequelize.DATE
     }
   }),
-  down: queryInterface => queryInterface.dropTable('LikeSummaries')
+  down: queryInterface => queryInterface.dropTable('DislikeSummaries')
 };
