@@ -1,4 +1,5 @@
 /* eslint-disable valid-jsdoc */
+import dotenv from 'dotenv';
 import models from '../db/models';
 import TokenAuthenticate from '../helpers/TokenAuthenticate';
 import Response from '../helpers/response';
@@ -7,6 +8,8 @@ import EmailNotificationAPI from '../helpers/EmailNotificationAPI';
 import basePath from '../helpers/basepath';
 import Follow from '../db/service/Follow';
 import Unfollow from '../db/service/Unfollow';
+
+dotenv.config();
 
 const { User, Profile, Following, } = models;
 
@@ -181,11 +184,11 @@ class UsersController {
   static async forgotPassword(req, res) {
     try {
       const { checkEmail } = req;
-      const { email: recipient, username } = checkEmail;
-      const userDetails = { email: recipient, username };
+      const { id, email: recipient, username } = checkEmail;
+      const userDetails = { id, email: recipient, username };
       const token = await TokenAuthenticate.generateToken(userDetails, '1hr');
       const subject = 'Reset Password';
-      const path = basePath(req);
+      const path = 'https://merry-ah-staging';
       const linkPath = `${path}/api/v1/auth/forgot-password?token=${token}`;
       const message = `<h3>Dear ${username}</h3><br>
       <a href='${linkPath}'>
