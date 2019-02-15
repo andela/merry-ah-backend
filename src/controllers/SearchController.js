@@ -21,7 +21,7 @@ class SearchController {
    * @memberof SearchController
    * @returns {object} arts matching the specified category
    */
-  static async searchByCategory(req, res) {
+  static async getArtsByCategory(req, res) {
     try {
       const { categoryId } = req.params;
 
