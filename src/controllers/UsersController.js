@@ -188,7 +188,7 @@ class UsersController {
       const userDetails = { id, email: recipient, username };
       const token = await TokenAuthenticate.generateToken(userDetails, '1hr');
       const subject = 'Reset Password';
-      const path = 'https://merry-ah-staging';
+      const path = process.env.FRONTEND_URL;
       const linkPath = `${path}/complete-password-reset?token=${token}`;
       const message = `<h3>Dear ${username}</h3><br>
       <a href='${linkPath}'>
