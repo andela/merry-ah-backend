@@ -4,7 +4,7 @@
   "description": "A Social platform for the creative at heart",
   "main": "index.js",
   "scripts": {
-    "start": "node ./build/index.js",
+    "start": "npm run db:migrate && node ./build/index.js",
     "start:dev": "nodemon --exec babel-node ./src/index.js",
     "build": "babel -d build/ src",
     "postinstall": "npm run build",
