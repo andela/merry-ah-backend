@@ -2,7 +2,7 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 const {
-  DB_USER, DB_NAME, DB_PASSWORD, DB_NAME_TEST
+  DB_USER, DB_NAME, DB_PASSWORD, DB_NAME_TEST, DATABASE_URL, PROD_DIALECT
 } = process.env;
 module.exports = {
   development: {
@@ -20,7 +20,7 @@ module.exports = {
     dialect: 'postgres'
   },
   production: {
-    url: process.env.DATABASE_URL,
-    dialect: process.env.PROD_DIALECT
+    url: DATABASE_URL,
+    dialect: PROD_DIALECT
   }
 };
