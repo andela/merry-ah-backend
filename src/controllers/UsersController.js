@@ -315,6 +315,55 @@ class UsersController {
    * @memberof UsersController
    * @returns one artist on the platform
    */
+  static async getAUser(req, res) {
+    try {
+      const { userId } = req.params;
+
+      const user = await User.findOne({
+        where: {
+          id: userId,
+        },
+        attributes: ['id', 'username', 'email', 'userType'],
+        include: [{
+          model: Profile,
+          as: 'profile',
+          attributes: ['firstName', 'lastName', 'bio', 'imgURL']
+        }]
+      });
+      if (!user) {
+        const response = new Response(
+          'Not Found',
+          404,
+          'User was not found',
+        );
+        return res.status(response.code).json(response);
+      }
+
+      const response = new Response(
+        'Ok',
+        200,
+        'Returned one user',
+        { user }
+      );
+      return res.status(response.code).json(response);
+    } catch (err) {
+      const response = new Response(
+        'Internal server error',
+        500,
+        `${err}`,
+      );
+      return res.status(response.code).json(response);
+    }
+  }
+
+  /**
+   * @static
+   * @desc GET /api/v1/users/artists/:artistId
+   * @param {object} req
+   * @param {object} res
+   * @memberof UsersController
+   * @returns one artist on the platform
+   */
   static async getOneArtist(req, res) {
     try {
       const { artistId } = req.params;

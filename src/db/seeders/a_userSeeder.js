@@ -8,7 +8,7 @@ module.exports = {
       signUpType: 'local',
       isVerified: true,
       password: bcrypt.hashSync('femiok', bcrypt.genSaltSync(8)),
-      email: 'julietezekwe@gmail.com',
+      email: 'julietezekwe@g mail.com',
       isActive: true,
       createdAt: new Date(),
       updatedAt: new Date()
