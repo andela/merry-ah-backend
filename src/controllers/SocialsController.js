@@ -1,8 +1,13 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable camelcase */
+import dotenv from 'dotenv'
 import models from '../db/models';
 import TokenAuthenticate from '../helpers/TokenAuthenticate';
 import Response from '../helpers/response';
+
+dotenv.config();
+
+const { FRONTEND_BASE_PATH } = process.env
 
 const { User, Profile } = models;
 const tokenExpireTime = '10hr';
@@ -156,6 +161,7 @@ class SocialController {
       id, username, email, signUpType,
     };
     const token = TokenAuthenticate.generateToken(payload, tokenExpireTime);
+
     if (newUser) {
       response = new Response(
         'Ok',
@@ -163,12 +169,12 @@ class SocialController {
         'User logged in successfully',
         { token }
       );
-      return res.status(response.code).json(response);
+      return res.redirect(`${FRONTEND_BASE_PATH}/auth?token=${token}`);
     }
     response = new Response(
-      'Ok',
-      200,
-      `Welcome ${username}`,
+      'Unauthorized',
+      401,
+      'You dont have access to this route',
       { token }
     );
     return res.status(response.code).json(response);
