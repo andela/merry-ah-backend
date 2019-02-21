@@ -1,13 +1,13 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable camelcase */
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
 import models from '../db/models';
 import TokenAuthenticate from '../helpers/TokenAuthenticate';
 import Response from '../helpers/response';
 
 dotenv.config();
 
-const { FRONTEND_BASE_PATH } = process.env
+const { FRONTEND_BASE_PATH } = process.env;
 
 const { User, Profile } = models;
 const tokenExpireTime = '10hr';
