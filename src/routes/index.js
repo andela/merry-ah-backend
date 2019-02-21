@@ -2,6 +2,7 @@ import express from 'express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import artsRoute from './artsRoute';
+import categoriesRoute from './categoriesRoute';
 import authRouter from './authRouter';
 import commentReaction from './commentReactionRouter';
 import ratingRouter from './ratingRouter';
@@ -26,6 +27,7 @@ router.use(
 );
 router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 router.use('/arts', artsRoute);
+router.use('/categories', categoriesRoute);
 router.use('/artsreport', reportRouter);
 router.use('/arts/comments/', [commentRouter, commentReaction]);
 router.use('/auth', socialRouter);
