@@ -42,3 +42,4 @@ node_modules
 
 .env
 build/
+src/helpers/EmailNotificationAPI.jscoverage

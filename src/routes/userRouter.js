@@ -45,6 +45,10 @@ userRouter.get(
   UserMiddleware.validateArtistID,
   UsersController.getOneArtist,
 );
+userRouter.get(
+  '/:userId/profile',
+  UsersController.getAUser,
+);
 userRouter.put(
   '/:userId/roles',
   TokenAuthenticate.tokenVerify,
