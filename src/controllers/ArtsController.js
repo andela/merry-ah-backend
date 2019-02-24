@@ -600,16 +600,22 @@ class ArtsController {
           'description',
           'featuredImg',
           'createdAt',
-          [sequelize.literal(
-            '(SELECT COUNT(*) FROM "Comments" C WHERE C."artId" = "Art".id)'
-          ), 'CommentsCount'],
-          [sequelize.literal(
-            '(SELECT COUNT(*) FROM "Likes" C WHERE C."artId" = "Art".id)'
-          ), 'LikesCount'],
-          [sequelize.literal(
-            `(SELECT "caculatedRate" 
+          [
+            sequelize.literal(
+              '(SELECT COUNT(*) FROM "Comments" C WHERE C."artId" = "Art".id)'
+            ), 'CommentsCount'
+          ],
+          [
+            sequelize.literal(
+              '(SELECT COUNT(*) FROM "Likes" C WHERE C."artId" = "Art".id)'
+            ), 'LikesCount'
+          ],
+          [
+            sequelize.literal(
+              `(SELECT "caculatedRate" 
             FROM "RateSummaries" C WHERE C."artId" = "Art".id)`
-          ), 'CalculatedRate'],
+            ), 'CalculatedRate'
+          ],
         ],
         limit: limitDefault,
         offset,
