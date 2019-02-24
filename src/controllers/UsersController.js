@@ -21,7 +21,7 @@ class UsersController {
    * @param {object} req
    * @param {object} res
    * @memberof UsersController
-   * @returns user details
+   * @returns user payloadObject
    */
   static async signUp(req, res) {
     const defaultstatus = 0;
