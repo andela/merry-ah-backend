@@ -9,6 +9,7 @@ import TokenAuthenticate from '../helpers/TokenAuthenticate';
 import userRouter from './userRouter';
 import commentRouter from './commentRouter';
 import socialRouter from './socialRouter';
+import searchRouter from './searchRouter';
 import reportRouter from './reportRouter';
 import bookmarkRouter from './bookmarkRouter';
 import transactionRouter from './transactionRouter';
@@ -35,7 +36,7 @@ router.use(
   TokenAuthenticate.tokenVerify,
   bookmarkRouter
 );
-router.use('/users', userRouter);
+router.use('/search', searchRouter);
 router.use('/transaction', TokenAuthenticate.tokenVerify, transactionRouter);
 
 export default router;
