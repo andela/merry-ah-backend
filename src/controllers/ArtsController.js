@@ -29,7 +29,7 @@ class ArtsController {
       const { id: artistId } = req.verifyUser;
 
       const {
-        title, description, categoryId, media, price
+        title, description, categoryId, media
       } = req.body;
 
       mediaFiles = media;
@@ -45,6 +45,11 @@ class ArtsController {
 
       const slugifiedTitle = slugify(title);
 
+      const checkCategory = await Category.findOne({ where: { id: 1 } });
+      if (!checkCategory) {
+        await Category.create({ categoryName: 'Architecture' });
+      }
+
       const createArticle = await Art
         .create({
           artistId,
@@ -53,8 +58,7 @@ class ArtsController {
           description,
           categoryId,
           featuredImg: mediaFilesArray[0].url,
-          status: defaultStatus,
-          price
+          status: defaultStatus
         });
 
       const {
@@ -103,7 +107,6 @@ class ArtsController {
           artDescription,
           artFeaturedImg,
           artCategoryId,
-          price,
           visited,
           followersNotified
         }
@@ -157,7 +160,7 @@ class ArtsController {
       }
 
       const {
-        title, description, categoryId, media, price
+        title, description, categoryId, media
       } = req.body;
 
       featuredImgUpdate = artToUpdate.dataValues.featuredImg;
@@ -190,7 +193,6 @@ class ArtsController {
         description,
         categoryId,
         featuredImg: featuredImgUpdate,
-        price
       });
 
       const response = new Response(
@@ -600,23 +602,13 @@ class ArtsController {
           'description',
           'featuredImg',
           'createdAt',
-          [
-            sequelize.literal(
-              '(SELECT COUNT(*) FROM "Comments" C WHERE C."artId" = "Art".id)'
-            ), 'CommentsCount'
-          ],
-          [
-            sequelize.literal(
-              '(SELECT COUNT(*) FROM "Likes" C WHERE C."artId" = "Art".id)'
-            ), 'LikesCount'
-          ],
-          [
-            sequelize.literal(
-              `(SELECT "caculatedRate" 
-            FROM "RateSummaries" C WHERE C."artId" = "Art".id)`
-            ), 'CalculatedRate'
-          ],
-        ],
+          [sequelize.literal(`(SELECT COUNT(*) 
+          FROM "Comments" C WHERE C."artId" = "Art".id)`), 'CommentsCount'],
+          [sequelize.literal(`(SELECT COUNT(*) 
+          FROM "Likes" C WHERE C."artId" = "Art".id)`), 'LikesCount'],
+          [sequelize.literal(`(SELECT "caculatedRate" 
+          FROM "RateSummaries" C 
+          WHERE C."artId" = "Art".id)`), 'CalculatedRate']],
         limit: limitDefault,
         offset,
       });
