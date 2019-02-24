@@ -558,6 +558,86 @@ class ArtsController {
       return res.status(response.code).json(response);
     }
   }
+
+  /**
+   * @desc GET /api/v1/articles
+   * @param {object} req
+   * @param {object} res
+   * @memberof ArtsController
+   * @returns {Object} All Artist owned Articles
+   */
+  static async getAllArtistArticles(req, res) {
+    try {
+      const { artistId } = req.params;
+      const { limit, page } = req.query;
+      const limitDefault = limit || 20;
+      const pageDefault = page || 1;
+
+      const offset = limitDefault * (pageDefault - 1);
+
+      const articles = await Art.findAndCountAll({
+        where: { artistId },
+        include: [
+          {
+            model: Category,
+            as: 'Category',
+            attributes: ['id', 'categoryName'],
+          },
+          {
+            model: User,
+            as: 'Author',
+            attributes: ['username'],
+          },
+        ],
+        order: [
+          ['createdAt', 'DESC'],
+          ['id', 'DESC'],
+        ],
+        attributes: [
+          'id',
+          'slug',
+          'artistId',
+          'categoryId',
+          'title',
+          'description',
+          'featuredImg',
+          'createdAt',
+          [sequelize.literal(
+            '(SELECT COUNT(*) FROM "Comments" C WHERE C."artId" = "Art".id)'
+          ), 'CommentsCount'],
+          [sequelize.literal(
+            '(SELECT COUNT(*) FROM "Likes" C WHERE C."artId" = "Art".id)'
+          ), 'LikesCount'],
+          [sequelize.literal(
+            `(SELECT "caculatedRate" 
+            FROM "RateSummaries" C WHERE C."artId" = "Art".id)`
+          ), 'CalculatedRate'],
+        ],
+        limit: limitDefault,
+        offset,
+      });
+      const pages = Math.ceil(articles.count / limitDefault);
+      const response = new Response(
+        'Ok',
+        200,
+        'All Articles',
+        {
+          articles: articles.rows,
+          articlesGrandTotal: articles.count,
+          page: pageDefault,
+          pages
+        }
+      );
+      return res.status(response.code).json(response);
+    } catch (err) {
+      const response = new Response(
+        'Not ok',
+        500,
+        `${err}`,
+      );
+      return res.status(response.code).json(response);
+    }
+  }
 }
 
 export default ArtsController;

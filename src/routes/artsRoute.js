@@ -49,4 +49,5 @@ artsRoute.post(
   ArtsController.dislikeArticle,
 );
 
+artsRoute.get('/:artistId/profile', ArtsController.getAllArtistArticles);
 export default artsRoute;
