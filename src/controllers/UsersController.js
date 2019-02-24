@@ -1,4 +1,5 @@
 /* eslint-disable valid-jsdoc */
+import dotenv from 'dotenv';
 import models from '../db/models';
 import TokenAuthenticate from '../helpers/TokenAuthenticate';
 import Response from '../helpers/response';
@@ -7,6 +8,8 @@ import EmailNotificationAPI from '../helpers/EmailNotificationAPI';
 import basePath from '../helpers/basepath';
 import Follow from '../db/service/Follow';
 import Unfollow from '../db/service/Unfollow';
+
+dotenv.config();
 
 const { User, Profile, Following, } = models;
 
@@ -21,7 +24,7 @@ class UsersController {
    * @param {object} req
    * @param {object} res
    * @memberof UsersController
-   * @returns user payloadObject
+   * @returns user details
    */
   static async signUp(req, res) {
     const defaultstatus = 0;
@@ -181,12 +184,12 @@ class UsersController {
   static async forgotPassword(req, res) {
     try {
       const { checkEmail } = req;
-      const { email: recipient, username } = checkEmail;
-      const userDetails = { email: recipient, username };
+      const { id, email: recipient, username } = checkEmail;
+      const userDetails = { id, email: recipient, username };
       const token = await TokenAuthenticate.generateToken(userDetails, '1hr');
       const subject = 'Reset Password';
-      const path = basePath(req);
-      const linkPath = `${path}/api/v1/auth/forgot-password?token=${token}`;
+      const path = process.env.FRONTEND_URL;
+      const linkPath = `${path}/complete-password-reset?token=${token}`;
       const message = `<h3>Dear ${username}</h3><br>
       <a href='${linkPath}'>
       <button style='font-size: 20px; background: orange;'>
@@ -295,6 +298,55 @@ class UsersController {
         200,
         'Returned all artists',
         { artists }
+      );
+      return res.status(response.code).json(response);
+    } catch (err) {
+      const response = new Response(
+        'Internal server error',
+        500,
+        `${err}`,
+      );
+      return res.status(response.code).json(response);
+    }
+  }
+
+  /**
+   * @static
+   * @desc GET /api/v1/users/artists/:artistId
+   * @param {object} req
+   * @param {object} res
+   * @memberof UsersController
+   * @returns one artist on the platform
+   */
+  static async getAUser(req, res) {
+    try {
+      const { userId } = req.params;
+
+      const user = await User.findOne({
+        where: {
+          id: userId,
+        },
+        attributes: ['id', 'username', 'email', 'userType'],
+        include: [{
+          model: Profile,
+          as: 'profile',
+          attributes: ['firstName', 'lastName', 'bio', 'imgURL']
+        }]
+      });
+      if (!user) {
+        const response = new Response(
+          'Not Found',
+          404,
+          'User was not found',
+        );
+        return res.status(response.code).json(response);
+      }
+
+      const response = new Response(
+        'Ok',
+        200,
+        'Returned one user',
+        { user }
       );
       return res.status(response.code).json(response);
     } catch (err) {

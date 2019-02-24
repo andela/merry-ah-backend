@@ -2,6 +2,7 @@ import express from 'express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import artsRoute from './artsRoute';
+import categoriesRoute from './categoriesRoute';
 import authRouter from './authRouter';
 import commentReaction from './commentReactionRouter';
 import ratingRouter from './ratingRouter';
@@ -9,6 +10,7 @@ import TokenAuthenticate from '../helpers/TokenAuthenticate';
 import userRouter from './userRouter';
 import commentRouter from './commentRouter';
 import socialRouter from './socialRouter';
+import searchRouter from './searchRouter';
 import reportRouter from './reportRouter';
 import bookmarkRouter from './bookmarkRouter';
 import transactionRouter from './transactionRouter';
@@ -26,6 +28,7 @@ router.use(
 );
 router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 router.use('/arts', artsRoute);
+router.use('/categories', categoriesRoute);
 router.use('/artsreport', reportRouter);
 router.use('/arts/comments/', [commentRouter, commentReaction]);
 router.use('/auth', socialRouter);
@@ -35,7 +38,7 @@ router.use(
   TokenAuthenticate.tokenVerify,
   bookmarkRouter
 );
-router.use('/users', userRouter);
+router.use('/search', searchRouter);
 router.use('/transaction', TokenAuthenticate.tokenVerify, transactionRouter);
 
 export default router;

@@ -19,7 +19,7 @@ describe('Reports Endpoint API Test', () => {
   before((done) => {
     chai.request(app)
       .post('/api/v1/auth/signin')
-      .send({ email: 'email@gmail.com', password: 'abcdefgh' })
+      .send({ email: 'julietezekwe@gmail.com', password: 'femiok' })
       .end((err, res) => {
         userToken = res.body.data.token;
       });

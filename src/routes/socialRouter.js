@@ -20,7 +20,8 @@ socialRouter.get(
 
 socialRouter.get(
   '/google/callback',
-  passport.authenticate('google'), SocialController.getToken
+  passport.authenticate('google'),
+  SocialController.getToken
 );
 
 socialRouter.get(
