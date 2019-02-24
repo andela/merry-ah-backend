@@ -19,6 +19,7 @@ class ArticleValidator {
     req.check('categoryId', 'Category is required & numeric').isNumeric();
     req.check('description', 'Description should be longer').trim().notEmpty()
       .isLength({ min: 15 });
+    req.check('price', 'Price is required & numeric').isNumeric();
 
     const errors = req.validationErrors();
     const validationErrors = [];

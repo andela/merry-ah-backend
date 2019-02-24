@@ -29,7 +29,7 @@ class ArtsController {
       const { id: artistId } = req.verifyUser;
 
       const {
-        title, description, categoryId, media
+        title, description, categoryId, media, price
       } = req.body;
 
       mediaFiles = media;
@@ -53,7 +53,8 @@ class ArtsController {
           description,
           categoryId,
           featuredImg: mediaFilesArray[0].url,
-          status: defaultStatus
+          status: defaultStatus,
+          price
         });
 
       const {
@@ -102,6 +103,7 @@ class ArtsController {
           artDescription,
           artFeaturedImg,
           artCategoryId,
+          price,
           visited,
           followersNotified
         }
@@ -155,7 +157,7 @@ class ArtsController {
       }
 
       const {
-        title, description, categoryId, media
+        title, description, categoryId, media, price
       } = req.body;
 
       featuredImgUpdate = artToUpdate.dataValues.featuredImg;
@@ -188,6 +190,7 @@ class ArtsController {
         description,
         categoryId,
         featuredImg: featuredImgUpdate,
+        price
       });
 
       const response = new Response(
