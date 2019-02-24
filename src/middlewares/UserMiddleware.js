@@ -32,7 +32,7 @@ class UserMiddleware {
         where: {
           email,
         },
-        attributes: ['username', 'email'],
+        attributes: ['id', 'username', 'email'],
       });
       if (!checkEmail) {
         const response = new Response(
