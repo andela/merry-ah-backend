@@ -45,11 +45,6 @@ class ArtsController {
 
       const slugifiedTitle = slugify(title);
 
-      const checkCategory = await Category.findOne({ where: { id: 1 } });
-      if (!checkCategory) {
-        await Category.create({ categoryName: 'Architecture' });
-      }
-
       const createArticle = await Art
         .create({
           artistId,
