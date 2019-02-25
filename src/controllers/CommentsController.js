@@ -2,7 +2,9 @@ import models from '../db/models';
 import Response from '../helpers/response';
 import { SendNotifications } from '../helpers';
 
-const { Comment, Art, UpdatedComment } = models;
+const {
+  Comment, Art, UpdatedComment, User
+} = models;
 
 /**
  * Represents a CommentsController.
@@ -88,6 +90,11 @@ class CommentsController {
             $lt: lastId
           }
         },
+        include: [{
+          model: User,
+          as: 'User',
+          attributes: ['username'],
+        }],
         limit,
       });
       const response = new Response(
