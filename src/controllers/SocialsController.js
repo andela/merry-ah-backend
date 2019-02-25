@@ -161,23 +161,14 @@ class SocialController {
       id, username, email, signUpType,
     };
     const token = TokenAuthenticate.generateToken(payload, tokenExpireTime);
-
-    if (newUser) {
-      response = new Response(
-        'Ok',
-        201,
-        'User logged in successfully',
-        { token }
-      );
-      return res.redirect(`${FRONTEND_BASE_PATH}/auth?token=${token}`);
-    }
+    console.log('--------> ', newUser);
     response = new Response(
-      'Unauthorized',
-      401,
-      'You dont have access to this route',
+      'Ok',
+      201,
+      'User logged in successfully',
       { token }
     );
-    return res.status(response.code).json(response);
+    return res.redirect(`${FRONTEND_BASE_PATH}/auth?token=${token}`);
   }
 }
 export default SocialController;
