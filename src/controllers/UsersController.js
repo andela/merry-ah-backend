@@ -519,7 +519,10 @@ class UsersController {
   static async updateProfile(req, res) {
     try {
       const { id } = req.verifyUser;
-      const { bio, imgURL, userType } = req.body;
+      const { bio } = req.body || null;
+      const { imgURL } = req.body || null;
+      const { userType } = req.body;
+      let error = false;
       const updateProfile = await Profile.update(
         {
           bio,
@@ -531,17 +534,23 @@ class UsersController {
           }
         }
       );
-      const updateUserType = await User.update(
-        {
-          userType
-        },
-        {
-          where: {
-            id,
+      if (userType) {
+        const updateUserType = await User.update(
+          {
+            userType
+          },
+          {
+            where: {
+              id,
+            }
           }
+        );
+        if (!updateUserType[0]) {
+          error = true;
         }
-      );
-      if (updateProfile[0] && updateUserType[0]) {
+      }
+
+      if (updateProfile[0] && !error) {
         const response = new Response(
           'Ok',
           200,

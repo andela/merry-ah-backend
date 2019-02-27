@@ -20,9 +20,7 @@ const {
   validArtist1,
   validArtist2,
   validProfile,
-  invalidProfile,
   invalidImage,
-  invalidBio,
 } = userDetails;
 
 let updateToken;
@@ -327,22 +325,6 @@ describe('Users Endpoint API Test', () => {
     it('it should not update user with empty fields', (done) => {
       chai.request(app)
         .put('/api/v1/users/profile-update')
-        .set('Authorization', loginToken)
-        .send({})
-        .end((err, res) => {
-          expect(res.body.status).eql('Bad Request');
-          expect(res.body.messages).eql('Invalid credentials');
-          expect(res.body.data[0]).eql('Biography cannot be empty');
-          expect(res.body.data[1]).eql('Biography should be more than 5 words');
-          expect(res.body.data[2]).eql('imgURL is cannot be empty');
-          expect(res.body.data[3]).eql('Only Jpeg, Png or Gif is accepted image format');
-          expect(res.body.data[4]).eql('userType cannot be empty');
-          done(err);
-        });
-    });
-    it('it should not update user with empty fields', (done) => {
-      chai.request(app)
-        .put('/api/v1/users/profile-update')
         .set('Authorization', updateToken)
         .send(invalidImage)
         .end((err, res) => {
@@ -352,46 +334,41 @@ describe('Users Endpoint API Test', () => {
           done(err);
         });
     });
-    it('it should not update user with empty fields', (done) => {
-      chai.request(app)
-        .put('/api/v1/users/profile-update')
-        .set('Authorization', updateToken)
-        .send(invalidBio)
-        .end((err, res) => {
-          expect(res.body.status).eql('Bad Request');
-          expect(res.body.messages).eql('Invalid credentials');
-          expect(res.body.data[0]).eql('Biography should be more than 5 words');
-          done(err);
-        });
-    });
-    it('it should not update user with space in the fields', (done) => {
-      chai.request(app)
-        .put('/api/v1/users/profile-update')
-        .set('Authorization', updateToken)
-        .send({ bio: 'hahh jhvhjv hhv hgghg hhjhhj', imgURL: 'hhxvvh.gif', userType: '       ' })
-        .end((err, res) => {
-          expect(res.body.status).eql('Bad Request');
-          expect(res.body.messages).eql('Invalid credentials');
-          expect(res.body.data[0]).eql('userType cannot be empty');
-          done(err);
-        });
-    });
-    it('it should not update user with wrong usertype', (done) => {
-      chai.request(app)
-        .put('/api/v1/users/profile-update')
-        .set('Authorization', updateToken)
-        .send(invalidProfile)
-        .end((err, res) => {
-          expect(res.body.status).eql('Not found');
-          expect(res.body.messages).eql('This user type does not exist');
-          done(err);
-        });
-    });
-    it('it should update logged in user with valid update', (done) => {
+    it('should update a comment succesfully', (done) => {
       chai.request(app)
         .put('/api/v1/users/profile-update')
         .set('authorization', updateToken)
-        .send({ bio: 'hahh jhvhjv hhv hgghg hhjhhj', imgURL: 'hhxvvh.png', userType: 'user' })
+        .send({ bio: 'my bio is great', imgURL: 'image.jpg' })
+        .end((err, res) => {
+          expect(res.body.messages).eql('Profile updated successfully');
+          done(err);
+        });
+    });
+    it('should update a comment with valid image jpeg', (done) => {
+      chai.request(app)
+        .put('/api/v1/users/profile-update')
+        .set('authorization', updateToken)
+        .send({ bio: 'my bio is great', imgURL: 'image.jpeg' })
+        .end((err, res) => {
+          expect(res.body.messages).eql('Profile updated successfully');
+          done(err);
+        });
+    });
+    it('should update a comment with valid image png', (done) => {
+      chai.request(app)
+        .put('/api/v1/users/profile-update')
+        .set('authorization', updateToken)
+        .send({ bio: 'my bio is great', imgURL: 'image.png' })
+        .end((err, res) => {
+          expect(res.body.messages).eql('Profile updated successfully');
+          done(err);
+        });
+    });
+    it('should update a comment with valid image gif', (done) => {
+      chai.request(app)
+        .put('/api/v1/users/profile-update')
+        .set('authorization', updateToken)
+        .send({ bio: 'my bio is great', imgURL: 'image.gif' })
         .end((err, res) => {
           expect(res.body.messages).eql('Profile updated successfully');
           done(err);
