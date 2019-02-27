@@ -123,12 +123,12 @@ describe('Bookmark Tests', () => {
       .set('x-access-token', `${loginToken}`)
       .send()
       .end((err, res) => {
-        expect(404);
+        expect(200);
         expect(res.body).to.be.a('object');
         expect(res.body.messages)
           .eql('No Bookmarks was found for User');
-        expect(res.body.status).eql('Not Found');
-        expect(res.body.code).eql(404);
+        expect(res.body.status).eql('Ok');
+        expect(res.body.code).eql(200);
         done(err);
       });
   });
