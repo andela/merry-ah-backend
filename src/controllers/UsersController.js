@@ -520,7 +520,6 @@ class UsersController {
     try {
       const { id } = req.verifyUser;
       const { bio, imgURL, userType } = req.body;
-      
       const updateProfile = await Profile.update(
         {
           bio,
