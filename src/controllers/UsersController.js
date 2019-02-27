@@ -520,12 +520,11 @@ class UsersController {
     try {
       const { id } = req.verifyUser;
       const { bio, imgURL, userType } = req.body;
-
+      
       const updateProfile = await Profile.update(
         {
           bio,
-          imgURL,
-          userType
+          imgURL
         },
         {
           where: {
@@ -533,7 +532,17 @@ class UsersController {
           }
         }
       );
-      if (updateProfile[0]) {
+      const updateUserType = await User.update(
+        {
+          userType
+        },
+        {
+          where: {
+            id,
+          }
+        }
+      );
+      if (updateProfile[0] && updateUserType[0]) {
         const response = new Response(
           'Ok',
           200,
