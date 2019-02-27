@@ -118,8 +118,8 @@ class BookmarkController {
       /** Check if no bookmark found for user */
       if (userBookmarks.length === 0) {
         const response = new Response(
-          'Not Found',
-          404,
+          'Ok',
+          200,
           'No Bookmarks was found for User',
           userBookmarks
         );
