@@ -81,16 +81,19 @@ class UserValidator {
       }
     }
     const { userType } = req.body;
-    if (userType === undefined) return next();
-    const userTypes = userTypeOptions.includes(userType);
-    if (!userTypes) {
-      const response = new Response(
-        'Not found',
-        404,
-        'This user type does not exist'
-      );
-      return res.status(response.code).json(response);
+    if (userType !== undefined) {
+      const userTypes = userTypeOptions.includes(userType);
+      if (!userTypes) {
+        const response = new Response(
+          'Not found',
+          404,
+          'This user type does not exist'
+        );
+        return res.status(response.code).json(response);
+      }
     }
+
+    return next();
   }
 
   /**
