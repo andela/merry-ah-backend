@@ -1,7 +1,6 @@
 import Response from '../helpers/response';
 
 const minPassLen = 5;
-const minBioLen = 25;
 const userTypeOptions = ['user', 'artist'];
 /**
  * A module that checks if email already exists at sign up
@@ -64,36 +63,36 @@ class UserValidator {
    * @memberof UserValidator
    */
   static userProfileValidator(req, res, next) {
-    req.check('bio', 'Biography cannot be empty').trim().notEmpty();
-    req.check('bio', 'Biography should be more than 5 words')
-      .isLength({ min: minBioLen });
-    req.check('imgURL', 'imgURL is cannot be empty').trim().notEmpty();
-    req.check('imgURL', 'Only Jpeg, Png or Gif is accepted image format')
-      .isImage(req.body.imgURL);
-    req.check('userType', 'userType cannot be empty').trim().notEmpty();
-
-    const errors = req.validationErrors();
-    const validationErrors = [];
-    if (errors) {
-      errors.map(err => validationErrors.push(err.msg));
-      const response = new Response(
-        'Bad Request',
-        400,
-        'Invalid credentials',
-        validationErrors
-      );
-      return res.status(response.code).json(response);
+    const { imgURL } = req.body;
+    if (imgURL !== undefined) {
+      req.check('imgURL', 'Only Jpeg, Png or Gif is accepted image format')
+        .isImage(req.body.imgURL);
+      const errors = req.validationErrors();
+      const validationErrors = [];
+      if (errors) {
+        errors.map(err => validationErrors.push(err.msg));
+        const response = new Response(
+          'Bad Request',
+          400,
+          'Invalid credentials',
+          validationErrors
+        );
+        return res.status(response.code).json(response);
+      }
     }
     const { userType } = req.body;
-    const userTypes = userTypeOptions.includes(userType);
-    if (!userTypes) {
-      const response = new Response(
-        'Not found',
-        404,
-        'This user type does not exist'
-      );
-      return res.status(response.code).json(response);
+    if (userType !== undefined) {
+      const userTypes = userTypeOptions.includes(userType);
+      if (!userTypes) {
+        const response = new Response(
+          'Not found',
+          404,
+          'This user type does not exist'
+        );
+        return res.status(response.code).json(response);
+      }
     }
+
     return next();
   }
 
