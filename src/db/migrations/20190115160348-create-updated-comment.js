@@ -9,6 +9,8 @@ module.exports = {
       },
       commentId: {
         type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
         references: {
           model: 'Comments',
           key: 'id',
