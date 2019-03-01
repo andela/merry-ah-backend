@@ -161,7 +161,6 @@ class SocialController {
       id, username, email, signUpType,
     };
     const token = TokenAuthenticate.generateToken(payload, tokenExpireTime);
-    console.log('-------> ', newUser);
     response = new Response(
       'Ok',
       201,
